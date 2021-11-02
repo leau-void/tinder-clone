@@ -1,13 +1,12 @@
 import { getAuth, signOut } from "@firebase/auth";
 import React from "react";
-import Header from "./Header";
 import { Switch, Route } from "react-router";
+import { Link } from "react-router-dom";
 import NavBar from "./NavBar";
 
 const Main = () => {
   return (
     <div>
-      <Header />
       Main
       <Switch>
         <Route exact path="/">
@@ -21,6 +20,7 @@ const Main = () => {
         </Route>
       </Switch>
       <button onClick={() => signOut(getAuth())}>Logout</button>
+      <Link to="/settings">Settings</Link>
       <NavBar />
     </div>
   );

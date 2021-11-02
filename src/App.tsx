@@ -4,9 +4,10 @@ import { Switch, Route, useLocation, Redirect } from "react-router";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
-import Auth from "./components/Auth";
+import Login from "./components/Login";
 import Main from "./components/Main";
 import Settings from "./components/Settings";
+import Header from "./components/Header";
 import { firebaseConfig } from "./firebase-config";
 import { UserProvider } from "./context/UserContext";
 import { doc, getDoc, onSnapshot, setDoc } from "@firebase/firestore";
@@ -53,9 +54,10 @@ function App() {
   return (
     <UserProvider value={user}>
       {!user && <Redirect push to="/login" />}
+      <Header />
       <Switch key={location.pathname} location={location}>
         <Route path="/login">
-          <Auth />
+          <Login />
         </Route>
         <Route path="/settings">
           <Settings />
