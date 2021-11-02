@@ -7,4 +7,7 @@ export default interface Profile {
   age: number;
   description: string;
   photos: Photo[];
+  city: string;
+  gender: string;
+  sexual_orientation: string;
 }

@@ -9,26 +9,42 @@ import Main from "./components/Main";
 import Settings from "./components/Settings";
 import { firebaseConfig } from "./firebase-config";
 import { UserProvider } from "./context/UserContext";
-import { doc, getDoc, DocumentData, setDoc } from "@firebase/firestore";
+import { doc, getDoc, onSnapshot, setDoc } from "@firebase/firestore";
 import { User } from "./types";
 
 function App() {
   const location = useLocation();
+  const [userID, setUserID] = useState<string | null>(null);
   const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
     const unsub = onAuthStateChanged(getAuth(), (newUser) => {
       if (newUser) {
-        const docRef = doc(db, "users", newUser.uid);
-        getDoc(docRef).then((snap) => {
-          setUser(snap ? (snap.data() as User) : null);
-        });
+        setUserID(newUser.uid);
       } else {
-        setUser(null);
+        setUserID(null);
       }
     });
     return () => unsub();
   }, []);
+
+  useEffect(() => {
+    let unsub: () => void;
+
+    if (userID) {
+      const docRef = doc(db, "users", userID);
+      unsub = onSnapshot(docRef, (snap) => {
+        if (snap.exists()) setUser(snap.data() as User);
+        else setDoc(docRef, { uid: userID }, { merge: true });
+      });
+    } else {
+      setUser(null);
+    }
+
+    return () => {
+      if (unsub) unsub();
+    };
+  }, [userID]);
 
   return (
     <UserProvider value={user}>
