@@ -11,7 +11,7 @@ const Link = styled(NavLink)`
   color: black;
 
   &.active {
-    color: red;
+    color: blue;
   }
 `;
 
@@ -22,19 +22,19 @@ const Auth = () => {
       Auth
       {user && <Redirect to="/" />}
       <Switch>
-        <Route exact strict path="/login/">
+        <Route exact path="/login/">
           <Login />
         </Route>
-        <Route exact path="/login/s">
+        <Route exact path="/login/signup">
           <Signup />
         </Route>
       </Switch>
-      <button onClick={() => signInAnonymously(getAuth())}>Auth</button>
+      <button onClick={() => signInAnonymously(getAuth())}>Login</button>
       <nav>
-        <Link strict exact to="/login/" activeClassName="active">
+        <Link exact to="/login/" activeClassName="active">
           Login
         </Link>
-        <Link strict exact to="/login/s" activeClassName="active">
+        <Link to="/login/signup" activeClassName="active">
           Signup
         </Link>
       </nav>

@@ -25,14 +25,14 @@ function App() {
     <UserProvider value={user}>
       {!user && <Redirect push to="/login" />}
       <Switch key={location.pathname} location={location}>
-        <Route path="/" exact>
-          <Main />
-        </Route>
         <Route path="/login">
           <Auth />
         </Route>
         <Route path="/settings">
           <Settings />
+        </Route>
+        <Route path="/">
+          <Main />
         </Route>
       </Switch>
     </UserProvider>
