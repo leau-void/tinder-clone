@@ -9,14 +9,23 @@ import Main from "./components/Main";
 import Settings from "./components/Settings";
 import { firebaseConfig } from "./firebase-config";
 import { UserProvider } from "./context/UserContext";
+import { doc, getDoc, DocumentData, setDoc } from "@firebase/firestore";
+import { User } from "./types";
 
 function App() {
   const location = useLocation();
-  const [user, setUser] = useState(getAuth().currentUser);
+  const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
     const unsub = onAuthStateChanged(getAuth(), (newUser) => {
-      setUser(newUser);
+      if (newUser) {
+        const docRef = doc(db, "users", newUser.uid);
+        getDoc(docRef).then((snap) => {
+          setUser(snap ? (snap.data() as User) : null);
+        });
+      } else {
+        setUser(null);
+      }
     });
     return () => unsub();
   }, []);

@@ -1,5 +1,5 @@
 import React from "react";
-import { User } from "firebase/auth";
+import { User } from "../types";
 
 const UserContext = React.createContext<User | null>(null);
 

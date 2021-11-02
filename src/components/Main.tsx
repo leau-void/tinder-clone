@@ -1,11 +1,10 @@
 import { getAuth, signOut } from "@firebase/auth";
-import React, { useState } from "react";
+import React from "react";
 import Header from "./Header";
 import { Switch, Route } from "react-router";
 import NavBar from "./NavBar";
 
 const Main = () => {
-  const [page, setPage] = useState<"profile" | "feed" | "chat">("feed");
   return (
     <div>
       <Header />
