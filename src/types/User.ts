@@ -1,4 +1,4 @@
-import Profile from "./Profile";
+import { Profile } from "./Profile";
 import Settings from "./Settings";
 
 interface Location {
@@ -10,7 +10,8 @@ export default interface User {
   uid: string;
   likes: string[];
   dislikes: string[];
-  location: Location;
+  location: Location | null;
   profile: Profile;
   settings: Settings;
+  isHuman: boolean;
 }

@@ -1,8 +1,9 @@
-export default interface Photo {
+export interface Photo {
   src: string;
   alt: string;
 }
-export default interface Profile {
+
+export interface Profile {
   name: string;
   age: number;
   description: string;
@@ -10,4 +11,5 @@ export default interface Profile {
   city: string;
   gender: string;
   sexual_orientation: string;
+  passions: string[];
 }

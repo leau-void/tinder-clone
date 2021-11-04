@@ -32,7 +32,10 @@ const imageTypes: PhotoTypes[] = [
 ];
 
 const createRandomUser = (
-  { isHuman }: { isHuman: boolean } = { isHuman: false }
+  { isHuman, uid }: { isHuman: boolean; uid: string } = {
+    isHuman: false,
+    uid: "",
+  }
 ): User => {
   const getPhotos = (): Photo[] =>
     new Array(Math.round(Math.random() * 2 + 3)).fill(null).map(() => {
@@ -59,10 +62,14 @@ const createRandomUser = (
   return {
     isHuman,
     profile,
-    uid: datatype.uuid(),
+    uid: uid || datatype.uuid(),
     likes: [""],
     dislikes: [""],
-    settings: {},
+    settings: {
+      distance: 0,
+      minAge: 0,
+      maxAge: 150,
+    },
     location: {
       lat: Number(address.latitude()),
       lon: Number(address.longitude()),

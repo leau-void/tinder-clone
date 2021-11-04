@@ -14,10 +14,10 @@ describe("random user generation", () => {
     expect(newUser).toHaveProperty("location.lon");
     expect(newUser).toHaveProperty("isHuman", false);
     expect(newUser).toHaveProperty("settings");
+    expect(newUser).toHaveProperty("settings.distance", 0);
   });
 
   it("user has profile", () => {
-    console.log(newUser);
     const profile = newUser.profile;
     expect(profile).toHaveProperty("name");
     expect(profile).toHaveProperty("age");

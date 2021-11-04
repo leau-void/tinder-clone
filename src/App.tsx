@@ -12,6 +12,7 @@ import { firebaseConfig } from "./firebase-config";
 import { UserProvider } from "./context/UserContext";
 import { doc, getDoc, onSnapshot, setDoc } from "@firebase/firestore";
 import { User } from "./types";
+import createRandomUser from "./utils/createRandomUser";
 
 function App() {
   const location = useLocation();

@@ -1,1 +1,5 @@
-export default interface Settings {}
+export default interface Settings {
+  distance: number;
+  minAge: number;
+  maxAge: number;
+}
