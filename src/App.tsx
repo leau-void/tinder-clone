@@ -37,7 +37,12 @@ function App() {
       const docRef = doc(db, "users", userID);
       unsub = onSnapshot(docRef, (snap) => {
         if (snap.exists()) setUser(snap.data() as User);
-        else setDoc(docRef, { uid: userID }, { merge: true });
+        else {
+          const newObj = getAuth().currentUser?.isAnonymous
+            ? { ...createRandomUser(), uid: userID }
+            : { uid: userID };
+          setDoc(docRef, newObj, { merge: true });
+        }
       });
     } else {
       setUser(null);
@@ -49,7 +54,7 @@ function App() {
   }, [userID]);
 
   useEffect(() => {
-    console.log(userID, user);
+    console.log(user, getAuth().currentUser);
   });
 
   return (

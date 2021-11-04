@@ -59,12 +59,15 @@ const createRandomUser = (
       .map(() => random.word()),
     photos: getPhotos(),
   };
+  const likes: string[] = [];
+  const dislikes: string[] = [];
+
   return {
     isHuman,
     profile,
     uid: uid || datatype.uuid(),
-    likes: [""],
-    dislikes: [""],
+    likes,
+    dislikes,
     settings: {
       distance: 0,
       minAge: 0,
