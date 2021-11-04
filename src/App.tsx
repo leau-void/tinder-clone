@@ -13,6 +13,7 @@ import { UserProvider } from "./context/UserContext";
 import { doc, getDoc, onSnapshot, setDoc } from "@firebase/firestore";
 import { User } from "./types";
 import createRandomUser from "./utils/createRandomUser";
+import createEmptyUser from "./utils/createEmptyUser";
 
 function App() {
   const location = useLocation();
@@ -40,7 +41,7 @@ function App() {
         else {
           const newObj = getAuth().currentUser?.isAnonymous
             ? { ...createRandomUser(), uid: userID }
-            : { uid: userID };
+            : { ...createEmptyUser(), uid: userID };
           setDoc(docRef, newObj, { merge: true });
         }
       });

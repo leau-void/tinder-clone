@@ -33,10 +33,8 @@ const imageTypes: PhotoTypes[] = [
 
 const createRandomUser = ({
   isHuman,
-  uid,
 }: {
   isHuman?: boolean;
-  uid?: string;
 } = {}): User => {
   if (!isHuman) isHuman = false;
   const getPhotos = () =>
@@ -65,7 +63,7 @@ const createRandomUser = ({
   return {
     isHuman,
     profile,
-    uid: uid || datatype.uuid(),
+    uid: datatype.uuid(),
     likes: [] as string[],
     dislikes: [] as string[],
     settings: {
