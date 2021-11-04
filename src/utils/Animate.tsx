@@ -20,7 +20,7 @@ const Animate = ({
         setIsOpen(true);
         break;
       case "close":
-        window.setTimeout(() => setClassName("closing"), 10);
+        window.setTimeout(() => setClassName("closing"), 100);
         window.setTimeout(() => {
           setIsOpen(false);
         }, delay);

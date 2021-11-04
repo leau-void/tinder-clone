@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCog, faPen } from "@fortawesome/free-solid-svg-icons";
 import styled from "styled-components";
 import Settings from "./Settings";
 import EditProfile from "./EditProfile";
+import UserContext from "../context/UserContext";
 
 const Icon = styled(FontAwesomeIcon)`
   font-size: 1.7rem;
@@ -23,6 +24,8 @@ const Profile = () => {
   const [whichModalOpen, setWhichModalOpen] = useState<
     null | "settings" | "edit"
   >(null);
+
+  const user = useContext(UserContext);
 
   const closeModal = () => setWhichModalOpen(null);
 

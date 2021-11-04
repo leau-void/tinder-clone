@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useContext } from "react";
 import { signOut, getAuth } from "@firebase/auth";
 import styled, { css, keyframes } from "styled-components";
 import Animate from "../utils/Animate";
 import TopButton from "./TopButton";
+import UserContext from "../context/UserContext";
 
 const animationOpenModal = keyframes`
 0% {
@@ -51,6 +52,8 @@ const TopButtonLeft = styled(TopButton)``;
 
 const TopButtonLogout = styled(TopButton)``;
 
+const Body = styled.section``;
+
 const Settings = ({
   doOpen,
   closeModal,
@@ -58,6 +61,8 @@ const Settings = ({
   doOpen: boolean;
   closeModal: () => void;
 }) => {
+  const user = useContext(UserContext);
+
   return (
     <Animate {...{ doOpen, animationDuration: 300 }}>
       <Modal>
@@ -68,6 +73,7 @@ const Settings = ({
             Logout
           </TopButtonLogout>
         </Header>
+        <Body></Body>
       </Modal>
     </Animate>
   );
