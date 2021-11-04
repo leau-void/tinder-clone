@@ -10,7 +10,13 @@ import Settings from "./components/Settings";
 import Header from "./components/Header";
 import { firebaseConfig } from "./firebase-config";
 import { UserProvider } from "./context/UserContext";
-import { doc, getDoc, onSnapshot, setDoc } from "@firebase/firestore";
+import {
+  doc,
+  getDoc,
+  onSnapshot,
+  setDoc,
+  updateDoc,
+} from "@firebase/firestore";
 import { User } from "./types";
 import createRandomUser from "./utils/createRandomUser";
 import createEmptyUser from "./utils/createEmptyUser";
@@ -53,7 +59,7 @@ function App() {
       unsub = onSnapshot(docRef, (snap) => {
         if (snap.exists()) setUser(snap.data() as User);
         else {
-          const newObj = getAuth().currentUser?.isAnonymous
+          let newObj = getAuth().currentUser?.isAnonymous
             ? { ...createRandomUser(), uid: userID, isHuman: true }
             : { ...createEmptyUser(), uid: userID };
           setDoc(docRef, newObj, { merge: true });
