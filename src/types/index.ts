@@ -1,4 +1,3 @@
-import User from "./User";
-import { Profile, Photo } from "./Profile";
+import User, { Profile, Photo, Settings } from "./User";
 
-export type { User, Profile, Photo };
+export type { User, Profile, Photo, Settings };

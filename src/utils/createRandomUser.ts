@@ -1,4 +1,4 @@
-import { User, Profile, Photo } from "../types";
+import { User } from "../types";
 import { address, name, lorem, random, datatype, image } from "faker";
 
 const orientations = [
@@ -31,13 +31,15 @@ const imageTypes: PhotoTypes[] = [
   "abstract",
 ];
 
-const createRandomUser = (
-  { isHuman, uid }: { isHuman: boolean; uid: string } = {
-    isHuman: false,
-    uid: "",
-  }
-): User => {
-  const getPhotos = (): Photo[] =>
+const createRandomUser = ({
+  isHuman,
+  uid,
+}: {
+  isHuman?: boolean;
+  uid?: string;
+} = {}): User => {
+  if (!isHuman) isHuman = false;
+  const getPhotos = () =>
     new Array(Math.round(Math.random() * 2 + 3)).fill(null).map(() => {
       const type = imageTypes[Math.round(Math.random() * 7)];
 
@@ -47,7 +49,7 @@ const createRandomUser = (
       };
     });
 
-  const profile: Profile = {
+  const profile = {
     gender: name.gender(),
     name: name.findName(),
     age: Math.round(Math.random() * 50 + 21),
@@ -59,19 +61,18 @@ const createRandomUser = (
       .map(() => random.word()),
     photos: getPhotos(),
   };
-  const likes: string[] = [];
-  const dislikes: string[] = [];
 
   return {
     isHuman,
     profile,
     uid: uid || datatype.uuid(),
-    likes,
-    dislikes,
+    likes: [] as string[],
+    dislikes: [] as string[],
     settings: {
-      distance: 0,
-      minAge: 0,
-      maxAge: 150,
+      distance: 1,
+      minAge: 18,
+      maxAge: 100,
+      global: true,
     },
     location: {
       lat: Number(address.latitude()),
