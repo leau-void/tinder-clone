@@ -15,6 +15,20 @@ import { User } from "./types";
 import createRandomUser from "./utils/createRandomUser";
 import createEmptyUser from "./utils/createEmptyUser";
 
+declare global {
+  interface Window {
+    addUsers: (n: number) => void;
+  }
+}
+
+window.addUsers = (n) => {
+  for (let i = 0; i < n; i++) {
+    const newUser = createRandomUser();
+    const docRef = doc(db, "users", newUser.uid);
+    setDoc(docRef, newUser);
+  }
+};
+
 function App() {
   const location = useLocation();
   const [userID, setUserID] = useState<string | null>(null);
@@ -40,7 +54,7 @@ function App() {
         if (snap.exists()) setUser(snap.data() as User);
         else {
           const newObj = getAuth().currentUser?.isAnonymous
-            ? { ...createRandomUser(), uid: userID }
+            ? { ...createRandomUser(), uid: userID, isHuman: true }
             : { ...createEmptyUser(), uid: userID };
           setDoc(docRef, newObj, { merge: true });
         }
