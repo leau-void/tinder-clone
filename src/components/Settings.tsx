@@ -1,14 +1,75 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import { signOut, getAuth } from "@firebase/auth";
+import styled, { css, keyframes } from "styled-components";
+import Animate from "../utils/Animate";
+import TopButton from "./TopButton";
 
-const Settings = () => {
+const animationOpenModal = keyframes`
+0% {
+  top: 100vh;
+}
+100% {
+  top: 0;
+}
+`;
+
+const animationRuleOpenModal = css`
+  ${animationOpenModal} 0.3s ease-in-out forwards
+`;
+
+const Modal = styled.main`
+  position: absolute;
+  min-height: 100vh;
+  width: 100vw;
+  z-index: 99;
+  top: 0;
+  background: lightgrey;
+  animation: ${animationRuleOpenModal};
+
+  &.closing-setup {
+    animation: none;
+  }
+  &.closing {
+    animation: ${animationRuleOpenModal};
+    animation-direction: reverse;
+  }
+`;
+
+const Header = styled.header`
+  width: 100%;
+  display: grid;
+  grid-template-columns: 0.3fr 1fr 0.3fr;
+  background: grey;
+  text-align: center;
+`;
+
+const Title = styled.h3`
+  font-weight: 400;
+`;
+
+const TopButtonLeft = styled(TopButton)``;
+
+const TopButtonLogout = styled(TopButton)``;
+
+const Settings = ({
+  doOpen,
+  closeModal,
+}: {
+  doOpen: boolean;
+  closeModal: () => void;
+}) => {
   return (
-    <div>
-      Settings
-      <Link to="/">Back to main</Link>
-      <button onClick={() => signOut(getAuth())}>Logout</button>
-    </div>
+    <Animate {...{ doOpen, animationDuration: 300 }}>
+      <Modal>
+        <Header>
+          <TopButtonLeft onClick={() => closeModal()}>Back</TopButtonLeft>
+          <Title>Settings</Title>
+          <TopButtonLogout onClick={() => signOut(getAuth())}>
+            Logout
+          </TopButtonLogout>
+        </Header>
+      </Modal>
+    </Animate>
   );
 };
 

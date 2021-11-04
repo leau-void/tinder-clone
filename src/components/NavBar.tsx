@@ -48,11 +48,11 @@ const NavBar = () => {
       <Link exact to="/" activeClassName="active">
         <Logo src={wavesLogo} />
       </Link>
-      <Link to="/profile" activeClassName="active">
-        <Icon icon={faUser} />
-      </Link>
       <Link exact to="/chat" activeClassName="active">
         <Icon icon={faComments} />
+      </Link>
+      <Link to="/profile" activeClassName="active">
+        <Icon icon={faUser} />
       </Link>
     </StyledNav>
   );

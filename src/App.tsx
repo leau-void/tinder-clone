@@ -86,9 +86,6 @@ function App() {
         <Route path="/login">
           <Login />
         </Route>
-        <Route path="/settings">
-          <Settings />
-        </Route>
         <Route path="/">
           <Main />
         </Route>
@@ -101,3 +98,5 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore();
 
 export default App;
+
+export { app, db };
