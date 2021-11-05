@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState, SyntheticEvent } from "react";
 import styled from "styled-components";
 
-const Slider = styled.div`
+const Wrap = styled.div`
   position: relative;
   margin: 3vh auto;
   width: 240px;
@@ -21,6 +21,11 @@ const Range = styled.div`
   background: #46cdcf;
 `;
 
+const MinRange = styled(Range)`
+  z-index: 2;
+  background: #f4f4f4;
+`;
+
 const Thumb = styled.div`
   position: absolute;
   right: -7.5px;
@@ -36,12 +41,22 @@ const Thumb = styled.div`
   }
 `;
 
-const SingleSlider = ({
-  limits = [0, 100],
+const Slider = ({
+  min = 0,
+  max = 100,
   minDiff = 1,
   step = 1,
-  values = [25, 75],
-  valueSetters = [(n: number) => {}, (n: number) => {}],
+  lo = [0, (n: number) => {}],
+  hi = [100, (n: number) => {}],
+  double = false,
+}: {
+  min?: number;
+  max: number;
+  minDiff?: number;
+  step?: number;
+  lo?: [number, (n: number) => void];
+  hi: [number, (n: number) => void];
+  double?: boolean;
 }) => {
   const [sliderWidth, setSliderWidth] = useState(0);
   const [offsetSliderWidth, setOffsetSliderWidth] = useState(0);
@@ -49,15 +64,13 @@ const SingleSlider = ({
   const slider = useRef<HTMLDivElement>(null);
   const minRange = useRef<HTMLDivElement>(null);
   const maxRange = useRef<HTMLDivElement>(null);
-  const minThumb = useRef<HTMLDivElement>(null);
-  const maxThumb = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!minRange.current || !maxRange.current) return;
+    if (!maxRange.current) return;
+    maxRange.current.style.width = ((hi[0] - min) / (max - min)) * 100 + "%";
 
-    minRange.current.style.width =
-      ((values[0] - limits[0]) * 100) / limits[1] + "%";
-    maxRange.current.style.width = 100 - (limits[1] - values[1]) + "%";
+    if (!minRange.current) return;
+    minRange.current.style.width = ((lo[0] - min) / (max - min)) * 100 + "%";
   }, [minRange, maxRange]);
 
   useEffect(() => {
@@ -90,14 +103,14 @@ const SingleSlider = ({
     const dragedWidth = clientX - offsetSliderWidth;
     const dragedWidthInPercent = (dragedWidth * 100) / sliderWidth;
     const newMin: number = Math.round(
-      (dragedWidthInPercent * (limits[1] - limits[0])) / 100 + limits[0]
+      (dragedWidthInPercent * (max - min)) / 100 + min
     );
 
-    if (newMin >= limits[0] && newMin <= values[1] - minDiff) {
+    if (newMin >= min && newMin <= hi[0] - minDiff) {
       if (!minRange || !minRange.current) return;
       minRange.current.style.width = dragedWidthInPercent + "%";
 
-      valueSetters[0](newMin);
+      lo[1](newMin);
     }
   };
 
@@ -133,15 +146,13 @@ const SingleSlider = ({
 
     const dragedWidth = clientX - offsetSliderWidth;
     const dragedWidthInPercent = (dragedWidth * 100) / sliderWidth;
-    const newMax = Math.round(
-      (dragedWidthInPercent * (limits[1] - limits[0])) / 100 + limits[0]
-    );
+    const newMax = Math.round((dragedWidthInPercent * (max - min)) / 100 + min);
 
-    if (newMax >= values[0] + minDiff && newMax <= limits[1]) {
+    if (newMax >= lo[0] + minDiff && newMax <= max) {
       if (!maxRange || !maxRange.current) return;
       maxRange.current.style.width = dragedWidthInPercent + "%";
 
-      valueSetters[1](newMax);
+      hi[1](newMax);
     }
   };
 
@@ -154,16 +165,23 @@ const SingleSlider = ({
   };
 
   return (
-    <Slider ref={slider}>
+    <Wrap ref={slider}>
+      {double && (
+        <MinRange ref={minRange}>
+          <Thumb
+            onMouseDown={(e) => changeMinValue(e)}
+            onTouchStart={(e) => changeMinValue(e)}
+          />
+        </MinRange>
+      )}
       <Range ref={maxRange}>
         <Thumb
-          ref={maxThumb}
           onMouseDown={(e) => changeMaxValue(e)}
           onTouchStart={(e) => changeMaxValue(e)}
         />
       </Range>
-    </Slider>
+    </Wrap>
   );
 };
 
-export default SingleSlider;
+export default Slider;

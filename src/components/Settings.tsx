@@ -5,8 +5,7 @@ import Animate from "../utils/Animate";
 import TopButton from "./TopButton";
 import UserContext from "../context/UserContext";
 import { User } from "../types";
-import DoubleSlider from "./DoubleSlider";
-import SingleSlider from "./SingleSlider";
+import Slider from "./Slider";
 import { db } from "../App";
 import { updateDoc, doc } from "@firebase/firestore";
 
@@ -63,6 +62,8 @@ const Section = styled.section``;
 
 const Label = styled.label``;
 
+const Value = styled.div``;
+
 const Settings = ({
   doOpen,
   closeModal,
@@ -82,6 +83,8 @@ const Settings = ({
 
     setMinAge(user.settings.minAge);
     setMaxAge(user.settings.maxAge);
+    setDistance(user.settings.distance);
+    setGlobal(user.settings.global);
   }, [user]);
 
   const handleClose = (func: (args?: any) => void, ...args: any) => {
@@ -113,23 +116,31 @@ const Settings = ({
         </Header>
         <Body>
           <Section>
-            <Label></Label>
+            <Label>Global</Label>
+            <input
+              checked={global}
+              onClick={() => setGlobal(!global)}
+              type="checkbox"
+            />
+            {global.toString()}
           </Section>
           <Section>
             <Label>Distance</Label>
-            <SingleSlider
-              limits={[1, 100]}
-              values={[1, distance]}
-              valueSetters={[(n: number) => {}, setDistance]}
-            />
+            <Value>{distance}km</Value>
+            <Slider hi={[distance, setDistance]} min={1} max={200} />
           </Section>
           <Section>
             <Label>Age</Label>
-            <DoubleSlider
-              values={[minAge, maxAge]}
-              valueSetters={[setMinAge, setMaxAge]}
-              limits={[18, 100]}
+            <Value>
+              {minAge} - {maxAge}
+            </Value>
+            <Slider
+              lo={[minAge, setMinAge]}
+              hi={[maxAge, setMaxAge]}
+              min={18}
+              max={100}
               minDiff={5}
+              double
             />
           </Section>
         </Body>
