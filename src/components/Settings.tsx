@@ -1,9 +1,14 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { signOut, getAuth } from "@firebase/auth";
 import styled, { css, keyframes } from "styled-components";
 import Animate from "../utils/Animate";
 import TopButton from "./TopButton";
 import UserContext from "../context/UserContext";
+import { User } from "../types";
+import DoubleRangeSlider from "./DoubleRangeSlider.js";
+import DoubleSlider from "./DoubleSlider";
+
+interface Slider {}
 
 const animationOpenModal = keyframes`
 0% {
@@ -18,7 +23,7 @@ const animationRuleOpenModal = css`
   ${animationOpenModal} 0.3s ease-in-out forwards
 `;
 
-const Modal = styled.main`
+const Modal = styled.div`
   position: absolute;
   min-height: 100vh;
   width: 100vw;
@@ -52,7 +57,11 @@ const TopButtonLeft = styled(TopButton)``;
 
 const TopButtonLogout = styled(TopButton)``;
 
-const Body = styled.section``;
+const Body = styled.main``;
+
+const Section = styled.section``;
+
+const Label = styled.label``;
 
 const Settings = ({
   doOpen,
@@ -61,7 +70,17 @@ const Settings = ({
   doOpen: boolean;
   closeModal: () => void;
 }) => {
+  const [minAge, setMinAge] = useState(25);
+  const [maxAge, setMaxAge] = useState(75);
+
   const user = useContext(UserContext);
+
+  useEffect(() => {
+    if (!user) return;
+
+    setMinAge(user.settings.minAge);
+    setMaxAge(user.settings.maxAge);
+  }, [user]);
 
   return (
     <Animate {...{ doOpen, animationDuration: 300 }}>
@@ -73,7 +92,24 @@ const Settings = ({
             Logout
           </TopButtonLogout>
         </Header>
-        <Body></Body>
+        <Body>
+          <Section>
+            <Label></Label>
+          </Section>
+          <Section>
+            <Label>Distance</Label>
+          </Section>
+          <Section>
+            <Label>Age</Label>
+            <DoubleRangeSlider />
+            <DoubleSlider
+              values={[minAge, maxAge]}
+              valueSetters={[setMinAge, setMaxAge]}
+              limits={[18, 100]}
+              minDiff={5}
+            />
+          </Section>
+        </Body>
       </Modal>
     </Animate>
   );
