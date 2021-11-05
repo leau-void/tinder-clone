@@ -21,11 +21,6 @@ const Range = styled.div`
   background: #46cdcf;
 `;
 
-const MinRange = styled(Range)`
-  z-index: 2;
-  background: #f4f4f4;
-`;
-
 const Thumb = styled.div`
   position: absolute;
   right: -7.5px;
@@ -41,11 +36,11 @@ const Thumb = styled.div`
   }
 `;
 
-const DoubleSlider = ({
+const SingleSlider = ({
   limits = [0, 100],
   minDiff = 1,
   step = 1,
-  values = [0, 100],
+  values = [25, 75],
   valueSetters = [(n: number) => {}, (n: number) => {}],
 }) => {
   const [sliderWidth, setSliderWidth] = useState(0);
@@ -160,13 +155,6 @@ const DoubleSlider = ({
 
   return (
     <Slider ref={slider}>
-      <MinRange ref={minRange}>
-        <Thumb
-          ref={minThumb}
-          onMouseDown={(e) => changeMinValue(e)}
-          onTouchStart={(e) => changeMinValue(e)}
-        />
-      </MinRange>
       <Range ref={maxRange}>
         <Thumb
           ref={maxThumb}
@@ -178,4 +166,4 @@ const DoubleSlider = ({
   );
 };
 
-export default DoubleSlider;
+export default SingleSlider;

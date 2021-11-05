@@ -5,10 +5,10 @@ import Animate from "../utils/Animate";
 import TopButton from "./TopButton";
 import UserContext from "../context/UserContext";
 import { User } from "../types";
-import DoubleRangeSlider from "./DoubleRangeSlider.js";
 import DoubleSlider from "./DoubleSlider";
-
-interface Slider {}
+import SingleSlider from "./SingleSlider";
+import { db } from "../App";
+import { updateDoc, doc } from "@firebase/firestore";
 
 const animationOpenModal = keyframes`
 0% {
@@ -72,6 +72,8 @@ const Settings = ({
 }) => {
   const [minAge, setMinAge] = useState(25);
   const [maxAge, setMaxAge] = useState(75);
+  const [distance, setDistance] = useState(100);
+  const [global, setGlobal] = useState(true);
 
   const user = useContext(UserContext);
 
@@ -82,13 +84,30 @@ const Settings = ({
     setMaxAge(user.settings.maxAge);
   }, [user]);
 
+  const handleClose = (func: (args?: any) => void, ...args: any) => {
+    if (!user) return;
+    const docRef = doc(db, "users", user.uid);
+    updateDoc(docRef, {
+      settings: {
+        minAge,
+        maxAge,
+        distance,
+        global,
+      },
+    });
+
+    func(...args);
+  };
+
   return (
     <Animate {...{ doOpen, animationDuration: 300 }}>
       <Modal>
         <Header>
-          <TopButtonLeft onClick={() => closeModal()}>Back</TopButtonLeft>
+          <TopButtonLeft onClick={() => handleClose(closeModal)}>
+            Back
+          </TopButtonLeft>
           <Title>Settings</Title>
-          <TopButtonLogout onClick={() => signOut(getAuth())}>
+          <TopButtonLogout onClick={() => handleClose(signOut, getAuth())}>
             Logout
           </TopButtonLogout>
         </Header>
@@ -98,10 +117,14 @@ const Settings = ({
           </Section>
           <Section>
             <Label>Distance</Label>
+            <SingleSlider
+              limits={[1, 100]}
+              values={[1, distance]}
+              valueSetters={[(n: number) => {}, setDistance]}
+            />
           </Section>
           <Section>
             <Label>Age</Label>
-            <DoubleRangeSlider />
             <DoubleSlider
               values={[minAge, maxAge]}
               valueSetters={[setMinAge, setMaxAge]}
