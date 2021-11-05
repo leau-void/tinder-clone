@@ -134,14 +134,11 @@ const Slider = ({
 
   const onMouseMoveMax = (e: MouseEvent | TouchEvent): void => {
     let clientX = 0;
-    let pageX = 0;
 
     if (e instanceof MouseEvent) {
       clientX = e.clientX;
-      pageX = e.pageX;
     } else if (e instanceof TouchEvent) {
       clientX = e.touches[0].clientX;
-      pageX = e.touches[0].pageX;
     }
 
     const dragedWidth = clientX - offsetSliderWidth;
