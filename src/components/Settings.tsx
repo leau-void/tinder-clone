@@ -52,7 +52,9 @@ const Title = styled.h3`
   font-weight: 400;
 `;
 
-const TopButtonLeft = styled(TopButton)``;
+const TopButtonLeft = styled(TopButton)`
+  clip-path: polygon(0% 50%, 25% 0%, 100% 0%, 100% 100%, 25% 100%);
+`;
 
 const TopButtonLogout = styled(TopButton)``;
 
@@ -119,7 +121,7 @@ const Settings = ({
             <Label>Global</Label>
             <input
               checked={global}
-              onClick={() => setGlobal(!global)}
+              onChange={() => setGlobal(!global)}
               type="checkbox"
             />
             {global.toString()}

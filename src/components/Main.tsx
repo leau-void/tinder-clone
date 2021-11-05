@@ -1,8 +1,6 @@
-import { getAuth, signOut } from "firebase/auth";
 import { doc, updateDoc } from "firebase/firestore";
 import React, { useState, useEffect, useContext } from "react";
 import { Switch, Route } from "react-router";
-import { Link } from "react-router-dom";
 import NavBar from "./NavBar";
 import styled from "styled-components";
 import { Location } from "../types";
@@ -49,7 +47,6 @@ const Main = () => {
           <Chat />
         </Route>
       </Switch>
-      <button onClick={() => signOut(getAuth())}>Logout</button>
       <NavBar />
     </div>
   );
