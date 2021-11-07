@@ -1,4 +1,10 @@
-import React, { SyntheticEvent, useContext, useState, useEffect } from "react";
+import React, {
+  SyntheticEvent,
+  useContext,
+  useState,
+  useEffect,
+  FormEvent,
+} from "react";
 import styled from "styled-components";
 import { TopButtonLeft, TopButtonSave } from "./TopButton";
 import UserContext from "../context/UserContext";
@@ -15,6 +21,18 @@ const TextArea = styled.textarea``;
 const Section = styled.section`
   width: 100%;
 `;
+
+const Form = styled.form``;
+
+const Submit = styled.button``;
+
+const Container = styled.div``;
+
+const Passion = styled.div``;
+
+const PassionName = styled.div``;
+
+const DeletePassion = styled.button``;
 
 // interface Profile {
 //   name: string;
@@ -61,6 +79,18 @@ const EditProfile = ({
     console.log(e);
   };
 
+  const handleSubmit = (e: SyntheticEvent) => {
+    e.preventDefault();
+
+    if (passions.length >= 5) {
+      console.log("aaa");
+      return;
+    }
+
+    setPassions([...passions, passionInput]);
+    setPassionInput("");
+  };
+
   return (
     <ModalMenu
       title="Edit info"
@@ -79,28 +109,65 @@ const EditProfile = ({
           />
         </Section>
         <Section>
-          <Label>NAME</Label> <Input value={name} />
+          <Label>NAME</Label>
+          <Input onChange={(e) => setName(e.target.value)} value={name} />
         </Section>
         <Section>
-          <Label>AGE</Label> <Input value={age} type="number" />
+          <Label>AGE</Label>
+          <Input
+            onChange={(e) => setAge(Number(e.target.value))}
+            value={age}
+            type="number"
+          />
         </Section>
         <Section>
-          <Label>ABOUT ME</Label> <TextArea value={description} />
+          <Label>ABOUT ME</Label>
+          <TextArea
+            onChange={(e) => setDescription(e.target.value)}
+            value={description}
+          />
         </Section>
         <Section>
-          <Label>LIVING IN</Label> <Input value={city} />
+          <Label>LIVING IN</Label>
+          <Input onChange={(e) => setCity(e.target.value)} value={city} />
         </Section>
         <Section>
-          <Label>GENDER</Label> <Input value={gender} />
+          <Label>GENDER</Label>
+          <Input onChange={(e) => setGender(e.target.value)} value={gender} />
         </Section>
         <Section>
-          <Label>SEXUAL ORIENTATION</Label> <Input value={orientation} />
+          <Label>SEXUAL ORIENTATION</Label>
+          <Input
+            onChange={(e) => setOrientation(e.target.value)}
+            value={orientation}
+          />
         </Section>
         <Section>
-          <Label>PASSIONS</Label> <Input value={passionInput} />
-          {passions.map((passion, i) => (
-            <div key={i}>{passion}</div>
-          ))}
+          <Label>PASSIONS</Label>
+          <small>Share up to 5 passions</small>
+          <Form onSubmit={handleSubmit}>
+            <Input
+              onChange={(e) => setPassionInput(e.target.value)}
+              value={passionInput}
+            />
+            <Submit type="submit">Add</Submit>
+          </Form>
+          <Container>
+            {passions.map((passion, i) => (
+              <Passion key={i}>
+                <PassionName>{passion}</PassionName>
+                <DeletePassion
+                  onClick={() => {
+                    setPassions([
+                      ...passions.slice(0, i),
+                      ...passions.slice(i + 1),
+                    ]);
+                  }}>
+                  X
+                </DeletePassion>
+              </Passion>
+            ))}
+          </Container>
         </Section>
       </>
     </ModalMenu>

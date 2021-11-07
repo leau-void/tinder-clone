@@ -15,7 +15,6 @@ export default interface User {
 
 export interface Photo {
   src: string;
-  alt: string;
 }
 
 export interface Profile {

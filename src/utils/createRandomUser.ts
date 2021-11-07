@@ -43,7 +43,6 @@ const createRandomUser = ({
 
       return {
         src: image[type](),
-        alt: type,
       };
     });
 
