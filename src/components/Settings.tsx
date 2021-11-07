@@ -41,19 +41,19 @@ const Settings = ({
     setGlobal(user.settings.global);
   }, [user]);
 
-  const handleClose = (func: (args?: any) => void, ...args: any) => {
+  const handleClose = (cb: (args?: any) => void, ...args: any) => {
     if (!user) return;
     const docRef = doc(db, "users", user.uid);
     updateDoc(docRef, {
       settings: {
-        minAge,
-        maxAge,
-        distance,
-        global,
+        minAge: minAge,
+        maxAge: maxAge,
+        distance: distance,
+        global: global,
       },
     });
 
-    func(...args);
+    cb(...args);
   };
 
   return (

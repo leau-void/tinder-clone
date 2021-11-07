@@ -26,6 +26,7 @@ export interface Profile {
   gender: string;
   orientation: string;
   passions: string[];
+  [key: string]: string | number | Photo[] | string[];
 }
 
 export interface Settings {

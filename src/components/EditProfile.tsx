@@ -1,14 +1,19 @@
-import React, {
-  SyntheticEvent,
-  useContext,
-  useState,
-  useEffect,
-  FormEvent,
-} from "react";
+import React, { SyntheticEvent, useContext, useState, useEffect } from "react";
 import styled from "styled-components";
 import { TopButtonLeft, TopButtonSave } from "./TopButton";
 import UserContext from "../context/UserContext";
 import ModalMenu from "./ModalMenu";
+import PhotoCard from "./PhotoCard";
+
+const Tabs = styled.nav``;
+
+const Tab = styled.button``;
+
+const PhotoContainer = styled.div`
+  display: grid;
+  grid: repeat(3, 350px) / repeat(3, 200px);
+  grid-gap: 20px;
+`;
 
 const Label = styled.label``;
 
@@ -20,13 +25,16 @@ const TextArea = styled.textarea``;
 
 const Section = styled.section`
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 `;
 
 const Form = styled.form``;
 
 const Submit = styled.button``;
 
-const Container = styled.div``;
+const PassionsPreview = styled.div``;
 
 const Passion = styled.div``;
 
@@ -45,6 +53,10 @@ const DeletePassion = styled.button``;
 //   passions: string[];
 // }
 
+interface Photo {
+  src: string;
+}
+
 const EditProfile = ({
   doOpen,
   closeModal,
@@ -61,6 +73,12 @@ const EditProfile = ({
   const [passionInput, setPassionInput] = useState("");
   const [passions, setPassions] = useState<string[]>([]);
 
+  const [photos, setPhotos] = useState<Array<null | Photo>>(
+    new Array(9).fill(null)
+  );
+
+  const [currentTab, setCurrentTab] = useState<"edit" | "preview">("edit");
+
   const user = useContext(UserContext);
 
   useEffect(() => {
@@ -73,19 +91,20 @@ const EditProfile = ({
     setGender(user.profile.gender);
     setOrientation(user.profile.orientation);
     setPassions(user.profile.passions);
+
+    setPhotos(() =>
+      photos.map((cur, i) =>
+        user.profile.photos[i] ? user.profile.photos[i] : null
+      )
+    );
   }, [user]);
 
-  const handleUpload = (e: SyntheticEvent) => {
+  const handleUpload = ({ e, i }: { e: SyntheticEvent; i: number }) => {
     console.log(e);
   };
 
   const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
-
-    if (passions.length >= 5) {
-      console.log("aaa");
-      return;
-    }
 
     setPassions([...passions, passionInput]);
     setPassionInput("");
@@ -99,77 +118,117 @@ const EditProfile = ({
         left: <TopButtonLeft onClick={() => closeModal()}>Back</TopButtonLeft>,
         right: <TopButtonSave onClick={() => {}}>Save</TopButtonSave>,
       }}>
-      <>
-        <Section>
-          <input
-            type="file"
-            accept="image/*"
-            multiple
-            onChange={handleUpload}
-          />
-        </Section>
-        <Section>
-          <Label>NAME</Label>
-          <Input onChange={(e) => setName(e.target.value)} value={name} />
-        </Section>
-        <Section>
-          <Label>AGE</Label>
-          <Input
-            onChange={(e) => setAge(Number(e.target.value))}
-            value={age}
-            type="number"
-          />
-        </Section>
-        <Section>
-          <Label>ABOUT ME</Label>
-          <TextArea
-            onChange={(e) => setDescription(e.target.value)}
-            value={description}
-          />
-        </Section>
-        <Section>
-          <Label>LIVING IN</Label>
-          <Input onChange={(e) => setCity(e.target.value)} value={city} />
-        </Section>
-        <Section>
-          <Label>GENDER</Label>
-          <Input onChange={(e) => setGender(e.target.value)} value={gender} />
-        </Section>
-        <Section>
-          <Label>SEXUAL ORIENTATION</Label>
-          <Input
-            onChange={(e) => setOrientation(e.target.value)}
-            value={orientation}
-          />
-        </Section>
-        <Section>
-          <Label>PASSIONS</Label>
-          <small>Share up to 5 passions</small>
-          <Form onSubmit={handleSubmit}>
+      <Tabs>
+        <Tab
+          onClick={() => setCurrentTab("edit")}
+          className={currentTab === "edit" ? "active" : ""}>
+          Edit
+        </Tab>
+        <Tab
+          onClick={() => setCurrentTab("preview")}
+          className={currentTab === "preview" ? "active" : ""}>
+          Preview
+        </Tab>
+      </Tabs>
+      {currentTab === "edit" ? (
+        <>
+          <Section>
+            <PhotoContainer>
+              {photos.map((cur, i) => (
+                <PhotoCard
+                  key={i}
+                  cur={cur}
+                  i={i}
+                  handlerAdd={handleUpload}
+                  handlerRemove={({ i }: { i: number }) =>
+                    setPhotos([
+                      ...photos.slice(0, i),
+                      ...photos.slice(i + 1),
+                      null,
+                    ])
+                  }
+                />
+              ))}
+            </PhotoContainer>
+          </Section>
+          <Section>
+            <Label>NAME</Label>
+            <Input onChange={(e) => setName(e.target.value)} value={name} />
+          </Section>
+          <Section>
+            <Label>AGE</Label>
             <Input
-              onChange={(e) => setPassionInput(e.target.value)}
-              value={passionInput}
+              onChange={(e) => setAge(Number(e.target.value))}
+              value={age}
+              type="number"
             />
-            <Submit type="submit">Add</Submit>
-          </Form>
-          <Container>
-            {passions.map((passion, i) => (
-              <Passion key={i}>
-                <PassionName>{passion}</PassionName>
-                <DeletePassion
-                  onClick={() => {
-                    setPassions([
-                      ...passions.slice(0, i),
-                      ...passions.slice(i + 1),
-                    ]);
-                  }}>
-                  X
-                </DeletePassion>
-              </Passion>
-            ))}
-          </Container>
-        </Section>
-      </>
+          </Section>
+          <Section>
+            <Label>ABOUT ME</Label>
+            <TextArea
+              onChange={(e) => setDescription(e.target.value)}
+              value={description}
+            />
+          </Section>
+          <Section>
+            <Label>LIVING IN</Label>
+            <Input onChange={(e) => setCity(e.target.value)} value={city} />
+          </Section>
+          <Section>
+            <Label>GENDER</Label>
+            <Input onChange={(e) => setGender(e.target.value)} value={gender} />
+          </Section>
+          <Section>
+            <Label>SEXUAL ORIENTATION</Label>
+            <Input
+              onChange={(e) => setOrientation(e.target.value)}
+              value={orientation}
+            />
+          </Section>
+          <Section>
+            <Label>PASSIONS</Label>
+            <small>Share up to 5 passions</small>
+            <Form onSubmit={handleSubmit}>
+              <Input
+                onChange={(e) => setPassionInput(e.target.value)}
+                value={passionInput}
+                required
+              />
+              <Submit type="submit" disabled={passions.length >= 5}>
+                Add
+              </Submit>
+            </Form>
+            <PassionsPreview>
+              {passions.map((passion, i) => (
+                <Passion key={i}>
+                  <PassionName>{passion}</PassionName>
+                  <DeletePassion
+                    onClick={() => {
+                      setPassions([
+                        ...passions.slice(0, i),
+                        ...passions.slice(i + 1),
+                      ]);
+                    }}>
+                    X
+                  </DeletePassion>
+                </Passion>
+              ))}
+            </PassionsPreview>
+          </Section>
+        </>
+      ) : (
+        <div>
+          {user
+            ? Object.keys(user.profile).map((key) => (
+                <div>
+                  {Array.isArray(user.profile[key])
+                    ? JSON.stringify(user.profile[key])
+                    : user.profile[key]}
+                </div>
+              ))
+            : ""}
+        </div>
+      )}
     </ModalMenu>
   );
 };
