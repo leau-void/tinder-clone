@@ -154,7 +154,7 @@ const EditProfile = ({
       doOpen={doOpen}
       buttons={{
         left: <TopButtonLeft onClick={() => closeModal()}>Back</TopButtonLeft>,
-        right: <TopButtonSave onClick={() => {}}>Save</TopButtonSave>,
+        right: <TopButtonSave onClick={() => handleSave()}>Save</TopButtonSave>,
       }}>
       <Tabs>
         <Tab
