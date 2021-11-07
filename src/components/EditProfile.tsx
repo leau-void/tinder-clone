@@ -4,6 +4,8 @@ import { TopButtonLeft, TopButtonSave } from "./TopButton";
 import UserContext from "../context/UserContext";
 import ModalMenu from "./ModalMenu";
 import PhotoCard from "./PhotoCard";
+import validFileType from "../utils/validFileType";
+import { Photo } from "../types";
 
 const Tabs = styled.nav``;
 
@@ -53,8 +55,9 @@ const DeletePassion = styled.button``;
 //   passions: string[];
 // }
 
-interface Photo {
+interface EditPhoto {
   src: string;
+  file?: File;
 }
 
 const EditProfile = ({
@@ -73,7 +76,7 @@ const EditProfile = ({
   const [passionInput, setPassionInput] = useState("");
   const [passions, setPassions] = useState<string[]>([]);
 
-  const [photos, setPhotos] = useState<Array<null | Photo>>(
+  const [photos, setPhotos] = useState<Array<null | EditPhoto>>(
     new Array(9).fill(null)
   );
 
@@ -99,8 +102,22 @@ const EditProfile = ({
     );
   }, [user]);
 
-  const handleUpload = ({ e, i }: { e: SyntheticEvent; i: number }) => {
-    console.log(e);
+  const handleUpload = (e: SyntheticEvent) => {
+    const files = (e.target as HTMLInputElement).files;
+    if (!files || !files[0]) return;
+    const file = files[0];
+    if (!validFileType(file)) return;
+    console.log(file);
+    const newIndex = photos.findIndex((cur) => !cur);
+
+    setPhotos([
+      ...photos.slice(0, newIndex),
+      {
+        src: URL.createObjectURL(file),
+        file: file,
+      },
+      ...photos.slice(newIndex + 1),
+    ]);
   };
 
   const handleSubmit = (e: SyntheticEvent) => {
@@ -140,7 +157,7 @@ const EditProfile = ({
                   cur={cur}
                   i={i}
                   handlerAdd={handleUpload}
-                  handlerRemove={({ i }: { i: number }) =>
+                  handlerRemove={(i: number) =>
                     setPhotos([
                       ...photos.slice(0, i),
                       ...photos.slice(i + 1),
@@ -218,15 +235,11 @@ const EditProfile = ({
         </>
       ) : (
         <div>
-          {user
-            ? Object.keys(user.profile).map((key) => (
-                <div>
-                  {Array.isArray(user.profile[key])
-                    ? JSON.stringify(user.profile[key])
-                    : user.profile[key]}
-                </div>
-              ))
-            : ""}
+          {name}
+          {age}
+          {city}
+          {JSON.stringify(photos)}
+          {JSON.stringify(passions)}
         </div>
       )}
     </ModalMenu>

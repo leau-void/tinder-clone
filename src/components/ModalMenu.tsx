@@ -6,7 +6,7 @@ import { animationOpenModal } from "../utils/animations";
 const StyledModal = styled.div`
   position: absolute;
   min-height: 100vh;
-  width: 100vw;
+  width: 100%;
   z-index: 99;
   top: 0;
   background: lightgrey;

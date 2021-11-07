@@ -21,55 +21,16 @@ const AddPhoto = styled.input.attrs((props) => ({
   accept: "image/*",
 }))`
   opacity: 0;
+  max-width: 1px;
+  max-height: 1px;
 `;
 
-const AddPhotoButton = styled.label`
+const CornerButton = styled.button`
   min-width: 30px;
   width: 30px;
   min-height: 30px;
   height: 30px;
   background: blue;
-  display: block;
-  font-size: 1.3rem;
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-weight: bold;
-  position: absolute;
-  bottom: -15px;
-  right: -15px;
-  z-index: 99;
-
-  &::before {
-    content: "";
-    display: block;
-    width: 4px;
-    height: 15px;
-    background: white;
-    position: absolute;
-    border-radius: 4px;
-  }
-
-  &::after {
-    content: "";
-    display: block;
-    width: 4px;
-    height: 15px;
-    background: white;
-    transform-origin: center center;
-    transform: rotate(90deg);
-    position: absolute;
-    border-radius: 4px;
-  }
-`;
-
-const RemovePhotoButton = styled.button`
-  min-width: 30px;
-  width: 30px;
-  min-height: 30px;
-  height: 30px;
-  background: royalblue;
   display: block;
   font-size: 1.3rem;
   border-radius: 50%;
@@ -92,7 +53,6 @@ const RemovePhotoButton = styled.button`
     position: absolute;
     border-radius: 4px;
     transform-origin: center center;
-    transform: rotate(45deg);
   }
 
   &::after {
@@ -102,9 +62,19 @@ const RemovePhotoButton = styled.button`
     height: 15px;
     background: white;
     transform-origin: center center;
-    transform: rotate(135deg);
+    transform: rotate(90deg);
     position: absolute;
     border-radius: 4px;
+  }
+`;
+
+const RemovePhotoButton = styled(CornerButton)`
+  &::before {
+    transform: rotate(45deg);
+  }
+
+  &::after {
+    transform: rotate(135deg);
   }
 `;
 
@@ -116,20 +86,27 @@ const PhotoCard = ({
 }: {
   cur: Photo | null;
   i: number;
-  handlerAdd: ({ i, e }: { i: number; e: SyntheticEvent }) => void;
-  handlerRemove: ({ i }: { i: number }) => void;
+  handlerAdd: (e: SyntheticEvent) => void;
+  handlerRemove: (i: number) => void;
 }) => {
   return (
     <StyledCard>
       {cur ? (
         <>
           <PhotoImg src={cur.src}></PhotoImg>
-          <RemovePhotoButton onClick={() => handlerRemove({ i })} />
+          <RemovePhotoButton onClick={() => handlerRemove(i)} />
         </>
       ) : (
         <>
-          <AddPhoto onChange={(e) => handlerAdd({ e, i })} id={"input-" + i} />
-          <AddPhotoButton htmlFor={"input-" + i} />
+          <AddPhoto onChange={handlerAdd} id={"input-" + i} />
+          <CornerButton
+            onClick={(e) =>
+              (
+                (e.target as HTMLElement)
+                  .previousElementSibling as HTMLInputElement
+              ).click()
+            }
+          />
         </>
       )}
     </StyledCard>
