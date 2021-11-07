@@ -5,7 +5,8 @@ import UserContext from "../context/UserContext";
 import ModalMenu from "./ModalMenu";
 import PhotoCard from "./PhotoCard";
 import validFileType from "../utils/validFileType";
-import { Photo } from "../types";
+import { doc, updateDoc } from "@firebase/firestore";
+import { db } from "../App";
 
 const Tabs = styled.nav``;
 
@@ -125,6 +126,26 @@ const EditProfile = ({
 
     setPassions([...passions, passionInput]);
     setPassionInput("");
+  };
+
+  const handleSave = () => {
+    if (!user) return;
+    const docRef = doc(db, "users", user.uid);
+    updateDoc(docRef, {
+      profile: {
+        name: name,
+        age: Number(age) > 18 && Number(age) < 100 ? Number(age) : 25,
+        description: description,
+        city: city,
+        gender: gender,
+        orientation: orientation,
+        passions: passions,
+        photos: user.profile.photos,
+        //for now photos not updated, have to add handler for storage
+      },
+    });
+
+    closeModal();
   };
 
   return (
