@@ -25,7 +25,7 @@ export interface Profile {
   photos: Photo[];
   city: string;
   gender: string;
-  sexual_orientation: string;
+  orientation: string;
   passions: string[];
 }
 

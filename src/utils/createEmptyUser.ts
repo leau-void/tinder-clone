@@ -8,7 +8,7 @@ const createEmptyUser = (): User => {
     photos: [] as Photo[],
     city: "",
     gender: "",
-    sexual_orientation: "",
+    orientation: "",
     passions: [] as string[],
   };
 

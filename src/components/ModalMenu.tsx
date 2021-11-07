@@ -1,10 +1,9 @@
 import React from "react";
 import styled from "styled-components";
-import { JsxElement } from "typescript";
 import Animate from "../utils/Animate";
 import { animationOpenModal } from "../utils/animations";
 
-const StyledModal = styled.main`
+const StyledModal = styled.div`
   position: absolute;
   min-height: 100vh;
   width: 100vw;
@@ -34,26 +33,30 @@ const Title = styled.h3`
   font-weight: 400;
 `;
 
-const Body = styled.section``;
+const Body = styled.main`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
 
 interface Props {
   children: JSX.Element | JSX.Element[];
-  buttons: JSX.Element | JSX.Element[];
+  buttons: { left: JSX.Element; right: JSX.Element };
   doOpen: boolean;
   title: string;
 }
 
-const Modal = ({ children, buttons, doOpen, title }: Props) => (
+const ModalMenu = ({ children, buttons, doOpen, title }: Props) => (
   <Animate {...{ doOpen, animationDuration: 300 }}>
     <StyledModal>
       <Header>
-        {Array.isArray(buttons) ? buttons[0] : null}
+        {buttons.left ? buttons.left : null}
         <Title>{title}</Title>
-        {Array.isArray(buttons) ? buttons[1] : buttons}
+        {buttons.right ? buttons.right : null}
       </Header>
       <Body>{children}</Body>
     </StyledModal>
   </Animate>
 );
 
-export default Modal;
+export default ModalMenu;

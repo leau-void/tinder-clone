@@ -6,13 +6,17 @@ import UserContext from "../context/UserContext";
 import Slider from "./Slider";
 import { db } from "../App";
 import { updateDoc, doc } from "@firebase/firestore";
-import Modal from "./Modal";
-
-const Section = styled.section``;
+import ModalMenu from "./ModalMenu";
 
 const Label = styled.label``;
 
 const Value = styled.div``;
+
+const Section = styled.section`
+  width: 100%;
+`;
+
+const SubSection = styled.div``;
 
 const Settings = ({
   doOpen,
@@ -53,46 +57,66 @@ const Settings = ({
   };
 
   return (
-    <Modal
+    <ModalMenu
       title="Settings"
       doOpen={doOpen}
-      buttons={[
-        <TopButtonLeft onClick={() => handleClose(closeModal)}>
-          Back
-        </TopButtonLeft>,
-        <TopButtonLogout onClick={() => handleClose(signOut, getAuth())}>
-          Logout
-        </TopButtonLogout>,
-      ]}>
-      <Section>
-        <Label>Global</Label>
-        <input
-          checked={global}
-          onChange={() => setGlobal(!global)}
-          type="checkbox"
-        />
-        {global.toString()}
-      </Section>
-      <Section>
-        <Label>Distance</Label>
-        <Value>{distance}km</Value>
-        <Slider hi={[distance, setDistance]} min={1} max={200} />
-      </Section>
-      <Section>
-        <Label>Age</Label>
-        <Value>
-          {minAge} - {maxAge}
-        </Value>
-        <Slider
-          lo={[minAge, setMinAge]}
-          hi={[maxAge, setMaxAge]}
-          min={18}
-          max={100}
-          minDiff={5}
-          double
-        />
-      </Section>
-    </Modal>
+      buttons={{
+        left: (
+          <TopButtonLeft onClick={() => handleClose(closeModal)}>
+            Back
+          </TopButtonLeft>
+        ),
+        right: (
+          <TopButtonLogout onClick={() => handleClose(signOut, getAuth())}>
+            Logout
+          </TopButtonLogout>
+        ),
+      }}>
+      <>
+        <Section>
+          <SubSection>
+            <Label>Global</Label>
+
+            <input
+              checked={global}
+              onChange={() => setGlobal(!global)}
+              type="checkbox"
+            />
+          </SubSection>
+          <SubSection>
+            <small>Global mode is recommended as this is a test app.</small>
+          </SubSection>
+        </Section>
+        <Section>
+          <SubSection>
+            <Label>Distance</Label>
+            <Value>{distance}km</Value>
+          </SubSection>
+          <SubSection>
+            <Slider hi={[distance, setDistance]} min={1} max={200} />
+          </SubSection>
+        </Section>
+
+        <Section>
+          <SubSection>
+            <Label>Age</Label>
+            <Value>
+              {minAge} - {maxAge}
+            </Value>
+          </SubSection>
+          <SubSection>
+            <Slider
+              lo={[minAge, setMinAge]}
+              hi={[maxAge, setMaxAge]}
+              min={18}
+              max={100}
+              minDiff={5}
+              double
+            />
+          </SubSection>
+        </Section>
+      </>
+    </ModalMenu>
   );
 };
 
