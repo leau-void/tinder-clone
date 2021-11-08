@@ -14,7 +14,6 @@ const StyledCard = styled.div`
 
 const PhotoImg = styled.img`
   width: 100%;
-  height: 100%;
   object-fit: contain;
 `;
 
@@ -43,7 +42,7 @@ const CornerButton = styled.button`
   position: absolute;
   bottom: -15px;
   right: -15px;
-  z-index: 99;
+  z-index: 1;
   border: 0;
 
   &::before {

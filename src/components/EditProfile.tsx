@@ -15,7 +15,11 @@ import PhotoCropper from "./PhotoCropper";
 
 const Tabs = styled.nav``;
 
-const Tab = styled.button``;
+const Tab = styled.button`
+  &.active {
+    color: blue;
+  }
+`;
 
 const PhotoContainer = styled.div`
   display: grid;

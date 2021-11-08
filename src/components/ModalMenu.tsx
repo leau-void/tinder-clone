@@ -3,8 +3,12 @@ import styled from "styled-components";
 import Animate from "../utils/Animate";
 import { animationOpenModal } from "../utils/animations";
 
+interface StyledProps {
+  fixed: boolean | undefined;
+}
+
 const StyledModal = styled.div`
-  position: absolute;
+  position: ${(props: StyledProps) => (props.fixed ? "fixed" : "absolute")};
   min-height: 100vh;
   width: 100%;
   z-index: 99;
@@ -44,11 +48,12 @@ interface Props {
   buttons: { left: JSX.Element; right: JSX.Element };
   doOpen: boolean;
   title: string;
+  fixed?: boolean;
 }
 
-const ModalMenu = ({ children, buttons, doOpen, title }: Props) => (
+const ModalMenu = ({ children, buttons, doOpen, title, fixed }: Props) => (
   <Animate {...{ doOpen, animationDuration: 300 }}>
-    <StyledModal>
+    <StyledModal fixed={fixed}>
       <Header>
         {buttons.left ? buttons.left : null}
         <Title>{title}</Title>
