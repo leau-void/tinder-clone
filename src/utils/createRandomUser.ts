@@ -42,7 +42,7 @@ const createRandomUser = ({
       const type = imageTypes[Math.round(Math.random() * 7)];
 
       return {
-        src: image[type](),
+        src: image.imageUrl(350, 467, type),
       };
     });
 

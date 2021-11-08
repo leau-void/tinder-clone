@@ -2,9 +2,11 @@ import React, { SyntheticEvent } from "react";
 import styled from "styled-components";
 import { Photo } from "../types";
 
+// photos are 150/200 on mobile and can scale up to 350/467 for desktop
+
 const StyledCard = styled.div`
-  width: 200px;
-  height: 350px;
+  width: 225px;
+  height: 300px;
   position: relative;
   border-radius: 8px;
   background: grey;
@@ -13,7 +15,7 @@ const StyledCard = styled.div`
 const PhotoImg = styled.img`
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
 `;
 
 const AddPhoto = styled.input.attrs((props) => ({

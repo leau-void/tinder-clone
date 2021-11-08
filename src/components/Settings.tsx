@@ -1,22 +1,20 @@
 import React, { useContext, useEffect, useState } from "react";
 import { signOut, getAuth } from "@firebase/auth";
 import styled from "styled-components";
-import { TopButtonLeft, TopButtonLogout } from "./TopButton";
 import UserContext from "../context/UserContext";
 import Slider from "./Slider";
 import { db } from "../App";
 import { updateDoc, doc } from "@firebase/firestore";
-import ModalMenu from "./ModalMenu";
+import ModalMenu, {
+  Section,
+  SubSection,
+  TopButtonLeft,
+  TopButtonLogout,
+} from "./ModalMenu";
 
 const Label = styled.label``;
 
 const Value = styled.div``;
-
-const Section = styled.section`
-  width: 100%;
-`;
-
-const SubSection = styled.div``;
 
 const Settings = ({
   doOpen,

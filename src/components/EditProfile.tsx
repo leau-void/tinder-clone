@@ -1,12 +1,17 @@
 import React, { SyntheticEvent, useContext, useState, useEffect } from "react";
 import styled from "styled-components";
-import { TopButtonLeft, TopButtonSave } from "./TopButton";
 import UserContext from "../context/UserContext";
-import ModalMenu from "./ModalMenu";
+import ModalMenu, {
+  Section,
+  SectionLabel,
+  TopButtonLeft,
+  TopButtonSave,
+} from "./ModalMenu";
 import PhotoCard from "./PhotoCard";
 import validFileType from "../utils/validFileType";
 import { doc, updateDoc } from "@firebase/firestore";
 import { db } from "../App";
+import PhotoCropper from "./PhotoCropper";
 
 const Tabs = styled.nav``;
 
@@ -14,24 +19,15 @@ const Tab = styled.button``;
 
 const PhotoContainer = styled.div`
   display: grid;
-  grid: repeat(3, 350px) / repeat(3, 200px);
+  grid: repeat(3, 300px) / repeat(3, 225px);
   grid-gap: 20px;
 `;
-
-const Label = styled.label``;
 
 const Value = styled.div``;
 
 const Input = styled.input``;
 
 const TextArea = styled.textarea``;
-
-const Section = styled.section`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
 
 const Form = styled.form``;
 
@@ -76,6 +72,7 @@ const EditProfile = ({
   const [orientation, setOrientation] = useState("");
   const [passionInput, setPassionInput] = useState("");
   const [passions, setPassions] = useState<string[]>([]);
+  const [editPhoto, setEditPhoto] = useState<null | File>(null);
 
   const [photos, setPhotos] = useState<Array<null | EditPhoto>>(
     new Array(9).fill(null)
@@ -109,17 +106,20 @@ const EditProfile = ({
     const file = files[0];
     if (!validFileType(file)) return;
     console.log(file);
-    const newIndex = photos.findIndex((cur) => !cur);
+    setEditPhoto(file);
 
-    setPhotos([
-      ...photos.slice(0, newIndex),
-      {
-        src: URL.createObjectURL(file),
-        file: file,
-      },
-      ...photos.slice(newIndex + 1),
-    ]);
+    //const newIndex = photos.findIndex((cur) => !cur);
+    // setPhotos([
+    //   ...photos.slice(0, newIndex),
+    //   {
+    //     src: URL.createObjectURL(file),
+    //     file: file,
+    //   },
+    //   ...photos.slice(newIndex + 1),
+    // ]);
   };
+
+  const handleSavePhoto = () => {};
 
   const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
@@ -168,6 +168,7 @@ const EditProfile = ({
           Preview
         </Tab>
       </Tabs>
+      <PhotoCropper {...{ editPhoto, setEditPhoto, handleSavePhoto }} />
       {currentTab === "edit" ? (
         <>
           <Section>
@@ -190,11 +191,11 @@ const EditProfile = ({
             </PhotoContainer>
           </Section>
           <Section>
-            <Label>NAME</Label>
+            <SectionLabel>NAME</SectionLabel>
             <Input onChange={(e) => setName(e.target.value)} value={name} />
           </Section>
           <Section>
-            <Label>AGE</Label>
+            <SectionLabel>AGE</SectionLabel>
             <Input
               onChange={(e) => setAge(Number(e.target.value))}
               value={age}
@@ -202,29 +203,29 @@ const EditProfile = ({
             />
           </Section>
           <Section>
-            <Label>ABOUT ME</Label>
+            <SectionLabel>ABOUT ME</SectionLabel>
             <TextArea
               onChange={(e) => setDescription(e.target.value)}
               value={description}
             />
           </Section>
           <Section>
-            <Label>LIVING IN</Label>
+            <SectionLabel>LIVING IN</SectionLabel>
             <Input onChange={(e) => setCity(e.target.value)} value={city} />
           </Section>
           <Section>
-            <Label>GENDER</Label>
+            <SectionLabel>GENDER</SectionLabel>
             <Input onChange={(e) => setGender(e.target.value)} value={gender} />
           </Section>
           <Section>
-            <Label>SEXUAL ORIENTATION</Label>
+            <SectionLabel>SEXUAL ORIENTATION</SectionLabel>
             <Input
               onChange={(e) => setOrientation(e.target.value)}
               value={orientation}
             />
           </Section>
           <Section>
-            <Label>PASSIONS</Label>
+            <SectionLabel>PASSIONS</SectionLabel>
             <small>Share up to 5 passions</small>
             <Form onSubmit={handleSubmit}>
               <Input

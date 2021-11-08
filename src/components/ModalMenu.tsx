@@ -59,4 +59,60 @@ const ModalMenu = ({ children, buttons, doOpen, title }: Props) => (
   </Animate>
 );
 
+const Section = styled.section`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+const SubSection = styled.div``;
+
+const SectionLabel = styled.label``;
+
+const TopButton = styled.button`
+  border-radius: 8px;
+  align-self: center;
+  width: fit-content;
+  padding: 0.5rem;
+  border: 2px solid black;
+`;
+
+const TopButtonLeft = styled(TopButton)`
+  position: relative;
+  left: 50%;
+  z-index: 2;
+
+  &::before {
+    content: "";
+    display: block;
+    position: absolute;
+    top: -4px;
+    left: 3px;
+    width: 34px;
+    height: 34px;
+    border-radius: inherit;
+    transform-origin: top left;
+    transform: rotate(45deg);
+    z-index: -1;
+    background-color: inherit;
+    border-left: inherit;
+    border-bottom: inherit;
+  }
+`;
+
+const TopButtonSave = styled(TopButton)``;
+
+const TopButtonLogout = styled(TopButton)``;
+
 export default ModalMenu;
+
+export {
+  Section,
+  SubSection,
+  SectionLabel,
+  TopButton,
+  TopButtonLeft,
+  TopButtonSave,
+  TopButtonLogout,
+};
