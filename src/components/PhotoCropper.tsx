@@ -23,6 +23,8 @@ const Img = styled.img`
   left: 100vw;
 `;
 
+const ZoomButton = styled.button``;
+
 const initialZoom = { zoom: 1 };
 
 const zoomReducer = (
@@ -116,10 +118,6 @@ const PhotoCropper = ({
     setImage(node);
   }, []);
 
-  const setupImageSrc = async (image: HTMLImageElement, photo: File) => {
-    image.src = await getImageUrl(photo, undefined);
-  };
-
   useEffect(() => {
     if (!editPhoto || !image || !canvas || !ctx) return;
     const imageLoaded = () => {
@@ -129,8 +127,12 @@ const PhotoCropper = ({
 
       ctx.drawImage(image, 0, 0, imgWidth.current, imgHeight.current);
     };
+
     image.addEventListener("load", imageLoaded);
-    setupImageSrc(image, editPhoto);
+
+    getImageUrl(editPhoto, undefined).then((url) => {
+      image.src = url;
+    });
 
     return () => image.removeEventListener("load", imageLoaded);
   }, [editPhoto, image, canvas, ctx]);
@@ -282,8 +284,8 @@ const PhotoCropper = ({
           ref={setupCanvas}
           width={350}
           height={467}></Canvas>
-        <button onClick={() => dispatchZoom({ type: "in" })}>+</button>{" "}
-        <button onClick={() => dispatchZoom({ type: "out" })}>-</button>
+        <ZoomButton onClick={() => dispatchZoom({ type: "in" })}>+</ZoomButton>
+        <ZoomButton onClick={() => dispatchZoom({ type: "out" })}>-</ZoomButton>
       </Section>
     </ModalMenu>
   );

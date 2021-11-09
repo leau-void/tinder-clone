@@ -1,8 +1,8 @@
-import React, { SyntheticEvent } from "react";
+import React, { useRef, SyntheticEvent } from "react";
 import styled from "styled-components";
 import { Photo } from "../types";
 
-// photos are 150/200 on mobile and can scale up to 350/467 for desktop
+// photos are 150/200 on mobile (on profile) and can scale up to 350/467 for desktop
 
 const StyledCard = styled.div`
   width: 100px;
@@ -10,14 +10,38 @@ const StyledCard = styled.div`
   position: relative;
   border-radius: 8px;
   background: grey;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const BackgroundAdd = styled.div`
+  width: 60px;
+  height: 60px;
+  background: darkgrey;
+  clip-path: polygon(
+    0% 45%,
+    0% 55%,
+    45% 55%,
+    45% 100%,
+    55% 100%,
+    55% 55%,
+    100% 55%,
+    100% 45%,
+    55% 45%,
+    55% 0%,
+    45% 0%,
+    45% 45%
+  );
 `;
 
 const PhotoImg = styled.img`
   width: 100%;
   object-fit: contain;
+  border-radius: 8px;
 `;
 
-const AddPhoto = styled.input.attrs((props) => ({
+const FileInput = styled.input.attrs((props) => ({
   type: "file",
   accept: "image/*",
 }))`
@@ -90,8 +114,18 @@ const PhotoCard = ({
   handlerAdd: (e: SyntheticEvent) => void;
   handlerRemove: (i: number) => void;
 }) => {
+  const input = useRef<HTMLInputElement>(null);
+
+  const clickAddButton = (e: SyntheticEvent) => {
+    e.stopPropagation();
+
+    if (!input.current) return;
+
+    input.current.click();
+  };
+
   return (
-    <StyledCard>
+    <StyledCard onClick={cur ? undefined : clickAddButton}>
       {cur ? (
         <>
           <PhotoImg src={cur.src}></PhotoImg>
@@ -99,15 +133,9 @@ const PhotoCard = ({
         </>
       ) : (
         <>
-          <AddPhoto onChange={handlerAdd} id={"input-" + i} />
-          <CornerButton
-            onClick={(e) =>
-              (
-                (e.target as HTMLElement)
-                  .previousElementSibling as HTMLInputElement
-              ).click()
-            }
-          />
+          <BackgroundAdd />
+          <FileInput ref={input} onChange={handlerAdd} id={"input-" + i} />
+          <CornerButton onClick={clickAddButton} />
         </>
       )}
     </StyledCard>
