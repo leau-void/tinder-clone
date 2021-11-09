@@ -128,7 +128,7 @@ const PhotoCropper = ({
     document.addEventListener("mousemove", moveHandler);
     document.addEventListener("mouseup", moveEnd);
 
-    document.addEventListener("touchmove", moveHandler);
+    document.addEventListener("touchmove", moveHandler, true);
     document.addEventListener("touchend", moveEnd);
   };
 
@@ -136,6 +136,8 @@ const PhotoCropper = ({
     if (!editPhoto || !image || !canvas || !ctx) return;
 
     if (e instanceof TouchEvent && e.touches.length >= 2) {
+      e.preventDefault();
+      e.stopImmediatePropagation();
       const newTouchDist = Math.hypot(
         e.touches[0].pageX - e.touches[1].pageX,
         e.touches[0].pageY - e.touches[1].pageY
@@ -225,7 +227,7 @@ const PhotoCropper = ({
     document.removeEventListener("mousemove", moveHandler);
     document.removeEventListener("mouseup", moveEnd);
 
-    document.removeEventListener("touchmove", moveHandler);
+    document.removeEventListener("touchmove", moveHandler, true);
     document.removeEventListener("touchend", moveEnd);
   };
 
