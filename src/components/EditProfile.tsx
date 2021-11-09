@@ -105,12 +105,13 @@ const EditProfile = ({
   }, [user]);
 
   const handleUpload = (e: SyntheticEvent) => {
-    const files = (e.target as HTMLInputElement).files;
+    const target = e.target as HTMLInputElement;
+    const files = target.files;
     if (!files || !files[0]) return;
     const file = files[0];
     if (!validFileType(file)) return;
-    console.log(file);
     setEditPhoto(file);
+    target.value = "";
 
     //const newIndex = photos.findIndex((cur) => !cur);
     // setPhotos([
