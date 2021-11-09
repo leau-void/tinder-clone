@@ -8,11 +8,19 @@ import React, {
 } from "react";
 import styled from "styled-components";
 import ModalMenu, { Section, TopButtonLeft, TopButtonSave } from "./ModalMenu";
+import { getImageUrl } from "../utils/getImageURL";
 
 const Canvas = styled.canvas`
   border: 2px solid black;
   cursor: move;
   background: white;
+`;
+
+const Img = styled.img`
+  opacity: 0;
+  position: absolute;
+  z-index: -1;
+  left: 100vw;
 `;
 
 const initialZoom = { zoom: 1 };
@@ -74,6 +82,7 @@ const PhotoCropper = ({
   useEffect(() => {
     if (!editPhoto || !image || !canvas || !ctx) return;
     ctx.clearRect(0, 0, canvas.offsetWidth, canvas.offsetHeight);
+
     ctx.drawImage(
       image,
       offsetX,
@@ -107,6 +116,10 @@ const PhotoCropper = ({
     setImage(node);
   }, []);
 
+  const setupImageSrc = async (image: HTMLImageElement, photo: File) => {
+    image.src = await getImageUrl(photo, undefined);
+  };
+
   useEffect(() => {
     if (!editPhoto || !image || !canvas || !ctx) return;
     const imageLoaded = () => {
@@ -117,7 +130,7 @@ const PhotoCropper = ({
       ctx.drawImage(image, 0, 0, imgWidth.current, imgHeight.current);
     };
     image.addEventListener("load", imageLoaded);
-    image.src = URL.createObjectURL(editPhoto);
+    setupImageSrc(image, editPhoto);
 
     return () => image.removeEventListener("load", imageLoaded);
   }, [editPhoto, image, canvas, ctx]);
@@ -135,12 +148,14 @@ const PhotoCropper = ({
   const moveHandler = (e: MouseEvent | TouchEvent) => {
     if (!editPhoto || !image || !canvas || !ctx) return;
 
-    if (e instanceof TouchEvent && e.touches.length >= 2) {
+    if (e instanceof TouchEvent) {
       e.preventDefault();
       e.stopImmediatePropagation();
+    }
+    if (e instanceof TouchEvent && e.targetTouches.length >= 2) {
       const newTouchDist = Math.hypot(
-        e.touches[0].pageX - e.touches[1].pageX,
-        e.touches[0].pageY - e.touches[1].pageY
+        e.targetTouches[0].pageX - e.targetTouches[1].pageX,
+        e.targetTouches[0].pageY - e.targetTouches[1].pageY
       );
 
       if (lastTouchDist.current == null) lastTouchDist.current = newTouchDist;
@@ -160,7 +175,7 @@ const PhotoCropper = ({
       if (e instanceof MouseEvent) {
         clientX = e.clientX;
       } else if (e instanceof TouchEvent) {
-        clientX = e.touches[0].clientX;
+        clientX = e.targetTouches[0].clientX;
       }
 
       const newX = clientX - canvas.offsetLeft;
@@ -189,7 +204,7 @@ const PhotoCropper = ({
       if (e instanceof MouseEvent) {
         clientY = e.clientY;
       } else if (e instanceof TouchEvent) {
-        clientY = e.touches[0].clientY;
+        clientY = e.targetTouches[0].clientY;
       }
 
       const newY = clientY - canvas.offsetTop;
@@ -259,10 +274,7 @@ const PhotoCropper = ({
           </TopButtonSave>
         ),
       }}>
-      <img
-        ref={setupImage}
-        alt="placeholder"
-        style={{ opacity: 0, position: "absolute", left: "100vw" }}></img>
+      <Img ref={setupImage} src="" alt="placeholder"></Img>
       <Section>
         <Canvas
           onMouseDown={moveStart}

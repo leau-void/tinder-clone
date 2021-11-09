@@ -23,7 +23,7 @@ const Tab = styled.button`
 
 const PhotoContainer = styled.div`
   display: grid;
-  grid: repeat(3, 300px) / repeat(3, 225px);
+  grid: repeat(3, 134px) / repeat(3, 100px);
   grid-gap: 20px;
 `;
 

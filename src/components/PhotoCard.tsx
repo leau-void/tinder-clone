@@ -5,8 +5,8 @@ import { Photo } from "../types";
 // photos are 150/200 on mobile and can scale up to 350/467 for desktop
 
 const StyledCard = styled.div`
-  width: 225px;
-  height: 300px;
+  width: 100px;
+  height: 134px;
   position: relative;
   border-radius: 8px;
   background: grey;
