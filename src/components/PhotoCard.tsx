@@ -108,11 +108,13 @@ const PhotoCard = ({
   i,
   handlerAdd,
   handlerRemove,
+  handleMove,
 }: {
   cur: Photo | null;
   i: number;
   handlerAdd: (e: SyntheticEvent) => void;
   handlerRemove: (i: number) => void;
+  handleMove: (e: SyntheticEvent) => void;
 }) => {
   const input = useRef<HTMLInputElement>(null);
 
@@ -128,7 +130,10 @@ const PhotoCard = ({
     <StyledCard onClick={cur ? undefined : clickAddButton}>
       {cur ? (
         <>
-          <PhotoImg src={cur.src}></PhotoImg>
+          <PhotoImg
+            onTouchStart={handleMove}
+            onMouseDown={handleMove}
+            src={cur.src}></PhotoImg>
           <RemovePhotoButton onClick={() => handlerRemove(i)} />
         </>
       ) : (

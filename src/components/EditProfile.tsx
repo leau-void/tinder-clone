@@ -1,4 +1,10 @@
-import React, { SyntheticEvent, useContext, useState, useEffect } from "react";
+import React, {
+  SyntheticEvent,
+  useContext,
+  useState,
+  useEffect,
+  useRef,
+} from "react";
 import styled from "styled-components";
 import UserContext from "../context/UserContext";
 import ModalMenu, {
@@ -11,7 +17,7 @@ import PhotoCard from "./PhotoCard";
 import validFileType from "../utils/validFileType";
 import { doc, updateDoc } from "@firebase/firestore";
 import { db } from "../App";
-import PhotoCropper from "./PhotoCropper";
+import CroppingTool from "./CroppingTool";
 
 const Tabs = styled.nav``;
 
@@ -78,6 +84,9 @@ const EditProfile = ({
   const [passions, setPassions] = useState<string[]>([]);
   const [editPhoto, setEditPhoto] = useState<null | File>(null);
 
+  const isClickDown = useRef<boolean>(false);
+  const clickDownTimer = useRef<number | null>(null);
+
   const [photos, setPhotos] = useState<Array<null | EditPhoto>>(
     new Array(9).fill(null)
   );
@@ -118,7 +127,6 @@ const EditProfile = ({
     e: SyntheticEvent,
     { src, file }: { src: string; file: Blob }
   ) => {
-    console.log(src, file);
     setEditPhoto(null);
 
     const newIndex = photos.findIndex((cur) => !cur);
@@ -159,6 +167,30 @@ const EditProfile = ({
     closeModal();
   };
 
+  useEffect(() => {
+    const handleClickEnd = () => {
+      isClickDown.current = false;
+      if (clickDownTimer.current) clearTimeout(clickDownTimer.current);
+      clickDownTimer.current = null;
+    };
+
+    window.addEventListener("mouseup", handleClickEnd);
+    window.addEventListener("touchend", handleClickEnd);
+
+    return () => {
+      window.removeEventListener("mouseup", handleClickEnd);
+      window.removeEventListener("touchend", handleClickEnd);
+    };
+  }, []);
+
+  const handleMove = (e: SyntheticEvent) => {
+    isClickDown.current = true;
+    clickDownTimer.current = window.setTimeout(() => {
+      if (isClickDown.current) console.log("yes!");
+      // TODO : Add handler for reorganizing photos
+    }, 1500);
+  };
+
   return (
     <ModalMenu
       title="Edit info"
@@ -179,7 +211,7 @@ const EditProfile = ({
           Preview
         </Tab>
       </Tabs>
-      <PhotoCropper {...{ editPhoto, setEditPhoto, handleSavePhoto }} />
+      <CroppingTool {...{ editPhoto, setEditPhoto, handleSavePhoto }} />
       {currentTab === "edit" ? (
         <>
           <Section>
@@ -197,6 +229,7 @@ const EditProfile = ({
                       null,
                     ])
                   }
+                  handleMove={handleMove}
                 />
               ))}
             </PhotoContainer>

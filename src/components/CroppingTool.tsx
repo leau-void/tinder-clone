@@ -44,7 +44,7 @@ const zoomReducer = (
   }
 };
 
-const PhotoCropper = ({
+const CroppingTool = ({
   editPhoto,
   setEditPhoto,
   handleSavePhoto,
@@ -105,7 +105,6 @@ const PhotoCropper = ({
   ]);
 
   const setupCanvas = useCallback((node) => {
-    console.log(node);
     if (!node) return;
     setCanvas(node);
     const ctx = node.getContext("2d");
@@ -113,7 +112,6 @@ const PhotoCropper = ({
   }, []);
 
   const setupImage = useCallback((node) => {
-    console.log(node);
     if (!node) return;
     setImage(node);
   }, []);
@@ -219,12 +217,6 @@ const PhotoCropper = ({
           (imgHeight.current * zoom - canvas.offsetHeight);
 
         const newPos = newDiff / canvas.offsetWidth + prev;
-        console.log({ newPos });
-        console.log(
-          canvas.offsetHeight,
-          imgHeight.current * zoom,
-          canvas.offsetHeight - imgHeight.current * zoom
-        );
 
         return newPos >= 0
           ? 0
@@ -291,4 +283,4 @@ const PhotoCropper = ({
   );
 };
 
-export default PhotoCropper;
+export default CroppingTool;
