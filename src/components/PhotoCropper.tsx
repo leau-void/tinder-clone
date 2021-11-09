@@ -41,7 +41,10 @@ const PhotoCropper = ({
 }: {
   editPhoto: null | File;
   setEditPhoto: (val: null | File) => void;
-  handleSavePhoto: () => void;
+  handleSavePhoto: (
+    e: SyntheticEvent,
+    { src, file }: { src: string; file: Blob }
+  ) => void;
 }) => {
   const [image, setImage] = useState<HTMLImageElement | null>(null);
   const [canvas, setCanvas] = useState<HTMLCanvasElement | null>(null);
@@ -242,7 +245,16 @@ const PhotoCropper = ({
           </TopButtonLeft>
         ),
         right: (
-          <TopButtonSave onClick={() => handleSavePhoto()}>Save</TopButtonSave>
+          <TopButtonSave
+            onClick={(e) => {
+              canvas!.toBlob((blob) => {
+                if (!blob) return new Error();
+                handleSavePhoto(e, { src: canvas!.toDataURL(), file: blob });
+                reset();
+              });
+            }}>
+            Save
+          </TopButtonSave>
         ),
       }}>
       <img

@@ -58,7 +58,7 @@ const DeletePassion = styled.button``;
 
 interface EditPhoto {
   src: string;
-  file?: File;
+  file?: File | Blob;
 }
 
 const EditProfile = ({
@@ -112,19 +112,25 @@ const EditProfile = ({
     if (!validFileType(file)) return;
     setEditPhoto(file);
     target.value = "";
-
-    //const newIndex = photos.findIndex((cur) => !cur);
-    // setPhotos([
-    //   ...photos.slice(0, newIndex),
-    //   {
-    //     src: URL.createObjectURL(file),
-    //     file: file,
-    //   },
-    //   ...photos.slice(newIndex + 1),
-    // ]);
   };
 
-  const handleSavePhoto = () => {};
+  const handleSavePhoto = (
+    e: SyntheticEvent,
+    { src, file }: { src: string; file: Blob }
+  ) => {
+    console.log(src, file);
+    setEditPhoto(null);
+
+    const newIndex = photos.findIndex((cur) => !cur);
+    setPhotos([
+      ...photos.slice(0, newIndex),
+      {
+        src,
+        file,
+      },
+      ...photos.slice(newIndex + 1),
+    ]);
+  };
 
   const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
