@@ -5,6 +5,7 @@ import styled from "styled-components";
 import Settings from "./Settings";
 import EditProfile from "./EditProfile";
 import UserContext from "../context/UserContext";
+import userPlaceholder from "../assets/placeholders/userPlaceholder.png";
 
 const Icon = styled(FontAwesomeIcon)`
   font-size: 1.7rem;
@@ -20,6 +21,13 @@ const Button = styled.button`
   border: 0;
 `;
 
+const UserPhoto = styled.img`
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  object-fit: cover;
+`;
+
 const Profile = () => {
   const [whichModalOpen, setWhichModalOpen] = useState<
     null | "settings" | "edit"
@@ -31,7 +39,14 @@ const Profile = () => {
 
   return (
     <div>
-      Profile
+      <UserPhoto
+        src={
+          user
+            ? user.profile.photos[0]
+              ? user.profile.photos[0].src
+              : userPlaceholder
+            : userPlaceholder
+        }></UserPhoto>
       <Button onClick={() => setWhichModalOpen("settings")}>
         <Icon icon={faCog} />
       </Button>

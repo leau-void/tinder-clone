@@ -6,17 +6,10 @@ import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 import Login from "./components/Login";
 import Main from "./components/Main";
-import Settings from "./components/Settings";
 import Header from "./components/Header";
 import { firebaseConfig } from "./firebase-config";
 import { UserProvider } from "./context/UserContext";
-import {
-  doc,
-  getDoc,
-  onSnapshot,
-  setDoc,
-  updateDoc,
-} from "@firebase/firestore";
+import { doc, onSnapshot, setDoc } from "@firebase/firestore";
 import { User } from "./types";
 import createRandomUser from "./utils/createRandomUser";
 import createEmptyUser from "./utils/createEmptyUser";
