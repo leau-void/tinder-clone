@@ -40,8 +40,6 @@ const PhotoContainer = styled.div`
   grid-gap: 20px;
 `;
 
-const Value = styled.div``;
-
 const Input = styled.input``;
 
 const TextArea = styled.textarea``;
@@ -84,9 +82,7 @@ const EditProfile = ({
   const isClickDown = useRef<boolean>(false);
   const clickDownTimer = useRef<number | null>(null);
 
-  const [photos, setPhotos] = useState<Array<null | EditPhoto>>(
-    new Array(9).fill(null)
-  );
+  const [photos, setPhotos] = useState<Array<null | EditPhoto>>([]);
 
   const [currentTab, setCurrentTab] = useState<"edit" | "preview">("edit");
 
@@ -104,9 +100,11 @@ const EditProfile = ({
     setPassions(user.profile.passions);
 
     setPhotos(() =>
-      photos.map((cur, i) =>
-        user.profile.photos[i] ? user.profile.photos[i] : null
-      )
+      new Array(9)
+        .fill(null)
+        .map((cur, i) =>
+          user.profile.photos[i] ? user.profile.photos[i] : null
+        )
     );
   }, [user]);
 

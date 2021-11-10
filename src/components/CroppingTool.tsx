@@ -62,6 +62,7 @@ const CroppingTool = ({
   const [{ zoom }, dispatchZoom] = useReducer(zoomReducer, initialZoom);
   const imgWidth = useRef<number>(0);
   const imgHeight = useRef<number>(0);
+  const imgLoadStatus = useRef<boolean>(false);
 
   const [offsetX, setOffsetX] = useState<number>(0);
   const [offsetY, setOffsetY] = useState<number>(0);
@@ -75,6 +76,9 @@ const CroppingTool = ({
     dispatchZoom({ type: "init" });
     setOffsetX(0);
     setOffsetY(0);
+    imgWidth.current = 0;
+    imgLoadStatus.current = false;
+    imgHeight.current = 0;
     lastX.current = null;
     lastY.current = null;
     lastTouchDist.current = null;
@@ -82,7 +86,8 @@ const CroppingTool = ({
   };
 
   useEffect(() => {
-    if (!editPhoto || !image || !canvas || !ctx) return;
+    if (!editPhoto || !image || !canvas || !ctx || !imgLoadStatus.current)
+      return;
     ctx.clearRect(0, 0, canvas.offsetWidth, canvas.offsetHeight);
 
     ctx.drawImage(
@@ -102,6 +107,7 @@ const CroppingTool = ({
     zoom,
     offsetX,
     offsetY,
+    imgLoadStatus,
   ]);
 
   const setupCanvas = useCallback((node) => {
@@ -119,6 +125,7 @@ const CroppingTool = ({
   useEffect(() => {
     if (!editPhoto || !image || !canvas || !ctx) return;
     const imageLoaded = () => {
+      imgLoadStatus.current = true;
       imgHeight.current = canvas.offsetHeight;
       imgWidth.current =
         (image.offsetWidth / image.offsetHeight) * imgHeight.current;

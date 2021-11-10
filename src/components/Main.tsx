@@ -9,13 +9,17 @@ import UserContext from "../context/UserContext";
 import Feed from "./Feed";
 import Profile from "./Profile";
 import Chat from "./Chat";
+import { Timestamp } from "firebase/firestore";
 
 const Main = () => {
-  const [geoloc, setGeoloc] = useState<Location | null>(null);
   const user = useContext(UserContext);
 
   useEffect(() => {
     if (!user) return;
+
+    // if less than 24 hours use previous location --> Solves problem with browsers that ask each time
+    if (Timestamp.now().seconds - user.location.timestamp < 86400) return;
+
     if ("geolocation" in navigator)
       navigator.geolocation.getCurrentPosition(
         (res) => {
@@ -24,7 +28,7 @@ const Main = () => {
           console.log({ lat, lon });
           const docRef = doc(db, "users", user.uid);
           updateDoc(docRef, {
-            location: { lat, lon },
+            location: { lat, lon, timestamp: Timestamp.now().seconds },
           });
         },
         (err) => {
