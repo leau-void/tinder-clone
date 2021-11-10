@@ -22,6 +22,7 @@ const createEmptyUser = (): User => {
   const location = {
     lat: 0,
     lon: 0,
+    timestamp: 0,
   };
 
   return {

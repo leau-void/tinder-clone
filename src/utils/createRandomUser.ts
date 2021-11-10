@@ -74,6 +74,7 @@ const createRandomUser = ({
     location: {
       lat: Number(address.latitude()),
       lon: Number(address.longitude()),
+      timestamp: 0,
     },
   };
 };
