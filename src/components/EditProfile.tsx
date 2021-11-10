@@ -16,8 +16,15 @@ import ModalMenu, {
 import PhotoCard from "./PhotoCard";
 import validFileType from "../utils/validFileType";
 import { doc, updateDoc } from "@firebase/firestore";
-import { db } from "../App";
+import { db, store } from "../App";
 import CroppingTool from "./CroppingTool";
+import {
+  ref,
+  uploadBytes,
+  getDownloadURL,
+  deleteObject,
+} from "firebase/storage";
+import uniqid from "uniqid";
 
 const Tabs = styled.nav``;
 
@@ -51,19 +58,9 @@ const PassionName = styled.div``;
 
 const DeletePassion = styled.button``;
 
-// interface Profile {
-//   name: string;
-//   age: number;
-//   description: string;
-//   photos: Photo[];
-//   city: string;
-//   gender: string;
-//   orientation: string;
-//   passions: string[];
-// }
-
 interface EditPhoto {
   src: string;
+  path?: string;
   file?: File | Blob;
 }
 
@@ -147,9 +144,37 @@ const EditProfile = ({
     setPassionInput("");
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!user) return;
+    closeModal();
+
     const docRef = doc(db, "users", user.uid);
+    const userPath = `users/${user.uid}`;
+    const userRef = ref(store, userPath);
+
+    const newPhotos = await Promise.all(
+      photos
+        .filter((photo) => photo != null)
+        .map(async (photo) => {
+          if (!photo!.file) return photo;
+          const photoRef = ref(
+            userRef,
+            uniqid() + "." + photo!.file.type.split("/")[1]
+          );
+          const snap = await uploadBytes(photoRef, photo!.file);
+          const src = await getDownloadURL(photoRef);
+
+          return {
+            path: snap.metadata.fullPath,
+            src,
+          };
+        })
+    );
+
+    user.profile.photos
+      .filter((photo) => !!photo.path && !newPhotos.includes(photo))
+      .forEach((photo) => deleteObject(ref(store, photo.path!)));
+
     updateDoc(docRef, {
       profile: {
         name: name,
@@ -159,12 +184,9 @@ const EditProfile = ({
         gender: gender,
         orientation: orientation,
         passions: passions,
-        photos: user.profile.photos,
-        //for now photos not updated, have to add handler for storage
+        photos: newPhotos,
       },
     });
-
-    closeModal();
   };
 
   useEffect(() => {

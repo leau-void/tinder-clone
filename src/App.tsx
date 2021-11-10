@@ -20,6 +20,7 @@ import {
 import { User } from "./types";
 import createRandomUser from "./utils/createRandomUser";
 import createEmptyUser from "./utils/createEmptyUser";
+import { getStorage } from "firebase/storage";
 
 declare global {
   interface Window {
@@ -96,7 +97,8 @@ function App() {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore();
+const store = getStorage();
 
 export default App;
 
-export { app, db };
+export { app, db, store };
