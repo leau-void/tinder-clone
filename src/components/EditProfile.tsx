@@ -25,6 +25,7 @@ import {
   deleteObject,
 } from "firebase/storage";
 import uniqid from "uniqid";
+import ProfileCard from "./ProfileCard";
 
 const Tabs = styled.nav``;
 
@@ -319,14 +320,10 @@ const EditProfile = ({
             </PassionsPreview>
           </Section>
         </>
+      ) : user ? (
+        <ProfileCard user={user} />
       ) : (
-        <div>
-          {name}
-          {age}
-          {city}
-          {JSON.stringify(photos)}
-          {JSON.stringify(passions)}
-        </div>
+        <div>No profile to display.</div>
       )}
     </ModalMenu>
   );
