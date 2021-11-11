@@ -68,10 +68,6 @@ function App() {
     };
   }, [userID]);
 
-  useEffect(() => {
-    console.log(user, getAuth().currentUser);
-  });
-
   return (
     <UserProvider value={user}>
       {!user && <Redirect push to="/login" />}

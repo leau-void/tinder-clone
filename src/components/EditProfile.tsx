@@ -74,6 +74,7 @@ const EditProfile = ({
   const [age, setAge] = useState(25);
   const [description, setDescription] = useState("");
   const [city, setCity] = useState("");
+  const [job, setJob] = useState("");
   const [gender, setGender] = useState("");
   const [orientation, setOrientation] = useState("");
   const [passionInput, setPassionInput] = useState("");
@@ -96,6 +97,7 @@ const EditProfile = ({
     setAge(user.profile.age);
     setDescription(user.profile.description);
     setCity(user.profile.city);
+    setJob(user.profile.job);
     setGender(user.profile.gender);
     setOrientation(user.profile.orientation);
     setPassions(user.profile.passions);
@@ -180,6 +182,7 @@ const EditProfile = ({
         age: Number(age) > 18 && Number(age) < 100 ? Number(age) : 25,
         description: description,
         city: city,
+        job: job,
         gender: gender,
         orientation: orientation,
         passions: passions,
@@ -277,6 +280,10 @@ const EditProfile = ({
           <Section>
             <SectionLabel>LIVING IN</SectionLabel>
             <Input onChange={(e) => setCity(e.target.value)} value={city} />
+          </Section>
+          <Section>
+            <SectionLabel>JOB TITLE</SectionLabel>
+            <Input onChange={(e) => setJob(e.target.value)} value={job} />
           </Section>
           <Section>
             <SectionLabel>GENDER</SectionLabel>

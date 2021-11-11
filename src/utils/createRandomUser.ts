@@ -52,6 +52,7 @@ const createRandomUser = ({
     age: Math.round(Math.random() * 50 + 21),
     description: lorem.sentence() + " " + lorem.sentence(),
     city: address.cityName(),
+    job: name.jobTitle(),
     orientation: orientations[Math.round(Math.random() * 5)],
     passions: new Array(Math.round(Math.random() * 3 + 3))
       .fill(null)

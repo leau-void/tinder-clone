@@ -1,23 +1,32 @@
-import React, { useState } from "react";
+import React, {
+  Dispatch,
+  RefObject,
+  SyntheticEvent,
+  useReducer,
+  useRef,
+  useState,
+} from "react";
 import styled from "styled-components";
 import { Location, Photo, User } from "../types";
-import {
-  FontAwesomeIcon,
-  FontAwesomeIconProps,
-} from "@fortawesome/react-fontawesome";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faInfoCircle,
   faMapMarkerAlt,
   faHome,
+  faSuitcase,
+  faArrowCircleDown,
 } from "@fortawesome/free-solid-svg-icons";
 
 const Icon = styled(FontAwesomeIcon)`
-  width: 25px !important;
+  min-width: 25px;
   display: block;
 `;
 
 const FullSizeCard = styled.div`
   color: #606060;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 `;
 
 const StyledCard = styled.div`
@@ -25,7 +34,6 @@ const StyledCard = styled.div`
   width: 300px;
   height: 450px;
   position: relative;
-  border: 2px solid black;
   background: #606060;
   color: white;
 `;
@@ -40,10 +48,88 @@ const PartialInfo = styled.div`
 
 const StyledPhotoWrap = styled.div`
   height: 450px;
+  display: flex;
+  width: 300px;
+  overflow-x: hidden;
+  position: relative;
 `;
 
-const PhotoWrap = ({ photos }: { photos: Photo[] }) => {
-  return <StyledPhotoWrap></StyledPhotoWrap>;
+const PhotoContainer = styled.div`
+  height: 450px;
+  display: flex;
+  width: 300px;
+  position: absolute;
+  left: calc(-${(props: { index: number }) => props.index} * 100%);
+`;
+
+const IndexDiv = styled.div`
+  width: 95%;
+  left: 2.5%;
+  height: 4px;
+  display: flex;
+  position: absolute;
+  top: 4px;
+  z-index: 1;
+`;
+
+const PhotoIndex = styled.div`
+  width: 100%;
+  background: white;
+  opacity: 0.6;
+  margin: 0 3px;
+  border-radius: 8px;
+
+  &.active {
+    opacity: 1;
+  }
+`;
+
+const PhotoElem = styled.img`
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+`;
+
+interface PhotoWrapProps {
+  photos: Photo[];
+  clickDispatch: Dispatch<{ type: "next" | "prev" | "init" }>;
+  currentPhoto: number;
+  expandHandler?: () => void;
+}
+
+const PhotoWrap = ({
+  photos,
+  clickDispatch,
+  currentPhoto,
+  expandHandler,
+}: PhotoWrapProps) => {
+  const clickHandler = (e: SyntheticEvent) => {
+    const target = e.target as HTMLElement;
+    const { offsetX, offsetY } = e.nativeEvent as PointerEvent;
+    console.log(target.offsetHeight);
+    console.log(offsetX, offsetY);
+    if (offsetY / target.offsetHeight > 2 / 3 && expandHandler)
+      return expandHandler();
+    if (offsetX / target.offsetWidth < 1 / 2)
+      return clickDispatch({ type: "prev" });
+    if (offsetX / target.offsetWidth >= 1 / 2)
+      return clickDispatch({ type: "next" });
+  };
+
+  return (
+    <StyledPhotoWrap onClick={clickHandler}>
+      <IndexDiv>
+        {photos.map((photo, i) => (
+          <PhotoIndex className={i === currentPhoto ? "active" : ""} />
+        ))}{" "}
+      </IndexDiv>
+      <PhotoContainer index={currentPhoto}>
+        {photos.map((photo, i) => (
+          <PhotoElem key={i} src={photo.src} />
+        ))}
+      </PhotoContainer>
+    </StyledPhotoWrap>
+  );
 };
 
 const Panel = styled.main`
@@ -83,13 +169,11 @@ const ExpandButton = styled.button`
 `;
 
 const ReduceButton = styled.button`
-  width: 30px;
-  height: 30px;
-  background: royalblue;
+  background: 0;
   border: 0;
   border-radius: 50%;
   position: absolute;
-  top: -15px;
+  top: -20px;
   right: 15px;
 `;
 
@@ -111,6 +195,11 @@ const City = styled.div`
   display: flex;
   align-items: center;
   margin: 0.25rem 0;
+`;
+
+const Job = styled.div`
+  display: flex;
+  align-items: center;
 `;
 
 const Distance = styled.div`
@@ -138,6 +227,25 @@ const Passion = styled.div`
   border-radius: 20px;
 `;
 
+const initPhoto = (n: number) => ({ currentPhoto: 0, n });
+
+const photoReducer = (
+  { n, currentPhoto }: { n: number; currentPhoto: number },
+  { type }: { type: "next" | "prev" | "init" }
+) => {
+  switch (type) {
+    case "next":
+      return {
+        n,
+        currentPhoto: currentPhoto + 1 < n ? currentPhoto + 1 : currentPhoto,
+      };
+    case "prev":
+      return { n, currentPhoto: currentPhoto === 0 ? 0 : currentPhoto - 1 };
+    case "init":
+      return initPhoto(n);
+  }
+};
+
 const ProfileCard = ({
   user,
   compareLocation,
@@ -149,6 +257,7 @@ const ProfileCard = ({
     name,
     age,
     city,
+    job,
     gender,
     orientation,
     description,
@@ -157,9 +266,14 @@ const ProfileCard = ({
   } = user.profile;
 
   const [isFullSize, setIsFullSize] = useState(false);
-  const [currentPhoto, setCurrentPhoto] = useState(0);
+  const [{ currentPhoto }, clickDispatch] = useReducer(
+    photoReducer,
+    photos.length,
+    initPhoto
+  );
 
-  const distance = 0;
+  const distance = 1;
+  console.log(currentPhoto);
 
   const getCorrectPart = (currentPhoto: number): JSX.Element | null => {
     switch (currentPhoto) {
@@ -168,59 +282,89 @@ const ProfileCard = ({
           <Description>{description}</Description>
         ) : passions[0] ? (
           <PassionsWrap>
-            {passions.map((passion) => (
-              <Passion>{passion}</Passion>
+            {passions.map((passion, i) => (
+              <Passion key={i}>{passion}</Passion>
             ))}
           </PassionsWrap>
-        ) : city || distance ? (
+        ) : city || distance || job ? (
           <>
-            <City>
-              <Icon size="xs" color="white" icon={faHome} />
-              Lives in {city}
-            </City>
-            <Distance>
-              <Icon size="xs" color="white" icon={faMapMarkerAlt} />
-              {distance} kilometers away
-            </Distance>
+            {city && (
+              <City>
+                <Icon size="xs" color="white" icon={faHome} />
+                Lives in {city}
+              </City>
+            )}
+            {distance && (
+              <Distance>
+                <Icon size="xs" color="white" icon={faMapMarkerAlt} />
+                {distance} kilometers away
+              </Distance>
+            )}
+            {job && (
+              <Job>
+                <Icon size="xs" color="white" icon={faSuitcase} />
+                {job}
+              </Job>
+            )}
           </>
         ) : null;
       case 1:
         return passions[0] ? (
           <PassionsWrap>
-            {passions.map((passion) => (
-              <Passion>{passion}</Passion>
+            {passions.map((passion, i) => (
+              <Passion key={i}>{passion}</Passion>
             ))}
           </PassionsWrap>
-        ) : city || distance ? (
+        ) : city || distance || job ? (
           <>
-            <City>
-              <Icon size="xs" color="white" icon={faHome} />
-              Lives in {city}
-            </City>
-            <Distance>
-              <Icon size="xs" color="white" icon={faMapMarkerAlt} />
-              {distance} kilometers away
-            </Distance>
+            {city && (
+              <City>
+                <Icon size="xs" color="white" icon={faHome} />
+                Lives in {city}
+              </City>
+            )}
+            {distance && (
+              <Distance>
+                <Icon size="xs" color="white" icon={faMapMarkerAlt} />
+                {distance} kilometers away
+              </Distance>
+            )}
+            {job && (
+              <Job>
+                <Icon size="xs" color="white" icon={faSuitcase} />
+                {job}
+              </Job>
+            )}
           </>
         ) : description ? (
           <Description>{description}</Description>
         ) : null;
       default:
-        return city || distance ? (
+        return city || distance || job ? (
           <>
-            <City>
-              <Icon size="xs" color="white" icon={faHome} />
-              Lives in {city}
-            </City>
-            <Distance>
-              <Icon size="xs" color="white" icon={faMapMarkerAlt} />
-              {distance} kilometers away
-            </Distance>
+            {city && (
+              <City>
+                <Icon size="xs" color="white" icon={faHome} />
+                Lives in {city}
+              </City>
+            )}
+            {distance && (
+              <Distance>
+                <Icon size="xs" color="white" icon={faMapMarkerAlt} />
+                {distance} kilometers away
+              </Distance>
+            )}
+            {job && (
+              <Job>
+                <Icon size="xs" color="white" icon={faSuitcase} />
+                {job}
+              </Job>
+            )}
           </>
         ) : passions[0] ? (
           <PassionsWrap>
-            {passions.map((passion) => (
-              <Passion>{passion}</Passion>
+            {passions.map((passion, i) => (
+              <Passion key={i}>{passion}</Passion>
             ))}
           </PassionsWrap>
         ) : description ? (
@@ -233,27 +377,43 @@ const ProfileCard = ({
     <>
       {isFullSize ? (
         <FullSizeCard>
-          <PhotoWrap photos={photos} />
+          <PhotoWrap
+            currentPhoto={currentPhoto}
+            clickDispatch={clickDispatch}
+            photos={photos}
+          />
           <Panel>
-            <ReduceButton onClick={() => setIsFullSize(false)} />
+            <ReduceButton onClick={() => setIsFullSize(false)}>
+              <Icon size="2x" color="blue" icon={faArrowCircleDown} />
+            </ReduceButton>
             <Header>
               <NameAgeWrap>
                 <Name>{name}</Name>
                 <Age>{age}</Age>
               </NameAgeWrap>
-              <City>
-                <Icon size="sm" color="#606060" icon={faHome} />
-                Lives in {city}
-              </City>
-              <Distance>
-                <Icon size="sm" color="#606060" icon={faMapMarkerAlt} />
-                {distance} kilometers away
-              </Distance>
+              {city && (
+                <City>
+                  <Icon size="sm" color="#606060" icon={faHome} />
+                  Lives in {city}
+                </City>
+              )}
+              {distance && (
+                <Distance>
+                  <Icon size="sm" color="#606060" icon={faMapMarkerAlt} />
+                  {distance} kilometers away
+                </Distance>
+              )}
+              {job && (
+                <Job>
+                  <Icon size="sm" color="#606060" icon={faSuitcase} />
+                  {job}
+                </Job>
+              )}
               <Gender>{gender}</Gender>
               <Orientation>{orientation}</Orientation>
               <PassionsWrap>
-                {passions.map((passion) => (
-                  <Passion>{passion}</Passion>
+                {passions.map((passion, i) => (
+                  <Passion key={i}>{passion}</Passion>
                 ))}
               </PassionsWrap>
             </Header>
@@ -264,7 +424,12 @@ const ProfileCard = ({
         </FullSizeCard>
       ) : (
         <StyledCard>
-          <PhotoWrap photos={photos} />
+          <PhotoWrap
+            currentPhoto={currentPhoto}
+            clickDispatch={clickDispatch}
+            photos={photos}
+            expandHandler={() => setIsFullSize(true)}
+          />
           <PartialInfo>
             <ExpandButton onClick={() => setIsFullSize(true)}>
               <Icon size="1x" color="white" icon={faInfoCircle} />
@@ -277,14 +442,6 @@ const ProfileCard = ({
           </PartialInfo>
         </StyledCard>
       )}
-      <button
-        onClick={() =>
-          setCurrentPhoto(
-            currentPhoto + 1 < photos.length ? currentPhoto + 1 : 0
-          )
-        }>
-        next
-      </button>
     </>
   );
 };
