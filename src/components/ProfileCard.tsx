@@ -73,13 +73,12 @@ const IndexDiv = styled.div`
   display: flex;
   position: absolute;
   top: 4px;
-  z-index: 1;
 `;
 
 const PhotoIndex = styled.div`
   width: 100%;
   background: white;
-  opacity: 0.6;
+  opacity: 0.4;
   margin: 0 3px;
   border-radius: 8px;
 
@@ -120,16 +119,16 @@ const PhotoWrap = ({
 
   return (
     <StyledPhotoWrap onClick={clickHandler}>
-      <IndexDiv>
-        {photos.map((photo, i) => (
-          <PhotoIndex className={i === currentPhoto ? "active" : ""} />
-        ))}{" "}
-      </IndexDiv>
       <PhotoContainer index={currentPhoto}>
         {photos.map((photo, i) => (
           <PhotoElem key={i} src={photo.src} />
         ))}
       </PhotoContainer>
+      <IndexDiv>
+        {photos.map((photo, i) => (
+          <PhotoIndex key={i} className={i === currentPhoto ? "active" : ""} />
+        ))}{" "}
+      </IndexDiv>
     </StyledPhotoWrap>
   );
 };

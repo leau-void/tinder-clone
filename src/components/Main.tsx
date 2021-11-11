@@ -10,8 +10,11 @@ import Feed from "./Feed";
 import Profile from "./Profile";
 import Chat from "./Chat";
 import { Timestamp } from "firebase/firestore";
+import { getDocs, collection } from "@firebase/firestore";
+import { User } from "../types";
+import { UsersProvider } from "../context/UsersContext";
 
-const StyledMain = styled.main`
+const StyledMain = styled.div`
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -19,6 +22,15 @@ const StyledMain = styled.main`
 
 const Main = () => {
   const user = useContext(UserContext);
+
+  const [users, setUsers] = useState<User[]>([]);
+
+  useEffect(() => {
+    if (!user) return;
+    getDocs(collection(db, "users")).then((snap) =>
+      setUsers(snap.docs.map((userDoc) => userDoc.data() as User))
+    );
+  }, [user]);
 
   useEffect(() => {
     if (!user) return;
@@ -44,20 +56,22 @@ const Main = () => {
   }, [user]);
 
   return (
-    <StyledMain>
-      <Switch>
-        <Route exact path="/">
-          <Feed />
-        </Route>
-        <Route exact path="/profile">
-          <Profile />
-        </Route>
-        <Route exact path="/chat">
-          <Chat />
-        </Route>
-      </Switch>
-      <NavBar />
-    </StyledMain>
+    <UsersProvider value={users}>
+      <StyledMain>
+        <Switch>
+          <Route exact path="/">
+            <Feed />
+          </Route>
+          <Route exact path="/profile">
+            <Profile />
+          </Route>
+          <Route exact path="/chat">
+            <Chat />
+          </Route>
+        </Switch>
+        <NavBar />
+      </StyledMain>
+    </UsersProvider>
   );
 };
 
