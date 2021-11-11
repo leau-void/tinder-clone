@@ -11,6 +11,12 @@ import Profile from "./Profile";
 import Chat from "./Chat";
 import { Timestamp } from "firebase/firestore";
 
+const StyledMain = styled.main`
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+`;
+
 const Main = () => {
   const user = useContext(UserContext);
 
@@ -38,8 +44,7 @@ const Main = () => {
   }, [user]);
 
   return (
-    <div>
-      Main
+    <StyledMain>
       <Switch>
         <Route exact path="/">
           <Feed />
@@ -52,7 +57,7 @@ const Main = () => {
         </Route>
       </Switch>
       <NavBar />
-    </div>
+    </StyledMain>
   );
 };
 

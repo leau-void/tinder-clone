@@ -7,8 +7,13 @@ import EditProfile from "./EditProfile";
 import UserContext from "../context/UserContext";
 import userPlaceholder from "../assets/placeholders/userPlaceholder.png";
 
+const StyledProfile = styled.main`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
 const Icon = styled(FontAwesomeIcon)`
-  font-size: 1.7rem;
   color: grey;
 
   &:hover {
@@ -16,9 +21,26 @@ const Icon = styled(FontAwesomeIcon)`
   }
 `;
 
+const ButtonWrap = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: space-evenly;
+`;
+
+const LabelButton = styled.label`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: grey;
+`;
+
 const Button = styled.button`
   background: 0;
   border: 0;
+  padding: 8px;
+  border: 1px solid grey;
+  border-radius: 50%;
+  margin-bottom: 4px;
 `;
 
 const UserPhoto = styled.img`
@@ -26,6 +48,7 @@ const UserPhoto = styled.img`
   height: 200px;
   border-radius: 50%;
   object-fit: cover;
+  margin: 50px 0;
 `;
 
 const Profile = () => {
@@ -38,7 +61,7 @@ const Profile = () => {
   const closeModal = () => setWhichModalOpen(null);
 
   return (
-    <div>
+    <StyledProfile>
       <UserPhoto
         src={
           user
@@ -47,18 +70,26 @@ const Profile = () => {
               : userPlaceholder
             : userPlaceholder
         }></UserPhoto>
-      <Button onClick={() => setWhichModalOpen("settings")}>
-        <Icon icon={faCog} />
-      </Button>
-      <Button onClick={() => setWhichModalOpen("edit")}>
-        <Icon icon={faPen} />
-      </Button>
+      <ButtonWrap>
+        <LabelButton>
+          <Button onClick={() => setWhichModalOpen("settings")}>
+            <Icon size="lg" icon={faCog} />
+          </Button>
+          SETTINGS
+        </LabelButton>
+        <LabelButton>
+          <Button onClick={() => setWhichModalOpen("edit")}>
+            <Icon size="lg" icon={faPen} />
+          </Button>
+          EDIT INFO
+        </LabelButton>
+      </ButtonWrap>
       <Settings
         doOpen={whichModalOpen === "settings"}
         closeModal={closeModal}
       />
       <EditProfile doOpen={whichModalOpen === "edit"} closeModal={closeModal} />
-    </div>
+    </StyledProfile>
   );
 };
 

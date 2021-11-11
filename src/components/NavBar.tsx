@@ -10,6 +10,8 @@ const StyledNav = styled.nav`
   width: 100%;
   align-items: center;
   justify-content: space-evenly;
+  margin-top: auto;
+  padding: 1rem 0;
 `;
 
 const Link = styled(NavLink)`
@@ -20,7 +22,6 @@ const Link = styled(NavLink)`
 `;
 
 const Icon = styled(FontAwesomeIcon)`
-  font-size: 1.7rem;
   color: grey;
 
   .active & {
@@ -28,11 +29,9 @@ const Icon = styled(FontAwesomeIcon)`
   }
 `;
 
-const Logo = styled.img.attrs((props) => ({
-  width: 40,
-  height: 40,
-  src: props.src,
-}))`
+const Logo = styled.img`
+  width: 2.2em;
+  height: 2.2em;
   filter: invert(39%) sepia(97%) saturate(0%) hue-rotate(213deg)
     brightness(107%) contrast(113%);
 
@@ -49,10 +48,10 @@ const NavBar = () => {
         <Logo src={wavesLogo} />
       </Link>
       <Link exact to="/chat" activeClassName="active">
-        <Icon icon={faComments} />
+        <Icon size="2x" icon={faComments} />
       </Link>
       <Link to="/profile" activeClassName="active">
-        <Icon icon={faUser} />
+        <Icon size="2x" icon={faUser} />
       </Link>
     </StyledNav>
   );
