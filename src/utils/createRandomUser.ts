@@ -10,27 +10,6 @@ const orientations = [
   "Questionning",
 ];
 
-type PhotoTypes =
-  | "image"
-  | "cats"
-  | "nature"
-  | "people"
-  | "nightlife"
-  | "sports"
-  | "animals"
-  | "abstract";
-
-const imageTypes: PhotoTypes[] = [
-  "image",
-  "cats",
-  "nature",
-  "people",
-  "nightlife",
-  "sports",
-  "animals",
-  "abstract",
-];
-
 const createRandomUser = ({
   isHuman,
 }: {
@@ -38,13 +17,9 @@ const createRandomUser = ({
 } = {}): User => {
   if (!isHuman) isHuman = false;
   const getPhotos = () =>
-    new Array(Math.round(Math.random() * 2 + 3)).fill(null).map(() => {
-      const type = imageTypes[Math.round(Math.random() * 7)];
-
-      return {
-        src: image.imageUrl(350, 467, type),
-      };
-    });
+    new Array(Math.round(Math.random() * 2 + 3)).fill(null).map(() => ({
+      src: image.imageUrl(350, 467),
+    }));
 
   const profile = {
     gender: name.gender(),
