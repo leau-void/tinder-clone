@@ -18,7 +18,7 @@ const createRandomUser = ({
   if (!isHuman) isHuman = false;
   const getPhotos = () =>
     new Array(Math.round(Math.random() * 2 + 3)).fill(null).map(() => ({
-      src: image.imageUrl(350, 467),
+      src: image.imageUrl(350, 467, undefined, true),
     }));
 
   const profile = {

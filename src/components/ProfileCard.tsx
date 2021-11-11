@@ -221,12 +221,14 @@ const Description = styled.div`
   max-height: 4.4rem;
   position: relative;
 
-  ::after {
-    content: "...";
-    font-size: 1.3rem;
-    position: absolute;
-    right: 0.5rem;
-    bottom: 0;
+  :not(.full-size &) {
+    ::after {
+      content: "...";
+      font-size: 1.3rem;
+      position: absolute;
+      right: 0.25rem;
+      bottom: 0;
+    }
   }
 `;
 
