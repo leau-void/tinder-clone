@@ -2,6 +2,8 @@ import React, {
   Dispatch,
   RefObject,
   SyntheticEvent,
+  useContext,
+  useEffect,
   useReducer,
   useRef,
   useState,
@@ -16,6 +18,8 @@ import {
   faSuitcase,
   faArrowCircleDown,
 } from "@fortawesome/free-solid-svg-icons";
+import UserContext from "../context/UserContext";
+import { getDistance } from "geolib";
 
 const Icon = styled(FontAwesomeIcon)`
   min-width: 25px;
@@ -106,8 +110,6 @@ const PhotoWrap = ({
   const clickHandler = (e: SyntheticEvent) => {
     const target = e.target as HTMLElement;
     const { offsetX, offsetY } = e.nativeEvent as PointerEvent;
-    console.log(target.offsetHeight);
-    console.log(offsetX, offsetY);
     if (offsetY / target.offsetHeight > 2 / 3 && expandHandler)
       return expandHandler();
     if (offsetX / target.offsetWidth < 1 / 2)
@@ -272,8 +274,23 @@ const ProfileCard = ({
     initPhoto
   );
 
-  const distance = 1;
-  console.log(currentPhoto);
+  const currentUser = useContext(UserContext);
+
+  const [distance, setDistance] = useState(0);
+
+  useEffect(() => {
+    if (!user || !currentUser) return;
+    const raw = Math.ceil(
+      getDistance(
+        { latitude: user.location.lat, longitude: user.location.lon },
+        {
+          latitude: currentUser.location.lat,
+          longitude: currentUser?.location.lon,
+        }
+      ) / 1000
+    );
+    setDistance(raw <= 0 ? 1 : raw);
+  }, [currentUser, user]);
 
   const getCorrectPart = (currentPhoto: number): JSX.Element | null => {
     switch (currentPhoto) {
@@ -297,7 +314,7 @@ const ProfileCard = ({
             {distance && (
               <Distance>
                 <Icon size="xs" color="white" icon={faMapMarkerAlt} />
-                {distance} kilometers away
+                {distance} {distance === 1 ? "kilometer" : "kilometers"} away
               </Distance>
             )}
             {job && (
@@ -326,7 +343,7 @@ const ProfileCard = ({
             {distance && (
               <Distance>
                 <Icon size="xs" color="white" icon={faMapMarkerAlt} />
-                {distance} kilometers away
+                {distance} {distance === 1 ? "kilometer" : "kilometers"} away
               </Distance>
             )}
             {job && (
@@ -351,7 +368,7 @@ const ProfileCard = ({
             {distance && (
               <Distance>
                 <Icon size="xs" color="white" icon={faMapMarkerAlt} />
-                {distance} kilometers away
+                {distance} {distance === 1 ? "kilometer" : "kilometers"} away
               </Distance>
             )}
             {job && (
@@ -400,7 +417,7 @@ const ProfileCard = ({
               {distance && (
                 <Distance>
                   <Icon size="sm" color="#606060" icon={faMapMarkerAlt} />
-                  {distance} kilometers away
+                  {distance} {distance === 1 ? "kilometer" : "kilometers"} away
                 </Distance>
               )}
               {job && (
