@@ -29,13 +29,28 @@ const FullSizeCard = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 100%;
+  min-height: 100vh;
+  max-height: 100vh;
+  background: lightgrey;
+  z-index: 99;
+`;
+
+const ScrollableCard = styled.div`
+  color: #606060;
+  width: 100%;
+  max-height: 100vh;
+  overflow-y: scroll;
 `;
 
 const StyledCard = styled.div`
   border-radius: 8px;
   width: 300px;
   height: 450px;
-  position: relative;
+  position: absolute;
   background: #606060;
   color: white;
   display: flex;
@@ -57,6 +72,13 @@ const StyledPhotoWrap = styled.div`
   width: 300px;
   overflow-x: hidden;
   position: absolute;
+
+  .full-size & {
+    position: relative;
+    margin: auto;
+    width: calc(100vw - 15px);
+    height: calc(calc(100vw - 15px) * 1.34);
+  }
 `;
 
 const PhotoContainer = styled.div`
@@ -65,6 +87,11 @@ const PhotoContainer = styled.div`
   width: 300px;
   position: absolute;
   left: calc(-${(props: { index: number }) => props.index} * 100%);
+
+  .full-size & {
+    width: calc(100vw - 15px);
+    height: calc(calc(100vw - 15px) * 1.34);
+  }
 `;
 
 const IndexDiv = styled.div`
@@ -139,7 +166,9 @@ const Panel = styled.main`
   background: white;
   display: flex;
   flex-direction: column;
+  width: 100%;
   position: relative;
+  padding-bottom: 6rem;
 `;
 
 const Header = styled.header`
@@ -167,17 +196,25 @@ const ExpandButton = styled.button`
   border: 0;
   position: absolute;
   background: 0;
-  top: 0;
+  top: -5px;
   right: 0;
 `;
 
 const ReduceButton = styled.button`
-  background: 0;
+  background: white;
+  width: 2em;
+  height: 2em;
+  padding: 0;
   border: 0;
   border-radius: 50%;
   position: absolute;
   top: -20px;
   right: 15px;
+
+  & > * {
+    transform-origin: center center;
+    transform: scale(1.1);
+  }
 `;
 
 const NameAgeWrap = styled.div`
@@ -216,17 +253,20 @@ const Orientation = styled.div``;
 
 const Description = styled.div`
   white-space: pre-wrap;
-  overflow-y: hidden;
+
   line-height: 1.1rem;
-  max-height: 4.4rem;
   position: relative;
+  max-width: 85%;
 
   :not(.full-size &) {
+    overflow-y: hidden;
+    max-height: 4.4rem;
+
     ::after {
       content: "...";
       font-size: 1.3rem;
       position: absolute;
-      right: 0.25rem;
+      right: 0;
       bottom: 0;
     }
   }
@@ -413,53 +453,56 @@ const ProfileCard = ({
     <>
       {isFullSize ? (
         <FullSizeCard className="full-size">
-          <PhotoWrap
-            currentPhoto={currentPhoto}
-            clickDispatch={clickDispatch}
-            photos={photos}
-          />
-          <Panel>
-            <ReduceButton onClick={() => setIsFullSize(false)}>
-              <Icon size="2x" color="blue" icon={faArrowCircleDown} />
-            </ReduceButton>
-            <Header>
-              <NameAgeWrap>
-                <Name>{name}</Name>
-                <Age>{age}</Age>
-              </NameAgeWrap>
-              {city && (
-                <City>
-                  <Icon size="sm" color="#606060" icon={faHome} />
-                  Lives in {city}
-                </City>
-              )}
-              {distance && (
-                <Distance>
-                  <Icon size="sm" color="#606060" icon={faMapMarkerAlt} />
-                  {distance} {distance === 1 ? "kilometer" : "kilometers"} away
-                </Distance>
-              )}
-              {job && (
-                <Job>
-                  <Icon size="sm" color="#606060" icon={faSuitcase} />
-                  {job}
-                </Job>
-              )}
-              <Gender>{gender}</Gender>
-              <Orientation>{orientation}</Orientation>
-              <PassionsWrap>
-                {passions.map((passion, i) => (
-                  <Passion key={i}>{passion}</Passion>
-                ))}
-              </PassionsWrap>
-            </Header>
-            <Body>
-              <Description>{description}</Description>
-            </Body>
-          </Panel>
-          {children && Array.isArray(children)
-            ? children.map((child) => child)
-            : children}
+          <ScrollableCard>
+            <PhotoWrap
+              currentPhoto={currentPhoto}
+              clickDispatch={clickDispatch}
+              photos={photos}
+            />
+            <Panel>
+              <ReduceButton onClick={() => setIsFullSize(false)}>
+                <Icon size="2x" color="blue" icon={faArrowCircleDown} />
+              </ReduceButton>
+              <Header>
+                <NameAgeWrap>
+                  <Name>{name}</Name>
+                  <Age>{age}</Age>
+                </NameAgeWrap>
+                {city && (
+                  <City>
+                    <Icon size="sm" color="#606060" icon={faHome} />
+                    Lives in {city}
+                  </City>
+                )}
+                {distance && (
+                  <Distance>
+                    <Icon size="sm" color="#606060" icon={faMapMarkerAlt} />
+                    {distance} {distance === 1 ? "kilometer" : "kilometers"}{" "}
+                    away
+                  </Distance>
+                )}
+                {job && (
+                  <Job>
+                    <Icon size="sm" color="#606060" icon={faSuitcase} />
+                    {job}
+                  </Job>
+                )}
+                <Gender>{gender}</Gender>
+                <Orientation>{orientation}</Orientation>
+                <PassionsWrap>
+                  {passions.map((passion, i) => (
+                    <Passion key={i}>{passion}</Passion>
+                  ))}
+                </PassionsWrap>
+              </Header>
+              <Body>
+                <Description>{description}</Description>
+              </Body>
+              {children && Array.isArray(children)
+                ? children.map((child) => child)
+                : children}
+            </Panel>
+          </ScrollableCard>
         </FullSizeCard>
       ) : (
         <StyledCard>
@@ -469,7 +512,7 @@ const ProfileCard = ({
             photos={photos}
             expandHandler={() => setIsFullSize(true)}
           />
-          <PartialInfo>
+          <PartialInfo onClick={() => setIsFullSize(true)}>
             <ExpandButton onClick={() => setIsFullSize(true)}>
               <Icon size="1x" color="white" icon={faInfoCircle} />
             </ExpandButton>

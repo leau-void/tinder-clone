@@ -24,7 +24,6 @@ const CardWrap = styled.div`
   width: 300px;
 
   & > * {
-    position: absolute;
     top: 0;
   }
 `;
@@ -33,11 +32,19 @@ const Icon = styled(FontAwesomeIcon)``;
 
 const ButtonsWrap = styled.div`
   display: flex;
-  width: 100%;
   align-items: center;
+  width: 100%;
   justify-content: space-evenly;
   position: relative;
   padding: 0.25em;
+
+  .full-size & {
+    width: calc(100% - 15px);
+    bottom: 0;
+    position: fixed;
+    padding: 1rem;
+    background: linear-gradient(0deg, white 40%, transparent);
+  }
 `;
 
 const Button = styled.button`
