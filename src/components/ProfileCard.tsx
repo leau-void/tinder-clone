@@ -1,11 +1,9 @@
 import React, {
   Dispatch,
-  RefObject,
   SyntheticEvent,
   useContext,
   useEffect,
   useReducer,
-  useRef,
   useState,
 } from "react";
 import styled from "styled-components";
@@ -40,14 +38,17 @@ const StyledCard = styled.div`
   position: relative;
   background: #606060;
   color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
 `;
 
 const PartialInfo = styled.div`
-  position: absolute;
-  bottom: 0;
-  width: 95%;
-  padding: 0.5rem;
-  margin: 0 2.5%;
+  width: 100%;
+  padding: 0.5rem 2.5%;
+  background: linear-gradient(0deg, black 40%, transparent);
+  position: relative;
+  border-radius: 0 0 8px 8px;
 `;
 
 const StyledPhotoWrap = styled.div`
@@ -55,7 +56,7 @@ const StyledPhotoWrap = styled.div`
   display: flex;
   width: 300px;
   overflow-x: hidden;
-  position: relative;
+  position: absolute;
 `;
 
 const PhotoContainer = styled.div`
@@ -107,6 +108,7 @@ const PhotoWrap = ({
   expandHandler,
 }: PhotoWrapProps) => {
   const clickHandler = (e: SyntheticEvent) => {
+    console.log(e);
     const target = e.target as HTMLElement;
     const { offsetX, offsetY } = e.nativeEvent as PointerEvent;
     if (offsetY / target.offsetHeight > 2 / 3 && expandHandler)
@@ -212,7 +214,21 @@ const Gender = styled.div``;
 
 const Orientation = styled.div``;
 
-const Description = styled.div``;
+const Description = styled.div`
+  white-space: pre-wrap;
+  overflow-y: hidden;
+  line-height: 1.1rem;
+  max-height: 4.4rem;
+  position: relative;
+
+  ::after {
+    content: "...";
+    font-size: 1.3rem;
+    position: absolute;
+    right: 0.5rem;
+    bottom: 0;
+  }
+`;
 
 const PassionsWrap = styled.div`
   width: 95%;
@@ -250,9 +266,11 @@ const photoReducer = (
 const ProfileCard = ({
   user,
   compareLocation,
+  children,
 }: {
   user: User;
   compareLocation?: Location;
+  children?: JSX.Element | JSX.Element[];
 }) => {
   const {
     name,
@@ -392,7 +410,7 @@ const ProfileCard = ({
   return (
     <>
       {isFullSize ? (
-        <FullSizeCard>
+        <FullSizeCard className="full-size">
           <PhotoWrap
             currentPhoto={currentPhoto}
             clickDispatch={clickDispatch}
@@ -437,6 +455,9 @@ const ProfileCard = ({
               <Description>{description}</Description>
             </Body>
           </Panel>
+          {children && Array.isArray(children)
+            ? children.map((child) => child)
+            : children}
         </FullSizeCard>
       ) : (
         <StyledCard>
@@ -455,6 +476,9 @@ const ProfileCard = ({
               <Age>{age}</Age>
             </NameAgeWrap>
             {getCorrectPart(currentPhoto)}
+            {children && Array.isArray(children)
+              ? children.map((child) => child)
+              : children}
           </PartialInfo>
         </StyledCard>
       )}
