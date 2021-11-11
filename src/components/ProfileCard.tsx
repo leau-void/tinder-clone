@@ -35,9 +35,12 @@ const PartialInfo = styled.div`
   bottom: 0;
   width: 95%;
   padding: 0.5rem;
+  margin: 0 2.5%;
 `;
 
-const StyledPhotoWrap = styled.div``;
+const StyledPhotoWrap = styled.div`
+  height: 450px;
+`;
 
 const PhotoWrap = ({ photos }: { photos: Photo[] }) => {
   return <StyledPhotoWrap></StyledPhotoWrap>;
@@ -45,9 +48,31 @@ const PhotoWrap = ({ photos }: { photos: Photo[] }) => {
 
 const Panel = styled.main`
   background: white;
+  display: flex;
+  flex-direction: column;
+  position: relative;
 `;
 
-const Header = styled.header``;
+const Header = styled.header`
+  display: flex;
+  flex-direction: column;
+  border-bottom: 1px solid #606060;
+  padding: 0.5rem;
+
+  & > * {
+    margin: 0.25rem 0;
+  }
+`;
+
+const Body = styled.div`
+  display: flex;
+  flex-direction: column;
+  padding: 0.5rem;
+
+  & > * {
+    margin: 0.25rem 0;
+  }
+`;
 
 const ExpandButton = styled.button`
   border: 0;
@@ -62,6 +87,10 @@ const ReduceButton = styled.button`
   height: 30px;
   background: royalblue;
   border: 0;
+  border-radius: 50%;
+  position: absolute;
+  top: -15px;
+  right: 15px;
 `;
 
 const NameAgeWrap = styled.div`
@@ -81,6 +110,7 @@ const Age = styled.div`
 const City = styled.div`
   display: flex;
   align-items: center;
+  margin: 0.25rem 0;
 `;
 
 const Distance = styled.div`
@@ -102,7 +132,8 @@ const PassionsWrap = styled.div`
 
 const Passion = styled.div`
   padding: 0.25rem 0.5rem;
-  border: 1px solid white;
+  border: 1px solid;
+  border-color: inherit;
   margin: 0.2rem;
   border-radius: 20px;
 `;
@@ -206,8 +237,6 @@ const ProfileCard = ({
           <Panel>
             <ReduceButton onClick={() => setIsFullSize(false)} />
             <Header>
-              <Gender>{gender}</Gender>
-              <Orientation>{orientation}</Orientation>
               <NameAgeWrap>
                 <Name>{name}</Name>
                 <Age>{age}</Age>
@@ -220,13 +249,17 @@ const ProfileCard = ({
                 <Icon size="sm" color="#606060" icon={faMapMarkerAlt} />
                 {distance} kilometers away
               </Distance>
+              <Gender>{gender}</Gender>
+              <Orientation>{orientation}</Orientation>
               <PassionsWrap>
                 {passions.map((passion) => (
                   <Passion>{passion}</Passion>
                 ))}
               </PassionsWrap>
             </Header>
-            <Description>{description}</Description>
+            <Body>
+              <Description>{description}</Description>
+            </Body>
           </Panel>
         </FullSizeCard>
       ) : (
