@@ -1,20 +1,92 @@
-import React, { useCallback, useState } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
-import { Location, User } from "../types";
+import { Location, Photo, User } from "../types";
+import {
+  FontAwesomeIcon,
+  FontAwesomeIconProps,
+} from "@fortawesome/react-fontawesome";
+import {
+  faInfoCircle,
+  faMapMarkerAlt,
+  faHome,
+} from "@fortawesome/free-solid-svg-icons";
 
-const FullSizeCard = styled.div``;
+const Icon = styled(FontAwesomeIcon)`
+  width: 25px !important;
+  display: block;
+`;
 
-const StyledCard = styled.div``;
+const FullSizeCard = styled.div`
+  color: #606060;
+`;
 
-const Panel = styled.main``;
+const StyledCard = styled.div`
+  border-radius: 8px;
+  width: 300px;
+  height: 450px;
+  position: relative;
+  border: 2px solid black;
+  background: #606060;
+  color: white;
+`;
 
-const NameAgeWrap = styled.div``;
+const PartialInfo = styled.div`
+  position: absolute;
+  bottom: 0;
+  width: 95%;
+  padding: 0.5rem;
+`;
 
-const Name = styled.div``;
+const StyledPhotoWrap = styled.div``;
 
-const Age = styled.div``;
+const PhotoWrap = ({ photos }: { photos: Photo[] }) => {
+  return <StyledPhotoWrap></StyledPhotoWrap>;
+};
 
-const City = styled.div``;
+const Panel = styled.main`
+  background: white;
+`;
+
+const Header = styled.header``;
+
+const ExpandButton = styled.button`
+  border: 0;
+  position: absolute;
+  background: 0;
+  top: 0;
+  right: 0;
+`;
+
+const ReduceButton = styled.button`
+  width: 30px;
+  height: 30px;
+  background: royalblue;
+  border: 0;
+`;
+
+const NameAgeWrap = styled.div`
+  display: flex;
+  align-items: end;
+`;
+
+const Name = styled.div`
+  margin-right: 1rem;
+  font-size: max(1.5em, 25px);
+`;
+
+const Age = styled.div`
+  font-size: max(1.1em, 18px);
+`;
+
+const City = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const Distance = styled.div`
+  display: flex;
+  align-items: center;
+`;
 
 const Gender = styled.div``;
 
@@ -22,11 +94,18 @@ const Orientation = styled.div``;
 
 const Description = styled.div``;
 
-const PassionsWrap = styled.div``;
+const PassionsWrap = styled.div`
+  width: 95%;
+  display: flex;
+  flex-wrap: wrap;
+`;
 
-const Passion = styled.div``;
-
-const Distance = styled.div``;
+const Passion = styled.div`
+  padding: 0.25rem 0.5rem;
+  border: 1px solid white;
+  margin: 0.2rem;
+  border-radius: 20px;
+`;
 
 const ProfileCard = ({
   user,
@@ -51,78 +130,129 @@ const ProfileCard = ({
 
   const distance = 0;
 
-  const getDescription = useCallback(
-    () => <Description>{description}</Description>,
-    [description]
-  );
-
-  const getPassionsWrap = useCallback(
-    () => (
-      <PassionsWrap>
-        {passions.map((passion) => (
-          <Passion>{passion}</Passion>
-        ))}
-      </PassionsWrap>
-    ),
-    [passions]
-  );
-
-  const getCity = useCallback(() => <City>{city}</City>, [city]);
-
-  const getDistance = useCallback(
-    () => <Distance>{distance}</Distance>,
-    [distance]
-  );
-
   const getCorrectPart = (currentPhoto: number): JSX.Element | null => {
     switch (currentPhoto) {
       case 0:
         return description ? (
-          getDescription()
+          <Description>{description}</Description>
         ) : passions[0] ? (
-          getPassionsWrap()
+          <PassionsWrap>
+            {passions.map((passion) => (
+              <Passion>{passion}</Passion>
+            ))}
+          </PassionsWrap>
         ) : city || distance ? (
           <>
-            {getCity()}
-            {getDistance()}
+            <City>
+              <Icon size="xs" color="white" icon={faHome} />
+              Lives in {city}
+            </City>
+            <Distance>
+              <Icon size="xs" color="white" icon={faMapMarkerAlt} />
+              {distance} kilometers away
+            </Distance>
           </>
         ) : null;
       case 1:
         return passions[0] ? (
-          getPassionsWrap()
+          <PassionsWrap>
+            {passions.map((passion) => (
+              <Passion>{passion}</Passion>
+            ))}
+          </PassionsWrap>
         ) : city || distance ? (
           <>
-            {getCity()}
-            {getDistance()}
+            <City>
+              <Icon size="xs" color="white" icon={faHome} />
+              Lives in {city}
+            </City>
+            <Distance>
+              <Icon size="xs" color="white" icon={faMapMarkerAlt} />
+              {distance} kilometers away
+            </Distance>
           </>
         ) : description ? (
-          getDescription()
+          <Description>{description}</Description>
         ) : null;
       default:
         return city || distance ? (
           <>
-            {getCity()}
-            {getDistance()}
+            <City>
+              <Icon size="xs" color="white" icon={faHome} />
+              Lives in {city}
+            </City>
+            <Distance>
+              <Icon size="xs" color="white" icon={faMapMarkerAlt} />
+              {distance} kilometers away
+            </Distance>
           </>
         ) : passions[0] ? (
-          getPassionsWrap()
+          <PassionsWrap>
+            {passions.map((passion) => (
+              <Passion>{passion}</Passion>
+            ))}
+          </PassionsWrap>
         ) : description ? (
-          getDescription()
+          <Description>{description}</Description>
         ) : null;
     }
   };
 
-  return isFullSize ? (
-    <FullSizeCard></FullSizeCard>
-  ) : (
-    <StyledCard>
-      <NameAgeWrap>
-        <Name>{name}</Name>
-        <Age>{age}</Age>
-      </NameAgeWrap>
-      {getCorrectPart(currentPhoto)}
-      <button onClick={() => setCurrentPhoto(currentPhoto + 1)} />
-    </StyledCard>
+  return (
+    <>
+      {isFullSize ? (
+        <FullSizeCard>
+          <PhotoWrap photos={photos} />
+          <Panel>
+            <ReduceButton onClick={() => setIsFullSize(false)} />
+            <Header>
+              <Gender>{gender}</Gender>
+              <Orientation>{orientation}</Orientation>
+              <NameAgeWrap>
+                <Name>{name}</Name>
+                <Age>{age}</Age>
+              </NameAgeWrap>
+              <City>
+                <Icon size="sm" color="#606060" icon={faHome} />
+                Lives in {city}
+              </City>
+              <Distance>
+                <Icon size="sm" color="#606060" icon={faMapMarkerAlt} />
+                {distance} kilometers away
+              </Distance>
+              <PassionsWrap>
+                {passions.map((passion) => (
+                  <Passion>{passion}</Passion>
+                ))}
+              </PassionsWrap>
+            </Header>
+            <Description>{description}</Description>
+          </Panel>
+        </FullSizeCard>
+      ) : (
+        <StyledCard>
+          <PhotoWrap photos={photos} />
+          <PartialInfo>
+            <ExpandButton onClick={() => setIsFullSize(true)}>
+              <Icon size="1x" color="white" icon={faInfoCircle} />
+            </ExpandButton>
+            <NameAgeWrap>
+              <Name>{name}</Name>
+              <Age>{age}</Age>
+            </NameAgeWrap>
+            {getCorrectPart(currentPhoto)}
+          </PartialInfo>
+        </StyledCard>
+      )}
+      <button
+        onClick={() =>
+          setCurrentPhoto(
+            currentPhoto + 1 < photos.length ? currentPhoto + 1 : 0
+          )
+        }>
+        next
+      </button>
+    </>
   );
 };
 
