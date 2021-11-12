@@ -66,6 +66,7 @@ const Match = () => {
   const user = useContext(UserContext);
 
   useEffect(() => {
+    if (!user) return;
     const matchHandler = async (e: CustomEventInit) => {
       console.log(e);
       console.log(user);
@@ -79,7 +80,7 @@ const Match = () => {
         members: [user.uid, match.uid],
       });
       console.log(docRef);
-      addDoc(collection(db, "chat", docRef.id, "messages"), {
+      addDoc(collection(db, "conversations", docRef.id, "messages"), {
         origin: "header",
         text: "You have matched with each other! You can now start talking.",
         timestamp: Timestamp.now().toMillis(),
@@ -89,7 +90,7 @@ const Match = () => {
     window.addEventListener("newMatch", matchHandler);
 
     return () => window.removeEventListener("newMatch", matchHandler);
-  }, []);
+  }, [user]);
 
   return (
     <MatchListener>

@@ -1,4 +1,4 @@
 import User, { Location, Profile, Photo, Settings } from "./User";
-import Chat, { Message } from "./Chat";
+import Conversation, { Message } from "./Conversation";
 
-export type { User, Location, Profile, Photo, Settings, Chat, Message };
+export type { User, Location, Profile, Photo, Settings, Conversation, Message };

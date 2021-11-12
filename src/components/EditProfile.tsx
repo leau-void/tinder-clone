@@ -328,7 +328,15 @@ const EditProfile = ({
           </Section>
         </>
       ) : user ? (
-        <ProfileCard user={user} />
+        <div
+          style={{
+            position: "relative",
+            width: "100%",
+            display: "flex",
+            justifyContent: "center",
+          }}>
+          <ProfileCard user={user} />
+        </div>
       ) : (
         <div>No profile to display.</div>
       )}
