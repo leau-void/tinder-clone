@@ -4,6 +4,7 @@ import { addDoc, Timestamp, collection } from "@firebase/firestore";
 import UserContext from "../context/UserContext";
 import { User } from "../types";
 import { db } from "../App";
+import ProfileCard from "./ProfileCard";
 
 const MatchListener = styled.div``;
 
@@ -15,24 +16,25 @@ const MatchModal = styled.div`
   width: 100%;
   height: 100%;
   z-index: 99;
-  background: center / contain no-repeat
-      url(${(props: { src: string }) => props.src}),
-    #3d84a8;
-  padding-top: 4rem;
+  background: #3d84a8;
   box-shadow: inset 0 0 15vh 15vh #424242;
+  z-index: 100;
 `;
 
 const Title = styled.h1`
   font-size: 2rem;
   color: white;
   text-align: center;
+  order: -1;
+  margin-top: 4rem;
+  margin-bottom: 2rem;
 `;
 
 const CloseButton = styled.button`
   width: 3rem;
   height: 3rem;
-  top: 1.8rem;
-  right: 1.8rem;
+  top: 1rem;
+  right: 1rem;
   position: absolute;
   border: 0;
   background: 0;
@@ -42,6 +44,7 @@ const X = styled.div`
   width: 1.8rem;
   height: 1.8rem;
   background: white;
+  margin: 0 auto;
   clip-path: polygon(
     0% 5%,
     45% 50%,
@@ -65,6 +68,7 @@ const Match = () => {
   useEffect(() => {
     const matchHandler = async (e: CustomEventInit) => {
       console.log(e);
+      console.log(user);
       if (!user) return;
       const { match, timestamp }: { match: User; timestamp: number } = e.detail;
 
@@ -90,11 +94,13 @@ const Match = () => {
   return (
     <MatchListener>
       {match && (
-        <MatchModal src={match.profile.photos[0].src}>
-          <CloseButton onClick={() => setMatch(null)}>
-            <X />
-          </CloseButton>
-          <Title>New match with {match.profile.name}</Title>
+        <MatchModal>
+          <ProfileCard user={match} onlyPhotos>
+            <CloseButton onClick={() => setMatch(null)}>
+              <X />
+            </CloseButton>
+            <Title>New match with {match.profile.name}</Title>
+          </ProfileCard>
         </MatchModal>
       )}
     </MatchListener>

@@ -36,7 +36,11 @@ const FullSizeCard = styled.div`
   min-height: 100vh;
   max-height: 100vh;
   background: lightgrey;
-  z-index: 99;
+  z-index: 80;
+
+  &.only-photo {
+    background: transparent;
+  }
 `;
 
 const ScrollableCard = styled.div`
@@ -75,9 +79,9 @@ const StyledPhotoWrap = styled.div`
 
   .full-size & {
     position: relative;
-    margin: auto;
-    width: calc(100vw - 15px);
-    height: calc(calc(100vw - 15px) * 1.34);
+    margin: 0 auto;
+    width: calc(70vh / 1.34);
+    height: 70vh;
   }
 `;
 
@@ -89,8 +93,8 @@ const PhotoContainer = styled.div`
   left: calc(-${(props: { index: number }) => props.index} * 100%);
 
   .full-size & {
-    width: calc(100vw - 15px);
-    height: calc(calc(100vw - 15px) * 1.34);
+    width: calc(70vh / 1.34);
+    height: 70vh;
   }
 `;
 
@@ -308,10 +312,12 @@ const ProfileCard = ({
   user,
   compareLocation,
   children,
+  onlyPhotos,
 }: {
   user: User;
   compareLocation?: Location;
   children?: JSX.Element | JSX.Element[];
+  onlyPhotos?: boolean;
 }) => {
   const {
     name,
@@ -447,6 +453,20 @@ const ProfileCard = ({
         ) : null;
     }
   };
+
+  if (onlyPhotos)
+    return (
+      <FullSizeCard className="full-size only-photo">
+        <PhotoWrap
+          currentPhoto={currentPhoto}
+          clickDispatch={clickDispatch}
+          photos={photos}
+        />
+        {children && Array.isArray(children)
+          ? children.map((child) => child)
+          : children}
+      </FullSizeCard>
+    );
 
   return (
     <>
