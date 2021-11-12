@@ -14,6 +14,7 @@ import {
   getDoc,
 } from "@firebase/firestore";
 import { db } from "../App";
+import { isPointWithinRadius } from "geolib";
 
 const StyledFeed = styled.main`
   height: 100%;
@@ -106,9 +107,25 @@ const Feed = () => {
 
   useEffect(() => {
     if (!user || !users) return;
-    // TODO add location filtering
+
+    const locationFiltered = user.settings.global
+      ? users
+      : users.filter((cur) =>
+          isPointWithinRadius(
+            {
+              latitude: user.location.lat,
+              longitude: user.location.lon,
+            },
+            {
+              latitude: cur.location.lat,
+              longitude: cur.location.lon,
+            },
+            user.settings.distance
+          )
+        );
+
     setAvail(
-      users.filter(
+      locationFiltered.filter(
         (cur) =>
           cur.uid !== user.uid &&
           !user.likes.includes(cur.uid) &&
