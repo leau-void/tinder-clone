@@ -14,7 +14,7 @@ const createEmptyUser = (): User => {
   };
 
   const settings = {
-    distance: 100,
+    distance: 200,
     minAge: 18,
     maxAge: 100,
     global: true,

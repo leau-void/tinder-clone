@@ -120,7 +120,7 @@ const Feed = () => {
               latitude: cur.location.lat,
               longitude: cur.location.lon,
             },
-            user.settings.distance
+            user.settings.distance * 1000
           )
         );
 
@@ -133,6 +133,8 @@ const Feed = () => {
       )
     );
   }, [user, users]);
+
+  // TODO add handling for swiping cards
 
   return (
     <StyledFeed>
