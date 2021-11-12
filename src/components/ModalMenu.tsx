@@ -30,7 +30,7 @@ const Header = styled.header`
   display: grid;
   grid-template-columns: 0.3fr 1fr 0.3fr;
   background: grey;
-  text-align: center;
+  place-items: center;
 `;
 
 const Title = styled.h3`
@@ -79,31 +79,36 @@ const TopButton = styled.button`
   border-radius: 8px;
   align-self: center;
   width: fit-content;
-  padding: 0.5rem;
-  border: 2px solid black;
+  padding: 0.6rem;
+  border: 0;
 `;
 
-const TopButtonLeft = styled(TopButton)`
-  position: relative;
-  left: 50%;
-  z-index: 2;
+const TopButtonBack = styled(TopButton)`
+  clip-path: polygon(
+    2% 47%,
+    2% 48%,
+    0% 51%,
+    1% 52%,
+    2% 55%,
+    25% 97%,
+    28% 99%,
+    30% 100%,
+    87% 100%,
+    99% 100%,
+    100% 97%,
+    100% 92%,
+    100% 82%,
+    100% 4%,
+    99% 3%,
+    99% 1%,
+    95% 0%,
+    31% 0%,
+    28% 0%,
+    27% 0%,
+    24% 3%
+  );
 
-  &::before {
-    content: "";
-    display: block;
-    position: absolute;
-    top: -4px;
-    left: 3px;
-    width: 34px;
-    height: 34px;
-    border-radius: inherit;
-    transform-origin: top left;
-    transform: rotate(45deg);
-    z-index: -1;
-    background-color: inherit;
-    border-left: inherit;
-    border-bottom: inherit;
-  }
+  padding-left: 1rem;
 `;
 
 const TopButtonSave = styled(TopButton)``;
@@ -117,7 +122,7 @@ export {
   SubSection,
   SectionLabel,
   TopButton,
-  TopButtonLeft,
+  TopButtonBack,
   TopButtonSave,
   TopButtonLogout,
 };

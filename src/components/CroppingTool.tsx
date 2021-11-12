@@ -7,7 +7,7 @@ import React, {
   useReducer,
 } from "react";
 import styled from "styled-components";
-import ModalMenu, { Section, TopButtonLeft, TopButtonSave } from "./ModalMenu";
+import ModalMenu, { Section, TopButtonBack, TopButtonSave } from "./ModalMenu";
 import { getImageUrl } from "../utils/getImageURL";
 
 const Canvas = styled.canvas`
@@ -254,13 +254,13 @@ const CroppingTool = ({
       doOpen={editPhoto ? true : false}
       buttons={{
         left: (
-          <TopButtonLeft
+          <TopButtonBack
             onClick={() => {
               reset();
               setEditPhoto(null);
             }}>
             Cancel
-          </TopButtonLeft>
+          </TopButtonBack>
         ),
         right: (
           <TopButtonSave

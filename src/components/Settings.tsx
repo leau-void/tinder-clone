@@ -8,7 +8,7 @@ import { updateDoc, doc } from "@firebase/firestore";
 import ModalMenu, {
   Section,
   SubSection,
-  TopButtonLeft,
+  TopButtonBack,
   TopButtonLogout,
 } from "./ModalMenu";
 
@@ -60,9 +60,9 @@ const Settings = ({
       doOpen={doOpen}
       buttons={{
         left: (
-          <TopButtonLeft onClick={() => handleClose(closeModal)}>
+          <TopButtonBack onClick={() => handleClose(closeModal)}>
             Back
-          </TopButtonLeft>
+          </TopButtonBack>
         ),
         right: (
           <TopButtonLogout onClick={() => handleClose(signOut, getAuth())}>

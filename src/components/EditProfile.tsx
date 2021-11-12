@@ -10,7 +10,7 @@ import UserContext from "../context/UserContext";
 import ModalMenu, {
   Section,
   SectionLabel,
-  TopButtonLeft,
+  TopButtonBack,
   TopButtonSave,
 } from "./ModalMenu";
 import PhotoCard from "./PhotoCard";
@@ -220,7 +220,7 @@ const EditProfile = ({
       title="Edit info"
       doOpen={doOpen}
       buttons={{
-        left: <TopButtonLeft onClick={() => closeModal()}>Back</TopButtonLeft>,
+        left: <TopButtonBack onClick={() => closeModal()}>Back</TopButtonBack>,
         right: <TopButtonSave onClick={() => handleSave()}>Save</TopButtonSave>,
       }}>
       <Tabs>
