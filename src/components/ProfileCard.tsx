@@ -135,7 +135,6 @@ const PhotoWrap = ({
   expandHandler,
 }: PhotoWrapProps) => {
   const clickHandler = (e: SyntheticEvent) => {
-    console.log(e);
     const target = e.target as HTMLElement;
     const { offsetX, offsetY } = e.nativeEvent as PointerEvent;
     if (offsetY / target.offsetHeight > 2 / 3 && expandHandler)

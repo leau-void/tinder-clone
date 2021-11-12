@@ -14,6 +14,7 @@ import { User } from "./types";
 import createRandomUser from "./utils/createRandomUser";
 import createEmptyUser from "./utils/createEmptyUser";
 import { getStorage } from "firebase/storage";
+import Match from "./components/Match";
 
 declare global {
   interface Window {
@@ -71,6 +72,7 @@ function App() {
   return (
     <UserProvider value={user}>
       {!user && <Redirect push to="/login" />}
+      <Match />
       <Header />
       <Switch key={location.pathname} location={location}>
         <Route path="/login">

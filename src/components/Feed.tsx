@@ -6,7 +6,13 @@ import { User } from "../types";
 import ProfileCard from "./ProfileCard";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart, faTimes } from "@fortawesome/free-solid-svg-icons";
-import { updateDoc, doc, arrayUnion } from "@firebase/firestore";
+import {
+  updateDoc,
+  doc,
+  arrayUnion,
+  Timestamp,
+  getDoc,
+} from "@firebase/firestore";
 import { db } from "../App";
 
 const StyledFeed = styled.main`
@@ -60,11 +66,35 @@ const Feed = () => {
   const users = useContext(UsersContext);
   const [avail, setAvail] = useState<User[]>([]);
 
-  const likeHandler = (uid: string) => {
+  const likeHandler = async (uid: string) => {
     if (!user) return;
+
+    const match = users.find((others) => others.uid === uid) as User;
+
     updateDoc(doc(db, "users", user.uid), {
       likes: arrayUnion(uid),
     });
+
+    const sendMatchEvent = () =>
+      window.dispatchEvent(
+        new CustomEvent("newMatch", {
+          detail: {
+            match,
+            timestamp: Timestamp.now().toMillis(),
+          },
+        })
+      );
+
+    if (!match.isHuman || match.likes.includes(user.uid)) {
+      sendMatchEvent();
+    } else {
+      const matchDoc = await getDoc(doc(db, "users", match.uid));
+      console.log(matchDoc.data(), user.uid);
+      if ((matchDoc.data() as User).likes.includes(user.uid)) {
+        console.log("aa");
+        sendMatchEvent();
+      }
+    }
   };
 
   const dislikeHandler = (uid: string) => {
@@ -76,7 +106,7 @@ const Feed = () => {
 
   useEffect(() => {
     if (!user || !users) return;
-
+    // TODO add location filtering
     setAvail(
       users.filter(
         (cur) =>
@@ -86,8 +116,6 @@ const Feed = () => {
       )
     );
   }, [user, users]);
-
-  console.log(avail);
 
   return (
     <StyledFeed>

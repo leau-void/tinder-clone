@@ -14,11 +14,7 @@ const StyledProfile = styled.main`
 `;
 
 const Icon = styled(FontAwesomeIcon)`
-  color: grey;
-
-  &:hover {
-    color: #46cdcf;
-  }
+  color: inherit;
 `;
 
 const ButtonWrap = styled.div`
@@ -38,9 +34,15 @@ const Button = styled.button`
   background: 0;
   border: 0;
   padding: 8px;
-  border: 1px solid grey;
+  border: 2px solid;
+  border-color: inherit;
   border-radius: 50%;
   margin-bottom: 4px;
+  color: grey;
+
+  &:hover {
+    color: #46cdcf;
+  }
 `;
 
 const UserPhoto = styled.img`
