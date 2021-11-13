@@ -31,6 +31,7 @@ const Header = styled.header`
   grid-template-columns: 0.3fr 1fr 0.3fr;
   background: grey;
   place-items: center;
+  height: 10vh;
 `;
 
 const Title = styled.h3`

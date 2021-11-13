@@ -3,7 +3,8 @@ body {
   color: #121212;
   width: 100%;
   max-width: 100%;
-  overflow-x: hidden;
+  overflow: hidden;
+  max-height: 100%;
 }
 
 html {

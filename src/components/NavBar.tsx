@@ -10,8 +10,9 @@ const StyledNav = styled.nav`
   width: 100%;
   align-items: center;
   justify-content: space-evenly;
-  margin-top: auto;
-  padding: 1rem 0;
+  position: absolute;
+  bottom: 0;
+  height: 10vh;
 `;
 
 const Link = styled(NavLink)`

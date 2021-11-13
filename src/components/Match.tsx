@@ -1,10 +1,11 @@
 import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
-import { addDoc, Timestamp, collection } from "@firebase/firestore";
+import { setDoc, doc, Timestamp } from "@firebase/firestore";
 import UserContext from "../context/UserContext";
 import { User } from "../types";
 import { db } from "../App";
 import ProfileCard from "./ProfileCard";
+import uniqid from "uniqid";
 
 const MatchListener = styled.div``;
 
@@ -68,23 +69,33 @@ const Match = () => {
   useEffect(() => {
     if (!user) return;
     const matchHandler = async (e: CustomEventInit) => {
-      console.log(e);
-      console.log(user);
       if (!user) return;
       const { match, timestamp }: { match: User; timestamp: number } = e.detail;
 
       setMatch(match);
 
-      const docRef = await addDoc(collection(db, "conversations"), {
-        timestamp,
-        members: [user.uid, match.uid],
-      });
-      console.log(docRef);
-      addDoc(collection(db, "conversations", docRef.id, "messages"), {
+      const messageID = uniqid();
+
+      const headerMsg = {
         origin: "header",
         text: "You have matched with each other! You can now start talking.",
         timestamp: Timestamp.now().toMillis(),
+        id: messageID,
+      };
+
+      const convoID = uniqid();
+
+      setDoc(doc(db, "conversations", convoID), {
+        timestamp,
+        members: [user.uid, match.uid],
+        id: convoID,
+        latest: headerMsg,
       });
+
+      setDoc(
+        doc(db, "conversations", convoID, "messages", messageID),
+        headerMsg
+      );
     };
 
     window.addEventListener("newMatch", matchHandler);

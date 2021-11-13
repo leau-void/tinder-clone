@@ -30,6 +30,8 @@ window.addUsers = (n) => {
   }
 };
 
+// TODO remove addUser function after project is done
+
 function App() {
   const location = useLocation();
   const [userID, setUserID] = useState<string | null>(null);

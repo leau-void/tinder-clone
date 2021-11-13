@@ -27,7 +27,15 @@ import {
 import uniqid from "uniqid";
 import ProfileCard from "./ProfileCard";
 
-const Tabs = styled.nav``;
+const Scrollable = styled.div`
+  max-height: 84vh;
+  overflow-y: scroll;
+  width: 100%;
+`;
+
+const Tabs = styled.nav`
+  height: 6vh;
+`;
 
 const Tab = styled.button`
   &.active {
@@ -237,7 +245,7 @@ const EditProfile = ({
       </Tabs>
       <CroppingTool {...{ editPhoto, setEditPhoto, handleSavePhoto }} />
       {currentTab === "edit" ? (
-        <>
+        <Scrollable>
           <Section>
             <PhotoContainer>
               {photos.map((cur, i) => (
@@ -326,7 +334,7 @@ const EditProfile = ({
               ))}
             </PassionsPreview>
           </Section>
-        </>
+        </Scrollable>
       ) : user ? (
         <div
           style={{
