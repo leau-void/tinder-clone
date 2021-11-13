@@ -7,13 +7,13 @@ import React, {
   useReducer,
 } from "react";
 import styled from "styled-components";
-import ModalMenu, { Section, TopButtonBack, TopButtonSave } from "./ModalMenu";
+import ModalMenu, { Section, TopButtonBack, TopButtonDone } from "./ModalMenu";
 import { getImageUrl } from "../utils/getImageURL";
 
 const Canvas = styled.canvas`
   border: 2px solid black;
   cursor: move;
-  background: white;
+  background: #f5f5f5;
 `;
 
 const Img = styled.img`
@@ -249,7 +249,6 @@ const CroppingTool = ({
 
   return (
     <ModalMenu
-      fixed
       title="Photo Editor"
       doOpen={editPhoto ? true : false}
       buttons={{
@@ -258,23 +257,22 @@ const CroppingTool = ({
             onClick={() => {
               reset();
               setEditPhoto(null);
-            }}>
-            Cancel
-          </TopButtonBack>
+            }}
+          />
         ),
         right: (
-          <TopButtonSave
+          <TopButtonDone
             onClick={(e) => {
               canvas!.toBlob((blob) => {
                 if (!blob) return new Error();
                 handleSavePhoto(e, { src: canvas!.toDataURL(), file: blob });
                 reset();
               });
-            }}>
-            Save
-          </TopButtonSave>
+            }}
+          />
         ),
-      }}>
+      }}
+      animation="horizontal">
       <Img ref={setupImage} src="" alt="placeholder"></Img>
       <Section>
         <Canvas

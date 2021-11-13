@@ -74,7 +74,7 @@ const CornerButton = styled.button`
     display: block;
     width: 4px;
     height: 15px;
-    background: white;
+    background: #f5f5f5;
     position: absolute;
     border-radius: 4px;
     transform-origin: center center;
@@ -85,7 +85,7 @@ const CornerButton = styled.button`
     display: block;
     width: 4px;
     height: 15px;
-    background: white;
+    background: #f5f5f5;
     transform-origin: center center;
     transform: rotate(90deg);
     position: absolute;

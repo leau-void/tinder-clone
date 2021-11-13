@@ -11,7 +11,7 @@ import ModalMenu, {
   Section,
   SectionLabel,
   TopButtonBack,
-  TopButtonSave,
+  TopButtonDone,
 } from "./ModalMenu";
 import PhotoCard from "./PhotoCard";
 import validFileType from "../utils/validFileType";
@@ -228,9 +228,10 @@ const EditProfile = ({
       title="Edit info"
       doOpen={doOpen}
       buttons={{
-        left: <TopButtonBack onClick={() => closeModal()}>Back</TopButtonBack>,
-        right: <TopButtonSave onClick={() => handleSave()}>Save</TopButtonSave>,
-      }}>
+        left: <TopButtonBack onClick={() => closeModal()} />,
+        right: <TopButtonDone onClick={() => handleSave()} />,
+      }}
+      animation="vertical">
       <Tabs>
         <Tab
           onClick={() => setCurrentTab("edit")}

@@ -17,12 +17,10 @@ import { db } from "../App";
 import { isPointWithinRadius } from "geolib";
 
 const StyledFeed = styled.main`
-  height: 100%;
-  padding: 1rem 0.5rem;
+  height: calc(100% - 10vh);
+  padding: 4rem 0.5rem;
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  margin: 0 auto;
 `;
 
 const CardWrap = styled.div`
@@ -50,7 +48,7 @@ const ButtonsWrap = styled.div`
     bottom: 0;
     position: fixed;
     padding: 1rem;
-    background: linear-gradient(0deg, white 40%, transparent);
+    background: linear-gradient(0deg, #f5f5f5 40%, transparent);
   }
 `;
 

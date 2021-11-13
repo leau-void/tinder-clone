@@ -8,7 +8,7 @@ import { updateDoc, doc } from "@firebase/firestore";
 import ModalMenu, {
   Section,
   SubSection,
-  TopButtonBack,
+  TopButtonDone,
   TopButtonLogout,
 } from "./ModalMenu";
 
@@ -59,17 +59,9 @@ const Settings = ({
       title="Settings"
       doOpen={doOpen}
       buttons={{
-        left: (
-          <TopButtonBack onClick={() => handleClose(closeModal)}>
-            Back
-          </TopButtonBack>
-        ),
-        right: (
-          <TopButtonLogout onClick={() => handleClose(signOut, getAuth())}>
-            Logout
-          </TopButtonLogout>
-        ),
-      }}>
+        right: <TopButtonDone onClick={() => handleClose(closeModal)} />,
+      }}
+      animation="vertical">
       <>
         <Section>
           <SubSection>
@@ -82,7 +74,9 @@ const Settings = ({
             />
           </SubSection>
           <SubSection>
-            <small>Global mode is recommended as this is a test app.</small>
+            <div style={{ width: "100%", textAlign: "center" }}>
+              <small>Global mode is recommended as this is a test app.</small>
+            </div>
           </SubSection>
         </Section>
         <Section>
@@ -111,6 +105,12 @@ const Settings = ({
               minDiff={5}
               double
             />
+          </SubSection>
+        </Section>
+
+        <Section>
+          <SubSection>
+            <TopButtonLogout onClick={() => handleClose(signOut, getAuth())} />
           </SubSection>
         </Section>
       </>

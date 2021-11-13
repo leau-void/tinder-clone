@@ -3,7 +3,7 @@ export interface Message {
   text: string;
   timestamp: number;
   id: string;
-  seen?: boolean;
+  seen: boolean;
 }
 
 export default interface Conversation {

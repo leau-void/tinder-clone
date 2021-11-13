@@ -9,8 +9,7 @@ interface IconProps {
 const UserIcon = styled.div`
   border-radius: 50%;
   position: relative;
-  background: url(${(props: IconProps) => props.src});
-  background-size: contain;
+  background: center / cover no-repeat url(${(props: IconProps) => props.src});
   width: ${(props: IconProps) => props.width || "100px"};
   height: ${(props: IconProps) => props.height || "100px"};
   cursor: pointer;

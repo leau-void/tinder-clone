@@ -56,7 +56,7 @@ const StyledCard = styled.div`
   height: 450px;
   position: absolute;
   background: #606060;
-  color: white;
+  color: #f5f5f5;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
@@ -109,7 +109,7 @@ const IndexDiv = styled.div`
 
 const PhotoIndex = styled.div`
   width: 100%;
-  background: white;
+  background: #f5f5f5;
   opacity: 0.4;
   margin: 0 3px;
   border-radius: 8px;
@@ -166,7 +166,7 @@ const PhotoWrap = ({
 };
 
 const Panel = styled.main`
-  background: white;
+  background: #f5f5f5;
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -204,7 +204,7 @@ const ExpandButton = styled.button`
 `;
 
 const ReduceButton = styled.button`
-  background: white;
+  background: #f5f5f5;
   width: 2em;
   height: 2em;
   padding: 0;
@@ -371,19 +371,19 @@ const ProfileCard = ({
           <>
             {city && (
               <City>
-                <Icon size="xs" color="white" icon={faHome} />
+                <Icon size="xs" color="#f5f5f5" icon={faHome} />
                 Lives in {city}
               </City>
             )}
             {distance && (
               <Distance>
-                <Icon size="xs" color="white" icon={faMapMarkerAlt} />
+                <Icon size="xs" color="#f5f5f5" icon={faMapMarkerAlt} />
                 {distance} {distance === 1 ? "kilometer" : "kilometers"} away
               </Distance>
             )}
             {job && (
               <Job>
-                <Icon size="xs" color="white" icon={faSuitcase} />
+                <Icon size="xs" color="#f5f5f5" icon={faSuitcase} />
                 {job}
               </Job>
             )}
@@ -400,19 +400,19 @@ const ProfileCard = ({
           <>
             {city && (
               <City>
-                <Icon size="xs" color="white" icon={faHome} />
+                <Icon size="xs" color="#f5f5f5" icon={faHome} />
                 Lives in {city}
               </City>
             )}
             {distance && (
               <Distance>
-                <Icon size="xs" color="white" icon={faMapMarkerAlt} />
+                <Icon size="xs" color="#f5f5f5" icon={faMapMarkerAlt} />
                 {distance} {distance === 1 ? "kilometer" : "kilometers"} away
               </Distance>
             )}
             {job && (
               <Job>
-                <Icon size="xs" color="white" icon={faSuitcase} />
+                <Icon size="xs" color="#f5f5f5" icon={faSuitcase} />
                 {job}
               </Job>
             )}
@@ -425,19 +425,19 @@ const ProfileCard = ({
           <>
             {city && (
               <City>
-                <Icon size="xs" color="white" icon={faHome} />
+                <Icon size="xs" color="#f5f5f5" icon={faHome} />
                 Lives in {city}
               </City>
             )}
             {distance && (
               <Distance>
-                <Icon size="xs" color="white" icon={faMapMarkerAlt} />
+                <Icon size="xs" color="#f5f5f5" icon={faMapMarkerAlt} />
                 {distance} {distance === 1 ? "kilometer" : "kilometers"} away
               </Distance>
             )}
             {job && (
               <Job>
-                <Icon size="xs" color="white" icon={faSuitcase} />
+                <Icon size="xs" color="#f5f5f5" icon={faSuitcase} />
                 {job}
               </Job>
             )}
@@ -533,7 +533,7 @@ const ProfileCard = ({
           />
           <PartialInfo onClick={() => setIsFullSize(true)}>
             <ExpandButton onClick={() => setIsFullSize(true)}>
-              <Icon size="1x" color="white" icon={faInfoCircle} />
+              <Icon size="1x" color="#f5f5f5" icon={faInfoCircle} />
             </ExpandButton>
             <NameAgeWrap>
               <Name>{name}</Name>

@@ -24,7 +24,7 @@ const MatchModal = styled.div`
 
 const Title = styled.h1`
   font-size: 2rem;
-  color: white;
+  color: #f5f5f5;
   text-align: center;
   order: -1;
   margin-top: 4rem;
@@ -44,7 +44,7 @@ const CloseButton = styled.button`
 const X = styled.div`
   width: 1.8rem;
   height: 1.8rem;
-  background: white;
+  background: #f5f5f5;
   margin: 0 auto;
   clip-path: polygon(
     0% 5%,
@@ -81,6 +81,7 @@ const Match = () => {
         text: "You have matched with each other! You can now start talking.",
         timestamp: Timestamp.now().toMillis(),
         id: messageID,
+        seen: false,
       };
 
       const convoID = uniqid();

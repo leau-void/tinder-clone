@@ -59,7 +59,9 @@ const Chat = () => {
 
   return (
     <ChatPage>
-      {openConvo && <ChatRoom convo={openConvo} />}
+      {openConvo && (
+        <ChatRoom convo={openConvo} close={() => setOpenConvo(null)} />
+      )}
       {user && users.length >= 1 && conversations.length >= 1 && (
         <>
           <Title>New Matches</Title>
