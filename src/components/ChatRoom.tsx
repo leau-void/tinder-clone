@@ -8,10 +8,19 @@ import React, {
 import styled from "styled-components";
 import { Conversation, Message, User } from "../types";
 import UserIcon from "./UserIcon";
-import { onSnapshot, collection, doc, updateDoc } from "@firebase/firestore";
+import {
+  onSnapshot,
+  collection,
+  doc,
+  updateDoc,
+  setDoc,
+  Timestamp,
+} from "@firebase/firestore";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import uniqid from "uniqid";
 import UsersContext from "../context/UsersContext";
 import UserContext from "../context/UserContext";
-import { db } from "../App";
+import { db, store } from "../App";
 import ModalMenu from "./ModalMenu";
 import { TopButtonBack } from "./ModalMenu";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -146,9 +155,53 @@ const ChatRoom = ({ convo, close }: ChatRoomProps) => {
     )
   );
 
-  const submitHandler = (e: SyntheticEvent) => {
+  const submitHandler = async (e: SyntheticEvent) => {
+    if (!user) return;
     e.preventDefault();
+
+    const text = textVal;
+    const img = imgVal
+      ? new File([imgVal], imgVal.name, { type: imgVal.type })
+      : null;
+
+    setTextVal("");
+    setImgURL("");
+    setImgVal(null);
+
+    const msgID = uniqid();
+
+    const newMessage: Message = {
+      origin: user.uid,
+      text: text,
+      timestamp: Timestamp.now().toMillis(),
+      id: msgID,
+      seen: false,
+      assetsPresent: Boolean(img),
+    };
+
+    setDoc(doc(messagesRef.current, msgID), newMessage);
+    updateDoc(convoRef.current, {
+      latest: newMessage,
+    });
+
+    if (img) {
+      const userPath = `users/${user.uid}`;
+      const userRef = ref(store, userPath);
+
+      const photoRef = ref(userRef, uniqid() + "." + img.type.split("/")[1]);
+      const snap = await uploadBytes(photoRef, img);
+      const src = await getDownloadURL(photoRef);
+
+      updateDoc(doc(messagesRef.current, msgID), {
+        assets: {
+          path: snap.metadata.fullPath,
+          src,
+        },
+      });
+    }
   };
+
+  console.log(messages);
 
   useEffect(() => {
     if (!user) return;

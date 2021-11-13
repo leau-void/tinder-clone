@@ -11,6 +11,7 @@ const StyledHeader = styled.header`
 const Title = styled.h1`
   margin: 0 0.5rem 0 1rem;
   font-size: 1.7rem;
+  font-weight: 500;
 `;
 
 const Icon = styled.img.attrs((props) => ({

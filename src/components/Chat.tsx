@@ -15,7 +15,9 @@ const ChatPage = styled.div`
 
 const Title = styled.h2`
   font-size: 1.2rem;
+  font-weight: 400;
   margin: 1rem;
+  color: #3d84a8;
 `;
 
 const NewMatchesWrap = styled.div`
