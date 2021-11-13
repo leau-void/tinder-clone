@@ -64,7 +64,7 @@ interface Props {
   children: JSX.Element | JSX.Element[];
   buttons: { left?: JSX.Element; right?: JSX.Element };
   doOpen: boolean;
-  title: string;
+  title: string | JSX.Element;
   animation?: "vertical" | "horizontal";
 }
 

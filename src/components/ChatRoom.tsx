@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
-import { Conversation, Message } from "../types";
+import { Conversation, Message, User } from "../types";
 import UserIcon from "./UserIcon";
 import {
   onSnapshot,
@@ -18,6 +18,25 @@ import { TopButtonBack } from "./ModalMenu";
 
 const StyledChatRoom = styled.div``;
 
+const StyledIconWrap = styled.div`
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+`;
+
+const UserIconWrap = ({
+  user,
+  onClick,
+}: {
+  user: User;
+  onClick: () => void;
+}) => (
+  <StyledIconWrap onClick={onClick}>
+    <UserIcon width="6vh" height="6vh" src={user.profile.photos[0].src} />
+    <small style={{ paddingLeft: "0.5rem" }}>{user.profile.name}</small>
+  </StyledIconWrap>
+);
+
 interface ChatRoomProps {
   convo: Conversation;
   close: () => void;
@@ -30,6 +49,12 @@ const ChatRoom = ({ convo, close }: ChatRoomProps) => {
   const convoRef = useRef(doc(db, "conversations", convo.id));
   const messagesRef = useRef(
     collection(db, "conversations", convo.id, "messages")
+  );
+
+  const match = useRef(
+    users.find(
+      (cur) => cur.uid !== user?.uid && convo.members.includes(cur.uid)
+    )
   );
 
   useEffect(() => {
@@ -57,17 +82,16 @@ const ChatRoom = ({ convo, close }: ChatRoomProps) => {
     return () => unsubMessages();
   }, [convo, user]);
 
-  const match = useRef(
-    users.find(
-      (cur) => cur.uid !== user?.uid && convo.members.includes(cur.uid)
-    )
-  );
-
-  console.log(messages);
+  if (!match.current) return null;
 
   return (
     <ModalMenu
-      title="convo"
+      title={
+        <UserIconWrap
+          onClick={() => console.log("click")}
+          user={match.current}
+        />
+      }
       buttons={{ left: <TopButtonBack onClick={close} /> }}
       doOpen={Boolean(convo)}
       animation="horizontal">
