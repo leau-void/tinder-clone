@@ -28,7 +28,6 @@ import uniqid from "uniqid";
 import ProfileCard from "./ProfileCard";
 
 const Scrollable = styled.div`
-  max-height: 84vh;
   overflow-y: scroll;
   width: 100%;
 `;

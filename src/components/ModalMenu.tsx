@@ -19,6 +19,7 @@ const StyledModal = styled.div`
   top: 0;
   left: 0;
   background: lightgrey;
+  color: #424242;
   animation: ${({ animation }: StyledProps) =>
     animation
       ? animation === "vertical"
@@ -58,6 +59,7 @@ const Body = styled.main`
   display: flex;
   flex-direction: column;
   align-items: center;
+  height: 92vh;
 `;
 
 interface Props {
@@ -93,7 +95,7 @@ const Section = styled.section`
 
 const SubSection = styled.div`
   width: 100%;
-  padding: 0.5rem 1rem;
+  padding: 0.5rem 2rem;
   display: flex;
   align-items: center;
   justify-content: space-between;

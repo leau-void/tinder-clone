@@ -9,20 +9,20 @@ const StyledHeader = styled.header`
 `;
 
 const Title = styled.h1`
-  margin: 0;
-  margin-right: 1rem;
+  margin: 0 0.5rem 0 1rem;
+  font-size: 1.7rem;
 `;
 
 const Icon = styled.img.attrs((props) => ({
   src: props.src,
   alt: "Waves App Logo",
-  width: 50,
+  width: 40,
 }))``;
 
 const Header = () => (
   <StyledHeader>
-    <Title>Waves</Title>
-    <Icon src={icon} width={50} />
+    <Title>waves</Title>
+    <Icon src={icon} />
   </StyledHeader>
 );
 
