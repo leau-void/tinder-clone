@@ -6,7 +6,7 @@ import React, {
   useState,
 } from "react";
 import styled from "styled-components";
-import { Conversation, Message, Photo, User } from "../types";
+import { Conversation, Message, User } from "../types";
 import UserIcon from "./UserIcon";
 import {
   onSnapshot,
@@ -21,7 +21,7 @@ import uniqid from "uniqid";
 import UsersContext from "../context/UsersContext";
 import UserContext from "../context/UserContext";
 import { db, store } from "../App";
-import ModalMenu from "./ModalMenu";
+import ModalMenu, { Section } from "./ModalMenu";
 import { TopButtonBack } from "./ModalMenu";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faImage, faBackspace } from "@fortawesome/free-solid-svg-icons";
@@ -29,6 +29,7 @@ import { getImageUrl } from "../utils/getImageURL";
 import imgPlaceholder from "../assets/placeholders/imgPlaceholder.png";
 import userPlaceholder from "../assets/placeholders/userPlaceholder.png";
 import formatDate from "../utils/formatDate";
+import ProfileCard from "./ProfileCard";
 
 const StyledIconWrap = styled.div`
   display: flex;
@@ -157,7 +158,6 @@ const ImagePreview = styled.div`
   padding: 0.5rem 2rem;
 `;
 
-// TODO add fullscreen img opening
 const Image = styled.img`
   max-height: 100%;
   max-width: 100%;
@@ -303,6 +303,9 @@ const ChatRoom = ({ convo, close }: ChatRoomProps) => {
 
   const [fullScreen, setFullScreen] = useState<string>("");
 
+  const [openProfile, setOpenProfile] = useState(false);
+  const [doOpenProfile, setDoOpenProfile] = useState(false);
+
   const match = useRef(
     users.find(
       (cur) => cur.uid !== user?.uid && convo.members.includes(cur.uid)
@@ -394,10 +397,13 @@ const ChatRoom = ({ convo, close }: ChatRoomProps) => {
     <ModalMenu
       title={
         <UserIconWrap
-          onClick={() => console.log("click")}
+          onClick={() => {
+            setDoOpenProfile(true);
+            setOpenProfile(true);
+          }}
           user={match.current}
         />
-      } // TODO add link to profile
+      }
       buttons={{
         left: (
           <TopButtonBack
@@ -498,6 +504,30 @@ const ChatRoom = ({ convo, close }: ChatRoomProps) => {
             Send
           </SendButton>
         </Form>
+        {openProfile && (
+          <ModalMenu
+            doOpen={doOpenProfile}
+            title={match.current.profile.name}
+            animation="horizontal"
+            buttons={{
+              left: (
+                <TopButtonBack
+                  onClick={() => {
+                    setDoOpenProfile(false);
+                    window.setTimeout(() => setOpenProfile(false), 300);
+                  }}
+                />
+              ),
+            }}>
+            <Section>
+              <ProfileCard
+                user={match.current}
+                compareLocation={user?.location}
+              />
+            </Section>
+          </ModalMenu>
+        )}
+
         {fullScreen && (
           <PhotoFullScreen src={fullScreen} close={() => setFullScreen("")} />
         )}

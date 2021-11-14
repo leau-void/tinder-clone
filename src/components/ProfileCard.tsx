@@ -262,16 +262,14 @@ const Description = styled.div`
   max-width: 85%;
 
   :not(.full-size &) {
-    overflow-y: hidden;
     max-height: 4.4rem;
 
-    ::after {
-      content: "...";
-      font-size: 1.3rem;
-      position: absolute;
-      right: 0;
-      bottom: 0;
-    }
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    -webkit-box-orient: vertical;
   }
 `;
 
