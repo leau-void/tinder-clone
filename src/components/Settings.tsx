@@ -16,6 +16,59 @@ const Label = styled.label``;
 
 const Value = styled.div``;
 
+const Switch = styled.label`
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+`;
+
+const Checkbox = styled.input`
+  opacity: 0;
+  width: 0;
+  height: 0;
+`;
+
+const SwitchSlider = styled.span`
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+  border-radius: 34px;
+
+  &::before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    -webkit-transition: 0.4s;
+    transition: 0.4s;
+    border-radius: 50%;
+  }
+
+  :checked + & {
+    background-color: #2196f3;
+
+    &::before {
+      -webkit-transform: translateX(26px);
+      -ms-transform: translateX(26px);
+      transform: translateX(26px);
+    }
+  }
+
+  :focus + & {
+    box-shadow: 0 0 1px #2196f3;
+  }
+`;
+
 const Settings = ({
   doOpen,
   closeModal,
@@ -53,7 +106,7 @@ const Settings = ({
 
     cb(...args);
   };
-
+  console.log(global);
   return (
     <ModalMenu
       title="Settings"
@@ -67,11 +120,16 @@ const Settings = ({
           <SubSection>
             <Label>Global</Label>
 
-            <input
-              checked={global}
-              onChange={() => setGlobal(!global)}
-              type="checkbox"
-            />
+            <Switch htmlFor="global-checkbox">
+              <Checkbox
+                id="global-checkbox"
+                onChange={() => setGlobal(!global)}
+                type="checkbox"
+                checked={global}
+                value={global + ""}
+              />
+              <SwitchSlider />
+            </Switch>
           </SubSection>
           <SubSection>
             <div style={{ width: "100%", textAlign: "center" }}>
