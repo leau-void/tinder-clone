@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 const Animate = ({
   children,
@@ -13,6 +13,9 @@ const Animate = ({
 
   const [className, setClassName] = useState("");
 
+  const timeout1Ref = useRef(0);
+  const timeout2Ref = useRef(0);
+
   const toggle = (action: string, delay: number) => {
     switch (action) {
       case "open":
@@ -20,9 +23,13 @@ const Animate = ({
         setIsOpen(true);
         break;
       case "close":
-        window.setTimeout(() => setClassName("closing"), 100);
-        window.setTimeout(() => {
+        timeout1Ref.current = window.setTimeout(() => {
+          setClassName("closing");
+          timeout1Ref.current = 0;
+        }, 100);
+        timeout2Ref.current = window.setTimeout(() => {
           setIsOpen(false);
+          timeout2Ref.current = 0;
         }, delay);
         break;
       default:
@@ -37,6 +44,11 @@ const Animate = ({
       setClassName("closing-setup");
       toggle("close", animationDuration);
     }
+
+    return () => {
+      if (timeout1Ref.current) clearTimeout(timeout1Ref.current);
+      if (timeout2Ref.current) clearTimeout(timeout2Ref.current);
+    };
   }, [doOpen, animationDuration]);
 
   const childrenArr = Array.isArray(children) ? children : [children];
