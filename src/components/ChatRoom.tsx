@@ -420,10 +420,13 @@ const ChatRoom = ({ convo, close }: ChatRoomProps) => {
         <MessagesArea className={imgVal ? "preview-open" : ""}>
           {messages.map((message) => (
             <>
-              <small style={{ marginBottom: "-0.25rem", textAlign: "center" }}>
+              <small
+                key={message.id + "date"}
+                style={{ marginBottom: "-0.25rem", textAlign: "center" }}>
                 {formatDate(message.timestamp)}
               </small>
               <MessageWrap
+                key={message.id}
                 className={
                   message.origin === "header"
                     ? "header"

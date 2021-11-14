@@ -4,9 +4,9 @@ import styled from "styled-components";
 const Wrap = styled.div`
   position: relative;
   margin: 3vh auto;
-  width: 240px;
+  width: ${({ width }: { width?: string }) => width || "240px"};
   height: 5px;
-  background: #f4f4f4;
+  background: lightgrey;
   border-radius: 5px;
   cursor: pointer;
 `;
@@ -23,20 +23,22 @@ const Range = styled.div`
 
 const MinRange = styled(Range)`
   z-index: 2;
-  background: #f4f4f4;
+  background: lightgrey;
 `;
 
 const Thumb = styled.div`
   position: absolute;
-  right: -7.5px;
-  top: -5px;
-  width: 15px;
-  height: 15px;
+  right: -12.5px;
+  top: -10px;
+  width: 25px;
+  height: 25px;
   border-radius: 50%;
-  background: #3d84a8;
+  background: #fafafa;
   transition: all 0.3s;
+  box-shadow: 0 0 0 2px rgba(39, 70, 132, 0.2);
 
-  &:hover {
+  &:hover,
+  &:active {
     box-shadow: 0 0 0 6px rgba(39, 70, 132, 0.2);
   }
 `;
@@ -49,6 +51,7 @@ const Slider = ({
   lo = [0, (n: number) => {}],
   hi = [100, (n: number) => {}],
   double = false,
+  width,
 }: {
   min?: number;
   max: number;
@@ -57,6 +60,7 @@ const Slider = ({
   lo?: [number, (n: number) => void];
   hi: [number, (n: number) => void];
   double?: boolean;
+  width?: string;
 }) => {
   const [sliderWidth, setSliderWidth] = useState(0);
   const [offsetSliderWidth, setOffsetSliderWidth] = useState(0);
@@ -159,7 +163,7 @@ const Slider = ({
   };
 
   return (
-    <Wrap ref={slider}>
+    <Wrap width={width} ref={slider}>
       {double && (
         <MinRange ref={minRange}>
           <Thumb

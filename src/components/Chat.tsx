@@ -111,7 +111,7 @@ const Chat = () => {
                 const match = findUser(convo.members);
 
                 return (
-                  <UserIconWrap>
+                  <UserIconWrap key={convo.id}>
                     <UserIcon
                       key={match?.uid}
                       width="80px"
@@ -133,7 +133,7 @@ const Chat = () => {
               .map((convo) => {
                 const match = findUser(convo.members);
                 return (
-                  <Convo onClick={() => setOpenConvo(convo)}>
+                  <Convo key={convo.id} onClick={() => setOpenConvo(convo)}>
                     <UserIcon
                       width="70px"
                       height="70px"

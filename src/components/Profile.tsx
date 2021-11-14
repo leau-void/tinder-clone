@@ -6,6 +6,9 @@ import Settings from "./Settings";
 import EditProfile from "./EditProfile";
 import UserContext from "../context/UserContext";
 import userPlaceholder from "../assets/placeholders/userPlaceholder.png";
+import ModalMenu, { Section } from "./ModalMenu";
+import { TopButtonBack } from "./ModalMenu";
+import ProfileCard from "./ProfileCard";
 
 const StyledProfile = styled.main`
   display: flex;
@@ -23,7 +26,7 @@ const ButtonWrap = styled.div`
   justify-content: space-evenly;
 `;
 
-const LabelButton = styled.label`
+const LabelButton = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -34,10 +37,9 @@ const Button = styled.button`
   background: 0;
   border: 0;
   padding: 8px;
-  border: 2px solid;
-  border-color: inherit;
+  box-shadow: 0 0 8px 2px;
   border-radius: 50%;
-  margin-bottom: 4px;
+  margin-bottom: 8px;
   color: grey;
 
   &:hover {
@@ -51,6 +53,7 @@ const UserPhoto = styled.img`
   border-radius: 50%;
   object-fit: cover;
   margin: 50px 0;
+  cursor: pointer;
 `;
 
 const Profile = () => {
@@ -62,9 +65,16 @@ const Profile = () => {
 
   const closeModal = () => setWhichModalOpen(null);
 
+  const [openProfile, setOpenProfile] = useState(false);
+  const [doOpenProfile, setDoOpenProfile] = useState(false);
+
   return (
     <StyledProfile>
       <UserPhoto
+        onClick={() => {
+          setDoOpenProfile(true);
+          setOpenProfile(true);
+        }}
         src={
           user
             ? user.profile.photos[0]
@@ -91,6 +101,26 @@ const Profile = () => {
         closeModal={closeModal}
       />
       <EditProfile doOpen={whichModalOpen === "edit"} closeModal={closeModal} />
+      {openProfile && user && (
+        <ModalMenu
+          doOpen={doOpenProfile}
+          title={user.profile.name}
+          animation="horizontal"
+          buttons={{
+            left: (
+              <TopButtonBack
+                onClick={() => {
+                  setDoOpenProfile(false);
+                  window.setTimeout(() => setOpenProfile(false), 300);
+                }}
+              />
+            ),
+          }}>
+          <Section>
+            <ProfileCard user={user} compareLocation={user?.location} />
+          </Section>
+        </ModalMenu>
+      )}
     </StyledProfile>
   );
 };

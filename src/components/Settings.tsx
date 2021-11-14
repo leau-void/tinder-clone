@@ -11,8 +11,12 @@ import ModalMenu, {
   TopButtonDone,
   TopButtonLogout,
 } from "./ModalMenu";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faGithub } from "@fortawesome/free-brands-svg-icons";
 
-const Label = styled.label``;
+const Label = styled.label`
+  color: black;
+`;
 
 const Value = styled.div``;
 
@@ -54,8 +58,8 @@ const SwitchSlider = styled.span`
     border-radius: 50%;
   }
 
-  :checked + & {
-    background-color: #2196f3;
+  input:checked + & {
+    background-color: #46cdcf;
 
     &::before {
       -webkit-transform: translateX(26px);
@@ -64,8 +68,19 @@ const SwitchSlider = styled.span`
     }
   }
 
-  :focus + & {
-    box-shadow: 0 0 1px #2196f3;
+  input:focus + & {
+    box-shadow: 0 0 1px #46cdcf;
+  }
+`;
+
+const GithubLink = styled.a`
+  width: 100%;
+  text-align: center;
+  color: #424242;
+  text-decoration: none;
+
+  &:hover {
+    color: black;
   }
 `;
 
@@ -106,7 +121,7 @@ const Settings = ({
 
     cb(...args);
   };
-  console.log(global);
+
   return (
     <ModalMenu
       title="Settings"
@@ -120,13 +135,12 @@ const Settings = ({
           <SubSection>
             <Label>Global</Label>
 
-            <Switch htmlFor="global-checkbox">
+            <Switch>
               <Checkbox
-                id="global-checkbox"
                 onChange={() => setGlobal(!global)}
                 type="checkbox"
                 checked={global}
-                value={global + ""}
+                key={global + ""}
               />
               <SwitchSlider />
             </Switch>
@@ -143,7 +157,12 @@ const Settings = ({
             <Value>{distance}km</Value>
           </SubSection>
           <SubSection>
-            <Slider hi={[distance, setDistance]} min={1} max={200} />
+            <Slider
+              hi={[distance, setDistance]}
+              min={1}
+              max={200}
+              width="80%"
+            />
           </SubSection>
         </Section>
 
@@ -162,6 +181,7 @@ const Settings = ({
               max={100}
               minDiff={5}
               double
+              width="80%"
             />
           </SubSection>
         </Section>
@@ -169,6 +189,20 @@ const Settings = ({
         <Section>
           <SubSection>
             <TopButtonLogout onClick={() => handleClose(signOut, getAuth())} />
+          </SubSection>
+        </Section>
+
+        <Section>
+          <SubSection>
+            <GithubLink href="https://github.com/leau-void/tinder-clone">
+              Made with <span style={{ color: "#e25555" }}>&#9829;</span> by
+              Leau
+              <FontAwesomeIcon
+                style={{ marginLeft: "0.5rem" }}
+                size="lg"
+                icon={faGithub}
+              />
+            </GithubLink>
           </SubSection>
         </Section>
       </>
