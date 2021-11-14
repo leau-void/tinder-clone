@@ -27,6 +27,7 @@ const NewMatchesWrap = styled.div`
   max-width: 100%;
   overflow-x: scroll;
   padding: 0.5rem 1rem;
+  padding-bottom: 0;
   display: flex;
 
   & > * {
@@ -35,10 +36,16 @@ const NewMatchesWrap = styled.div`
   }
 `;
 
+const UserIconWrap = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
 const UserName = styled.h3`
   margin: 0;
   font-weight: 600;
-  margin-bottom: 0.25rem;
+  margin: 0.25rem 0;
   color: black;
 `;
 
@@ -104,14 +111,17 @@ const Chat = () => {
                 const match = findUser(convo.members);
 
                 return (
-                  <UserIcon
-                    key={match?.uid}
-                    width="80px"
-                    height="80px"
-                    src={match?.profile.photos[0].src || userPlaceholder}
-                    className={convo.latest.seen ? "" : "not-seen"}
-                    onClick={() => setOpenConvo(convo)}
-                  />
+                  <UserIconWrap>
+                    <UserIcon
+                      key={match?.uid}
+                      width="80px"
+                      height="80px"
+                      src={match?.profile.photos[0].src || userPlaceholder}
+                      className={convo.latest.seen ? "" : "not-seen"}
+                      onClick={() => setOpenConvo(convo)}
+                    />
+                    <UserName>{match?.profile.name || ""}</UserName>
+                  </UserIconWrap>
                 );
               })}
           </NewMatchesWrap>

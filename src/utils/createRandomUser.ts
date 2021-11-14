@@ -23,7 +23,7 @@ const createRandomUser = ({
 
   const profile = {
     gender: name.gender(),
-    name: name.findName(),
+    name: name.firstName(),
     age: Math.round(Math.random() * 50 + 21),
     description: lorem.sentence() + " " + lorem.sentence(),
     city: address.cityName(),

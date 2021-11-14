@@ -13,6 +13,7 @@ const UserIcon = styled.div`
   width: ${(props: IconProps) => props.width || "100px"};
   height: ${(props: IconProps) => props.height || "100px"};
   cursor: pointer;
+  flex-shrink: 0;
 
   &.not-seen {
     &::after {

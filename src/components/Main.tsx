@@ -71,14 +71,13 @@ const Main = () => {
         (res) => {
           const { latitude: lat, longitude: lon } = res.coords;
           if (lat === user.location.lat && lon === user.location.lon) return;
-          console.log({ lat, lon });
           const docRef = doc(db, "users", user.uid);
           updateDoc(docRef, {
             location: { lat, lon, timestamp: Timestamp.now().seconds },
           });
         },
         (err) => {
-          console.log(err);
+          console.error(err);
         }
       );
   }, [user]);

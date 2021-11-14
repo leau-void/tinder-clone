@@ -27,6 +27,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faImage, faBackspace } from "@fortawesome/free-solid-svg-icons";
 import { getImageUrl } from "../utils/getImageURL";
 import imgPlaceholder from "../assets/placeholders/imgPlaceholder.png";
+import userPlaceholder from "../assets/placeholders/userPlaceholder.png";
+import formatDate from "../utils/formatDate";
 
 const StyledIconWrap = styled.div`
   display: flex;
@@ -42,10 +44,64 @@ const StyledChatRoom = styled.div`
 const MessagesArea = styled.div`
   height: calc(100% - 8vh);
   width: 100%;
+  padding: 1rem;
+  padding-right: 0.5rem;
   overflow-y: scroll;
+  display: flex;
+  flex-direction: column;
 
   &.preview-open {
     height: calc(100% - 8vh - 15vh);
+  }
+
+  & > * {
+    margin: 0.5rem 0;
+  }
+`;
+
+const MessageWrap = styled.div`
+  display: flex;
+  max-width: 70%;
+  align-items: center;
+
+  & > * {
+    margin-right: 0.5rem;
+  }
+
+  &.header {
+    align-self: center;
+  }
+
+  &.sent {
+    align-self: end;
+    align-self: flex-end;
+  }
+
+  &.received {
+    align-self: start;
+    align-self: flex-start;
+  }
+`;
+
+const MessageDiv = styled.div`
+  width: 100%;
+  background: #fafafa;
+  border-radius: 20px;
+  padding: 1rem;
+
+  & > * {
+    margin-top: 0.5rem;
+  }
+
+  .header > & {
+    background: 0;
+    text-align: center;
+    padding-top: 0.25rem;
+  }
+
+  .sent > & {
+    color: white;
+    background: blue;
   }
 `;
 
@@ -102,7 +158,9 @@ const ImagePreview = styled.div`
 `;
 
 const Image = styled.img`
-  height: 100%;
+  max-height: 100%;
+  max-width: 100%;
+  border-radius: 8px;
 `;
 
 const DeleteImage = styled.button`
@@ -201,8 +259,6 @@ const ChatRoom = ({ convo, close }: ChatRoomProps) => {
     }
   };
 
-  console.log(messages);
-
   useEffect(() => {
     if (!user) return;
     if (convo.latest.origin !== user.uid && !convo.latest.seen) {
@@ -259,7 +315,40 @@ const ChatRoom = ({ convo, close }: ChatRoomProps) => {
       doOpen={isOpen}
       animation="horizontal">
       <StyledChatRoom>
-        <MessagesArea className={imgVal ? "preview-open" : ""}></MessagesArea>
+        <MessagesArea className={imgVal ? "preview-open" : ""}>
+          {messages.map((message) => (
+            <>
+              <small style={{ marginBottom: "-0.25rem", textAlign: "center" }}>
+                {formatDate(message.timestamp)}
+              </small>
+              <MessageWrap
+                className={
+                  message.origin === "header"
+                    ? "header"
+                    : message.origin === user?.uid
+                    ? "sent"
+                    : "received"
+                }>
+                {message.origin !== "header" &&
+                  message.origin !== user?.uid && (
+                    <UserIcon
+                      width="5vw"
+                      height="5vw"
+                      src={
+                        match.current?.profile.photos[0].src || userPlaceholder
+                      }
+                    />
+                  )}
+                <MessageDiv>
+                  {message.text}
+                  {message.assetsPresent && (
+                    <Image src={message.assets?.src || imgPlaceholder} />
+                  )}
+                </MessageDiv>
+              </MessageWrap>
+            </>
+          ))}
+        </MessagesArea>
         {imgVal && (
           <ImagePreview>
             <Image src={imgURL ? imgURL : imgPlaceholder} />
