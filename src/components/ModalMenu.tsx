@@ -91,6 +91,10 @@ const Section = styled.section`
   width: 100%;
   background: #fafafa;
   margin: 1rem 0;
+
+  .section-label + & {
+    margin-top: 0.25rem;
+  }
 `;
 
 const SubSection = styled.div`
@@ -103,7 +107,9 @@ const SubSection = styled.div`
   border-bottom: 1px solid lightgrey;
 `;
 
-const SectionLabel = styled.label``;
+const SectionLabel = styled.label`
+  padding-left: 0.5rem;
+`;
 
 interface ButtonStyleProps {
   color?: string;

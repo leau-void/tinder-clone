@@ -46,23 +46,90 @@ const PhotoContainer = styled.div`
   display: grid;
   grid: repeat(3, 134px) / repeat(3, 100px);
   grid-gap: 20px;
+  padding: 1rem;
+
+  @media (max-width: 400px) {
+    transform-origin: center center;
+    transform: scale(0.8);
+  }
 `;
 
-const Input = styled.input``;
+const Input = styled.input`
+  width: 100%;
+  border: 0;
+  border-left: 3px solid transparent;
+  padding: 0.75rem;
+  padding-right: 4rem;
 
-const TextArea = styled.textarea``;
+  &:focus {
+    border-color: #424242;
+  }
+`;
 
-const Form = styled.form``;
+const TextArea = styled.textarea`
+  width: 100%;
+  border: 0;
+  border-left: 3px solid transparent;
+  padding: 0.75rem;
+  resize: none;
 
-const Submit = styled.button``;
+  &:focus {
+    border-color: #424242;
+  }
+`;
 
-const PassionsPreview = styled.div``;
+const Form = styled.form`
+  width: 100%;
+  display: flex;
+  margin: 0.5rem 0;
+  border-bottom: 1px solid lightgrey;
+  border-top: 1px solid lightgrey;
+  position: relative;
+`;
 
-const Passion = styled.div``;
+const Submit = styled.button`
+  color: red;
+  border: 0;
+  background: 0;
+  color: #3d84a8;
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translate(-25%, -50%);
+  border-radius: 20px;
+  padding: 0.5rem;
+
+  &:disabled {
+    color: lightgrey;
+  }
+`;
+
+const PassionsPreview = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  padding: 1rem;
+`;
+
+const Passion = styled.div`
+  padding: 0.25rem 0.5rem;
+  border: 1px solid;
+  border-color: inherit;
+  margin: 0.2rem;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+`;
 
 const PassionName = styled.div``;
 
-const DeletePassion = styled.button``;
+const DeletePassion = styled.button`
+  color: inherit;
+  margin-left: 0.25rem;
+  border: 0;
+  background: 0;
+`;
 
 interface EditPhoto {
   src: string;
@@ -266,47 +333,60 @@ const EditProfile = ({
               ))}
             </PhotoContainer>
           </Section>
+
+          <SectionLabel className="section-label">NAME</SectionLabel>
           <Section>
-            <SectionLabel>NAME</SectionLabel>
             <Input onChange={(e) => setName(e.target.value)} value={name} />
           </Section>
+
+          <SectionLabel className="section-label">AGE</SectionLabel>
           <Section>
-            <SectionLabel>AGE</SectionLabel>
             <Input
               onChange={(e) => setAge(Number(e.target.value))}
               value={age}
               type="number"
             />
           </Section>
+
+          <SectionLabel className="section-label">ABOUT ME</SectionLabel>
           <Section>
-            <SectionLabel>ABOUT ME</SectionLabel>
             <TextArea
               onChange={(e) => setDescription(e.target.value)}
               value={description}
+              rows={4}
             />
           </Section>
+
+          <SectionLabel className="section-label">LIVING IN</SectionLabel>
           <Section>
-            <SectionLabel>LIVING IN</SectionLabel>
             <Input onChange={(e) => setCity(e.target.value)} value={city} />
           </Section>
+
+          <SectionLabel className="section-label">JOB TITLE</SectionLabel>
           <Section>
-            <SectionLabel>JOB TITLE</SectionLabel>
             <Input onChange={(e) => setJob(e.target.value)} value={job} />
           </Section>
+
+          <SectionLabel className="section-label">GENDER</SectionLabel>
           <Section>
-            <SectionLabel>GENDER</SectionLabel>
             <Input onChange={(e) => setGender(e.target.value)} value={gender} />
           </Section>
+
+          <SectionLabel className="section-label">
+            SEXUAL ORIENTATION
+          </SectionLabel>
           <Section>
-            <SectionLabel>SEXUAL ORIENTATION</SectionLabel>
             <Input
               onChange={(e) => setOrientation(e.target.value)}
               value={orientation}
             />
           </Section>
+
+          <SectionLabel className="section-label">PASSIONS</SectionLabel>
           <Section>
-            <SectionLabel>PASSIONS</SectionLabel>
-            <small>Share up to 5 passions</small>
+            <small style={{ paddingTop: "0.5rem" }}>
+              Share up to 5 passions
+            </small>
             <Form onSubmit={handleSubmit}>
               <Input
                 onChange={(e) => setPassionInput(e.target.value)}
@@ -328,7 +408,7 @@ const EditProfile = ({
                         ...passions.slice(i + 1),
                       ]);
                     }}>
-                    X
+                    x
                   </DeletePassion>
                 </Passion>
               ))}

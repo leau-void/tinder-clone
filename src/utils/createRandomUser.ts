@@ -29,7 +29,7 @@ const createRandomUser = ({
     city: address.cityName(),
     job: name.jobTitle(),
     orientation: orientations[Math.round(Math.random() * 5)],
-    passions: new Array(Math.round(Math.random() * 3 + 3))
+    passions: new Array(Math.round(Math.random() * 2 + 3))
       .fill(null)
       .map(() => random.word()),
     photos: getPhotos(),
