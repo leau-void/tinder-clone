@@ -14,6 +14,8 @@ const Label = styled.label``;
 
 const Input = styled.input``;
 
+// TODO complete phone login flow
+
 const PhoneLoginModal = () => {
   const [phoneNumber, setPhoneNumber] = useState<string>("");
   const [isSignInOk, toggleIsSignInOk] = useBoolToggle(false);

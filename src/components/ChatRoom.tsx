@@ -6,7 +6,7 @@ import React, {
   useState,
 } from "react";
 import styled from "styled-components";
-import { Conversation, Message, User } from "../types";
+import { Conversation, Message, Photo, User } from "../types";
 import UserIcon from "./UserIcon";
 import {
   onSnapshot,
@@ -157,10 +157,20 @@ const ImagePreview = styled.div`
   padding: 0.5rem 2rem;
 `;
 
+// TODO add fullscreen img opening
 const Image = styled.img`
   max-height: 100%;
   max-width: 100%;
   border-radius: 8px;
+  cursor: pointer;
+
+  .fs-modal > & {
+    cursor: unset;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
 `;
 
 const DeleteImage = styled.button`
@@ -173,6 +183,90 @@ const DeleteImage = styled.button`
     color: black;
   }
 `;
+
+const FSModal = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+`;
+
+const CloseButton = styled.button`
+  width: 3rem;
+  height: 3rem;
+  top: 1rem;
+  right: 1rem;
+  position: absolute;
+  border: 0;
+  background: 0;
+`;
+
+const X = styled.div`
+  width: 1.8rem;
+  height: 1.8rem;
+  background: #f5f5f5;
+  margin: 0 auto;
+  clip-path: polygon(
+    0% 5%,
+    45% 50%,
+    0% 95%,
+    5% 100%,
+    50% 55%,
+    95% 100%,
+    100% 95%,
+    55% 50%,
+    100% 5%,
+    95% 0%,
+    50% 45%,
+    5% 0%
+  );
+`;
+
+const Background = styled.div`
+  height: 100%;
+  width: 100%;
+  background: #424242;
+  top: 0;
+  left: 0;
+  position: absolute;
+  z-index: -1;
+`;
+
+const PhotoFullScreen = ({
+  src,
+  close,
+}: {
+  src: string;
+  close: () => void;
+}) => {
+  useEffect(() => {
+    const keyDownHandler = (e: KeyboardEvent) => {
+      if (e.key === "Escape" || e.code === "Escape") close();
+    };
+    window.addEventListener("keydown", keyDownHandler);
+
+    return () => window.removeEventListener("keydown", keyDownHandler);
+  }, [close]);
+
+  const [placeholderShown, setPlaceholderShown] = useState(true);
+
+  return (
+    <FSModal className="fs-modal">
+      <Background onClick={() => close()} />
+      <Image
+        onLoad={() => setPlaceholderShown(false)}
+        src={src || imgPlaceholder}
+        width="80%"
+      />
+      {placeholderShown && <Image src={imgPlaceholder} width="80%" />}
+
+      <CloseButton onClick={() => close()}>
+        <X />
+      </CloseButton>
+    </FSModal>
+  );
+};
 
 const UserIconWrap = ({
   user,
@@ -206,6 +300,8 @@ const ChatRoom = ({ convo, close }: ChatRoomProps) => {
   const [imgVal, setImgVal] = useState<File | null>(null);
   const [imgURL, setImgURL] = useState("");
   const imgInputRef = useRef<HTMLInputElement>(null);
+
+  const [fullScreen, setFullScreen] = useState<string>("");
 
   const match = useRef(
     users.find(
@@ -301,7 +397,7 @@ const ChatRoom = ({ convo, close }: ChatRoomProps) => {
           onClick={() => console.log("click")}
           user={match.current}
         />
-      }
+      } // TODO add link to profile
       buttons={{
         left: (
           <TopButtonBack
@@ -342,7 +438,23 @@ const ChatRoom = ({ convo, close }: ChatRoomProps) => {
                 <MessageDiv>
                   {message.text}
                   {message.assetsPresent && (
-                    <Image src={message.assets?.src || imgPlaceholder} />
+                    <>
+                      {message.assets && (
+                        <Image
+                          onClick={() =>
+                            setFullScreen(message.assets?.src || imgPlaceholder)
+                          }
+                          onLoad={(e: SyntheticEvent) =>
+                            e.currentTarget.nextElementSibling?.setAttribute(
+                              "hidden",
+                              "true"
+                            )
+                          }
+                          src={message.assets.src}
+                        />
+                      )}
+                      <Image src={imgPlaceholder} />
+                    </>
                   )}
                 </MessageDiv>
               </MessageWrap>
@@ -351,7 +463,10 @@ const ChatRoom = ({ convo, close }: ChatRoomProps) => {
         </MessagesArea>
         {imgVal && (
           <ImagePreview>
-            <Image src={imgURL ? imgURL : imgPlaceholder} />
+            <Image
+              onClick={() => setFullScreen(imgURL)}
+              src={imgURL ? imgURL : imgPlaceholder}
+            />
             <DeleteImage
               onClick={() => {
                 setImgVal(null);
@@ -383,6 +498,9 @@ const ChatRoom = ({ convo, close }: ChatRoomProps) => {
             Send
           </SendButton>
         </Form>
+        {fullScreen && (
+          <PhotoFullScreen src={fullScreen} close={() => setFullScreen("")} />
+        )}
       </StyledChatRoom>
     </ModalMenu>
   );
