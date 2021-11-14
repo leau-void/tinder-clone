@@ -18,13 +18,14 @@ const UserIcon = styled.div`
     &::after {
       content: "";
       display: block;
+      border: 3px solid white;
       width: 20%;
       height: 20%;
       background: royalblue;
       position: absolute;
       border-radius: 50%;
-      bottom: 5%;
-      right: 5%;
+      bottom: 3%;
+      right: 3%;
     }
   }
 `;

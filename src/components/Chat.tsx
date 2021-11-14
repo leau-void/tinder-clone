@@ -7,10 +7,13 @@ import userPlaceholder from "../assets/placeholders/userPlaceholder.png";
 import { Conversation } from "../types";
 import ChatRoom from "./ChatRoom";
 import UserIcon from "./UserIcon";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faImage, faReply } from "@fortawesome/free-solid-svg-icons";
 
 const ChatPage = styled.div`
-  max-height: calc(100% - 10vh);
+  height: calc(100% - 10vh);
   overflow-y: scroll;
+  color: #424242;
 `;
 
 const Title = styled.h2`
@@ -32,6 +35,13 @@ const NewMatchesWrap = styled.div`
   }
 `;
 
+const UserName = styled.h3`
+  margin: 0;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  color: black;
+`;
+
 const ConvosWrap = styled.div`
   display: flex;
   flex-direction: column;
@@ -48,9 +58,25 @@ const Convo = styled.div`
   display: grid;
   grid: 1fr / 100px 1fr;
   place-items: center;
+  cursor: pointer;
 `;
 
-const ConvoText = styled.div``;
+const ConvoTextWrap = styled.div`
+  width: 100%;
+  overflow-x: hidden;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-bottom: 1px solid lightgrey;
+`;
+
+const ConvoText = styled.div`
+  max-width: 90%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`;
 
 const Chat = () => {
   const user = useContext(UserContext);
@@ -58,6 +84,9 @@ const Chat = () => {
   const conversations = useContext(ConversationsContext);
 
   const [openConvo, setOpenConvo] = useState<Conversation | null>(null);
+
+  const findUser = (members: [uid1: string, uid2: string]) =>
+    users.find((cur) => cur.uid !== user?.uid && members.includes(cur.uid));
 
   return (
     <ChatPage>
@@ -72,10 +101,7 @@ const Chat = () => {
               .filter((convo) => convo.latest.origin === "header")
               .sort((a, b) => b.timestamp - a.timestamp)
               .map((convo) => {
-                const match = users.find(
-                  (cur) =>
-                    cur.uid !== user.uid && convo.members.includes(cur.uid)
-                );
+                const match = findUser(convo.members);
 
                 return (
                   <UserIcon
@@ -94,31 +120,56 @@ const Chat = () => {
             {conversations
               .filter((convo) => convo.latest.origin !== "header")
               .sort((a, b) => b.latest.timestamp - a.latest.timestamp)
-              .map((convo) => (
-                <Convo>
-                  <UserIcon
-                    width="100px"
-                    height="100px"
-                    src={
-                      users.find(
-                        (cur) =>
-                          cur.uid !== user.uid &&
-                          convo.members.includes(cur.uid)
-                      )!.profile.photos[0].src
-                    }
-                    className={
-                      convo.latest.origin === user.uid || convo.latest.seen
-                        ? ""
-                        : "not-seen"
-                    }
-                  />
-                  <ConvoText>{convo.latest.text}</ConvoText>
-                </Convo>
-              ))}
+              .map((convo) => {
+                const match = findUser(convo.members);
+                return (
+                  <Convo onClick={() => setOpenConvo(convo)}>
+                    <UserIcon
+                      width="70px"
+                      height="70px"
+                      src={match?.profile.photos[0].src || userPlaceholder}
+                      className={
+                        convo.latest.origin === user.uid || convo.latest.seen
+                          ? ""
+                          : "not-seen"
+                      }
+                    />
+
+                    <ConvoTextWrap>
+                      <UserName>{match?.profile.name || ""}</UserName>
+                      <ConvoText>
+                        {convo.latest.origin === user.uid && (
+                          <FontAwesomeIcon
+                            style={{ marginRight: "0.5rem" }}
+                            size="sm"
+                            color="inherit"
+                            icon={faReply}
+                          />
+                        )}
+                        {convo.latest.assetsPresent && (
+                          <FontAwesomeIcon
+                            style={{ marginRight: "0.5rem" }}
+                            size="sm"
+                            color="inherit"
+                            icon={faImage}
+                          />
+                        )}
+                        {convo.latest.text}
+                      </ConvoText>
+                    </ConvoTextWrap>
+                  </Convo>
+                );
+              })}
           </ConvosWrap>
         </>
       )}
-      {conversations.length < 1 && <div>No Matches to display yet.</div>}
+      {conversations.length < 1 && (
+        <div style={{ textAlign: "center", padding: "4rem 1rem 0 1rem" }}>
+          No Matches to display yet. <br />
+          <br />
+          You should probably go back to the feed!
+        </div>
+      )}
     </ChatPage>
   );
 };
