@@ -9,11 +9,17 @@ import React, {
 import styled from "styled-components";
 import ModalMenu, { Section, TopButtonBack, TopButtonDone } from "./ModalMenu";
 import { getImageUrl } from "../utils/getImageURL";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSearchPlus, faSearchMinus } from "@fortawesome/free-solid-svg-icons";
 
 const Canvas = styled.canvas`
   border: 2px solid black;
   cursor: move;
   background: #f5f5f5;
+  border-radius: 20px;
+  margin: 1rem;
+  max-width: 80%;
+  max-height: 80%;
 `;
 
 const Img = styled.img`
@@ -23,7 +29,12 @@ const Img = styled.img`
   left: 100vw;
 `;
 
-const ZoomButton = styled.button``;
+const ZoomButton = styled.button`
+  padding: 0.5rem;
+  border: 0;
+  background: 0;
+  margin-top: 1rem;
+`;
 
 const initialZoom = { zoom: 1 };
 
@@ -88,12 +99,33 @@ const CroppingTool = ({
   useEffect(() => {
     if (!editPhoto || !image || !canvas || !ctx || !imgLoadStatus.current)
       return;
-    ctx.clearRect(0, 0, canvas.offsetWidth, canvas.offsetHeight);
+    ctx.clearRect(
+      0,
+      0,
+      Number(canvas.getAttribute("width")),
+      Number(canvas.getAttribute("height"))
+    );
+
+    const actualOffsetX =
+      offsetX >= 0
+        ? 0
+        : offsetX <=
+          Number(canvas.getAttribute("width")) - imgWidth.current * zoom
+        ? Number(canvas.getAttribute("width")) - imgWidth.current * zoom
+        : offsetX;
+
+    const actualOffsetY =
+      offsetY >= 0
+        ? 0
+        : offsetY <=
+          Number(canvas.getAttribute("height")) - imgHeight.current * zoom
+        ? Number(canvas.getAttribute("height")) - imgHeight.current * zoom
+        : offsetY;
 
     ctx.drawImage(
       image,
-      offsetX,
-      offsetY,
+      actualOffsetX,
+      actualOffsetY,
       imgWidth.current * zoom,
       imgHeight.current * zoom
     );
@@ -126,7 +158,7 @@ const CroppingTool = ({
     if (!editPhoto || !image || !canvas || !ctx) return;
     const imageLoaded = () => {
       imgLoadStatus.current = true;
-      imgHeight.current = canvas.offsetHeight;
+      imgHeight.current = Number(canvas.getAttribute("height"));
       imgWidth.current =
         (image.offsetWidth / image.offsetHeight) * imgHeight.current;
 
@@ -145,10 +177,10 @@ const CroppingTool = ({
   const moveStart = (e: SyntheticEvent) => {
     e.preventDefault();
 
-    document.addEventListener("mousemove", moveHandler);
+    document.addEventListener("mousemove", moveHandler, { passive: false });
     document.addEventListener("mouseup", moveEnd);
 
-    document.addEventListener("touchmove", moveHandler, true);
+    document.addEventListener("touchmove", moveHandler, { passive: false });
     document.addEventListener("touchend", moveEnd);
   };
 
@@ -157,7 +189,6 @@ const CroppingTool = ({
 
     if (e instanceof TouchEvent) {
       e.preventDefault();
-      e.stopImmediatePropagation();
     }
     if (e instanceof TouchEvent && e.targetTouches.length >= 2) {
       const newTouchDist = Math.hypot(
@@ -177,7 +208,7 @@ const CroppingTool = ({
       return;
     }
 
-    if (imgWidth.current * zoom > canvas.offsetWidth) {
+    if (imgWidth.current * zoom > Number(canvas.getAttribute("width"))) {
       let clientX = 0;
       if (e instanceof MouseEvent) {
         clientX = e.clientX;
@@ -192,21 +223,17 @@ const CroppingTool = ({
 
         const newDiff =
           (newX - lastX.current) *
-          (imgWidth.current * zoom - canvas.offsetWidth);
+          (imgWidth.current * zoom - Number(canvas.getAttribute("width")));
 
-        const newPos = newDiff / canvas.offsetWidth + prev;
+        const newPos = newDiff / Number(canvas.getAttribute("width")) + prev;
 
-        return newPos >= 0
-          ? 0
-          : newPos <= canvas.offsetWidth - imgWidth.current * zoom
-          ? canvas.offsetWidth - imgWidth.current * zoom
-          : newPos;
+        return newPos;
       });
 
       lastX.current = newX;
     }
 
-    if (imgHeight.current * zoom > canvas.offsetHeight) {
+    if (imgHeight.current * zoom > Number(canvas.getAttribute("height"))) {
       let clientY = 0;
       if (e instanceof MouseEvent) {
         clientY = e.clientY;
@@ -221,15 +248,11 @@ const CroppingTool = ({
 
         const newDiff =
           (newY - lastY.current) *
-          (imgHeight.current * zoom - canvas.offsetHeight);
+          (imgHeight.current * zoom - Number(canvas.getAttribute("height")));
 
-        const newPos = newDiff / canvas.offsetWidth + prev;
+        const newPos = newDiff / Number(canvas.getAttribute("width")) + prev;
 
-        return newPos >= 0
-          ? 0
-          : newPos <= canvas.offsetHeight - imgHeight.current * zoom
-          ? canvas.offsetHeight - imgHeight.current * zoom
-          : newPos;
+        return newPos;
       });
 
       lastY.current = newY;
@@ -243,7 +266,7 @@ const CroppingTool = ({
     document.removeEventListener("mousemove", moveHandler);
     document.removeEventListener("mouseup", moveEnd);
 
-    document.removeEventListener("touchmove", moveHandler, true);
+    document.removeEventListener("touchmove", moveHandler);
     document.removeEventListener("touchend", moveEnd);
   };
 
@@ -275,14 +298,44 @@ const CroppingTool = ({
       animation="horizontal">
       <Img ref={setupImage} src="" alt="placeholder"></Img>
       <Section>
-        <Canvas
-          onMouseDown={moveStart}
-          onTouchStart={moveStart}
-          ref={setupCanvas}
-          width={350}
-          height={467}></Canvas>
-        <ZoomButton onClick={() => dispatchZoom({ type: "in" })}>+</ZoomButton>
-        <ZoomButton onClick={() => dispatchZoom({ type: "out" })}>-</ZoomButton>
+        <div
+          style={{
+            width: "100%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              margin: "1rem 0",
+            }}>
+            <Canvas
+              onMouseDown={moveStart}
+              onTouchStart={moveStart}
+              ref={setupCanvas}
+              width={350}
+              height={467}></Canvas>
+            <small>Chose how your image will apear.</small>
+          </div>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              height: "100%",
+            }}>
+            <ZoomButton onClick={() => dispatchZoom({ type: "in" })}>
+              <FontAwesomeIcon icon={faSearchPlus} />
+            </ZoomButton>
+            <ZoomButton onClick={() => dispatchZoom({ type: "out" })}>
+              <FontAwesomeIcon icon={faSearchMinus} />
+            </ZoomButton>
+          </div>
+        </div>
       </Section>
     </ModalMenu>
   );

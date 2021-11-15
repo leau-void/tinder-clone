@@ -33,12 +33,26 @@ const Scrollable = styled.div`
 `;
 
 const Tabs = styled.nav`
+  min-height: 6vh;
   height: 6vh;
+  width: 100%;
+  display: flex;
+
+  & > :first-child {
+    border-right: 2px solid black;
+  }
 `;
 
 const Tab = styled.button`
+  width: 100%;
+  height: 100%;
+  background: 0;
+  border: 0;
+  border-bottom: 2px solid;
+  color: grey;
+
   &.active {
-    color: blue;
+    color: black;
   }
 `;
 
@@ -422,6 +436,7 @@ const EditProfile = ({
             width: "100%",
             display: "flex",
             justifyContent: "center",
+            marginTop: "2rem",
           }}>
           <ProfileCard user={user} />
         </div>
