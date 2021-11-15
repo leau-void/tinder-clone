@@ -18,6 +18,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import UserContext from "../context/UserContext";
 import { getDistance } from "geolib";
+import userPlaceholder from "../assets/placeholders/userPlaceholder.png";
 
 const Icon = styled(FontAwesomeIcon)`
   min-width: 25px;
@@ -55,7 +56,7 @@ const StyledCard = styled.div`
   width: 300px;
   height: 450px;
   position: absolute;
-  background: #606060;
+  background: #e6e7e8;
   color: #f5f5f5;
   display: flex;
   flex-direction: column;
@@ -76,6 +77,7 @@ const StyledPhotoWrap = styled.div`
   width: 300px;
   overflow-x: hidden;
   position: absolute;
+  background: center / contain no-repeat url(${userPlaceholder}), #e6e7e8;
 
   .full-size & {
     position: relative;

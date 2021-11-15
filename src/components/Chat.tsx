@@ -40,6 +40,7 @@ const UserIconWrap = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  cursor: pointer;
 `;
 
 const UserName = styled.h3`
@@ -111,14 +112,15 @@ const Chat = () => {
                 const match = findUser(convo.members);
 
                 return (
-                  <UserIconWrap key={convo.id}>
+                  <UserIconWrap
+                    key={convo.id}
+                    onClick={() => setOpenConvo(convo)}>
                     <UserIcon
                       key={match?.uid}
                       width="80px"
                       height="80px"
                       src={match?.profile.photos[0].src || userPlaceholder}
                       className={convo.latest.seen ? "" : "not-seen"}
-                      onClick={() => setOpenConvo(convo)}
                     />
                     <UserName>{match?.profile.name || ""}</UserName>
                   </UserIconWrap>

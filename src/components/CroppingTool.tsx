@@ -13,7 +13,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearchPlus, faSearchMinus } from "@fortawesome/free-solid-svg-icons";
 
 const Canvas = styled.canvas`
-  border: 2px solid black;
+  border: 3px solid #424242;
   cursor: move;
   background: #f5f5f5;
   border-radius: 20px;
