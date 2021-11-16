@@ -45,10 +45,9 @@ const ButtonContainer = styled.div`
 
 const LoginButton = styled.button`
   border-radius: 100px;
-  display: grid;
-  grid-template-columns: 60px 1fr;
+  display: flex;
   align-items: center;
-  justify-items: center;
+  justify-content: center;
   margin: 0.5rem 0;
   border: 2px solid;
   color: #424242;
@@ -60,7 +59,7 @@ const LoginButton = styled.button`
 
 const Icon = styled(FontAwesomeIcon)`
   width: 30px;
-  height: 100%;
+  margin: 15px;
 `;
 
 const Label = styled.span`

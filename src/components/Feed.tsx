@@ -25,11 +25,16 @@ import logo from "../assets/icons/waves-blue.png";
 import { animationFeedBg } from "../utils/animations";
 
 const StyledFeed = styled.main`
-  height: calc(100% - 10vh);
-  padding: 4rem 0.5rem;
+  height: calc(100% - 8vh);
+  padding: 0.5rem 0.5rem;
   display: flex;
   margin: 0 auto;
   position: relative;
+
+  @media (min-height: 650px) {
+    padding: 4rem 0.5rem;
+    height: calc(100% - 10vh);
+  }
 `;
 
 const CardWrap = styled.div`
@@ -154,6 +159,9 @@ const Button = styled.button`
   border-radius: 50%;
   width: 2.6em;
   height: 2.6em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 const EnableGlobalButton = styled.button`
@@ -415,7 +423,7 @@ const Feed = () => {
             </div>
           </CardDiv>
         )}
-        {avail.slice(0, 1).map((cur, i, arr) => (
+        {avail.slice(0, 2).map((cur, i, arr) => (
           <CardDiv
             onMouseDown={dragHandler}
             onTouchStart={dragHandler}

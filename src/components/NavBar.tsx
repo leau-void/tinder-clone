@@ -12,7 +12,11 @@ const StyledNav = styled.nav`
   justify-content: space-evenly;
   position: absolute;
   bottom: 0;
-  height: 10vh;
+  height: 8vh;
+
+  @media (min-height: 650px) {
+    height: 10vh;
+  }
 `;
 
 const Link = styled(NavLink)`
