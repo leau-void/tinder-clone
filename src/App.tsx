@@ -16,21 +16,19 @@ import createEmptyUser from "./utils/createEmptyUser";
 import { getStorage } from "firebase/storage";
 import Match from "./components/Match";
 
-declare global {
-  interface Window {
-    addUsers: (n: number) => void;
-  }
-}
+// declare global {
+//   interface Window {
+//     addUsers: (n: number) => void;
+//   }
+// }
 
-window.addUsers = (n) => {
-  for (let i = 0; i < n; i++) {
-    const newUser = createRandomUser();
-    const docRef = doc(db, "users", newUser.uid);
-    setDoc(docRef, newUser);
-  }
-};
-
-// TODO remove addUser function after project is done
+// window.addUsers = (n) => {
+//   for (let i = 0; i < n; i++) {
+//     const newUser = createRandomUser();
+//     const docRef = doc(db, "users", newUser.uid);
+//     setDoc(docRef, newUser);
+//   }
+// };
 
 function App() {
   const location = useLocation();

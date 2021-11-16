@@ -298,7 +298,8 @@ const EditProfile = ({
   const handleMove = (e: SyntheticEvent) => {
     isClickDown.current = true;
     clickDownTimer.current = window.setTimeout(() => {
-      if (isClickDown.current) console.log("start drag");
+      if (isClickDown.current) {
+      }
       // TODO : Add handler for reorganizing photos
     }, 1500);
   };
