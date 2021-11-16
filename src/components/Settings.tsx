@@ -1,10 +1,10 @@
 import React, { useContext, useEffect, useState } from "react";
-import { signOut, getAuth } from "@firebase/auth";
+import { signOut, getAuth } from "firebase/auth";
 import styled from "styled-components";
 import UserContext from "../context/UserContext";
 import Slider from "./Slider";
 import { db } from "../App";
-import { updateDoc, doc } from "@firebase/firestore";
+import { updateDoc, doc } from "firebase/firestore";
 import ModalMenu, {
   Section,
   SubSection,

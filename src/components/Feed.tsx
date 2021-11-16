@@ -18,7 +18,7 @@ import {
   arrayUnion,
   Timestamp,
   getDoc,
-} from "@firebase/firestore";
+} from "firebase/firestore";
 import { db } from "../App";
 import { isPointWithinRadius } from "geolib";
 import logo from "../assets/icons/waves-blue.png";

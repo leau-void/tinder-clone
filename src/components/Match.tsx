@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
-import { setDoc, doc, Timestamp } from "@firebase/firestore";
+import { setDoc, doc, Timestamp } from "firebase/firestore";
 import UserContext from "../context/UserContext";
 import { User } from "../types";
 import { db } from "../App";

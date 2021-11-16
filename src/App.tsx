@@ -9,7 +9,7 @@ import Main from "./components/Main";
 import Header from "./components/Header";
 import { firebaseConfig } from "./firebase-config";
 import { UserProvider } from "./context/UserContext";
-import { doc, onSnapshot, setDoc } from "@firebase/firestore";
+import { doc, onSnapshot, setDoc } from "firebase/firestore";
 import { User } from "./types";
 import createRandomUser from "./utils/createRandomUser";
 import createEmptyUser from "./utils/createEmptyUser";
