@@ -19,7 +19,7 @@
 
 <a href="#preview">More screenshots</a>
 
-Friend or Foe is a photo tagging game, where players look through a very crowded picture to find familiar characters.
+Waves is a
 
 
 ## Getting started

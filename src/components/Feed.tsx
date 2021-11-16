@@ -174,6 +174,7 @@ const Feed = () => {
   const user = useContext(UserContext);
   const users = useContext(UsersContext);
   const [avail, setAvail] = useState<User[]>([]);
+  const [showBg, setShowBg] = useState(true);
 
   const likeHandler = async (uid: string) => {
     if (!user || !uid) return;
@@ -238,6 +239,7 @@ const Feed = () => {
           !user.dislikes.includes(cur.uid)
       )
     );
+    window.setTimeout(() => setShowBg(false), 2000);
   }, [user, users]);
 
   const enableGlobal = () => {
@@ -382,7 +384,7 @@ const Feed = () => {
   };
   return (
     <StyledFeed>
-      <Background close={!!avail.length} />
+      {showBg && <Background close={!!avail.length} />}
 
       <CardWrap>
         {!avail.length && user && !user.settings.global && (
@@ -413,7 +415,7 @@ const Feed = () => {
             </div>
           </CardDiv>
         )}
-        {avail.map((cur, i, arr) => (
+        {avail.slice(0, 1).map((cur, i, arr) => (
           <CardDiv
             onMouseDown={dragHandler}
             onTouchStart={dragHandler}
