@@ -176,7 +176,12 @@ const Chat = () => {
         </>
       )}
       {conversations.length < 1 && (
-        <div style={{ textAlign: "center", padding: "4rem 1rem 0 1rem" }}>
+        <div
+          style={{
+            textAlign: "center",
+            padding: "4rem 1rem 0 1rem",
+            fontSize: "1.1rem",
+          }}>
           No Matches to display yet. <br />
           <br />
           You should probably go back to the feed!

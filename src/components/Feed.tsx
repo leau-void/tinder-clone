@@ -1,6 +1,5 @@
 import React, {
   SyntheticEvent,
-  useCallback,
   useContext,
   useEffect,
   useRef,
@@ -22,12 +21,15 @@ import {
 } from "@firebase/firestore";
 import { db } from "../App";
 import { isPointWithinRadius } from "geolib";
+import logo from "../assets/icons/waves-blue.png";
+import { animationFeedBg } from "../utils/animations";
 
 const StyledFeed = styled.main`
   height: calc(100% - 10vh);
   padding: 4rem 0.5rem;
   display: flex;
   margin: 0 auto;
+  position: relative;
 `;
 
 const CardWrap = styled.div`
@@ -37,6 +39,50 @@ const CardWrap = styled.div`
 
   & > * {
     top: 0;
+  }
+`;
+
+const Background = styled.div`
+  width: 100%;
+  height: 100%;
+  background: center / contain no-repeat url(${logo}), #f4f4f4;
+  background-size: 20vw;
+  position: absolute;
+  z-index: ${({ close }: { close: boolean }) => (close ? -1 : 150)};
+  transition: all 2s linear;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+
+  opacity: ${({ close }: { close: boolean }) => (close ? 0 : 1)};
+
+  ::before {
+    content: "";
+    display: block;
+    width: 25vw;
+    height: 25vw;
+    border: 2px solid #46cdcf;
+    border-radius: 50%;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    animation: ${animationFeedBg};
+  }
+
+  ::after {
+    content: "";
+    display: block;
+    width: 75vw;
+    height: 75vw;
+    border: 2px solid #46cdcf;
+    border-radius: 50%;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    animation: ${animationFeedBg};
+    animation-direction: reverse;
   }
 `;
 
@@ -110,6 +156,20 @@ const Button = styled.button`
   height: 2.6em;
 `;
 
+const EnableGlobalButton = styled.button`
+  border: 0;
+  background: #3d84a8;
+  padding: 0.5rem;
+  margin-top: 0.5rem;
+  color: #fafafa;
+  border-radius: 20px;
+
+  &:hover {
+    background: #46cdcf;
+    transform: scale(1.1);
+  }
+`;
+
 const Feed = () => {
   const user = useContext(UserContext);
   const users = useContext(UsersContext);
@@ -180,9 +240,14 @@ const Feed = () => {
     );
   }, [user, users]);
 
-  // TODO try fix cards re-render on like/dislike
+  const enableGlobal = () => {
+    if (!user) return;
+    updateDoc(doc(db, "users", user.uid), {
+      "settings.global": true,
+    });
+  };
 
-  // TODO add logo in bg and button to turn global on if global is off
+  // TODO fix cards re-render on like/dislike
 
   const startX = useRef<number | null>(null);
   const startY = useRef<number | null>(null);
@@ -276,7 +341,6 @@ const Feed = () => {
             (latestY.current - startY.current) +
             "px) rotate(25deg)";
           window.setTimeout(() => {
-            console.log(curCard!.dataset.uid);
             likeHandler(curCard!.dataset.uid || "");
           }, 300);
           break;
@@ -318,46 +382,70 @@ const Feed = () => {
       document.addEventListener("touchend", moveEnd);
     }
   };
-
   return (
     <StyledFeed>
+      <Background close={!!avail.length} />
+
       <CardWrap>
-        {avail
-          .slice(0, 5)
-          .reverse()
-          .map((cur, i, arr) => (
-            <CardDiv
-              onMouseDown={dragHandler}
-              onTouchStart={dragHandler}
-              key={cur.uid}
-              data-uid={cur.uid}
-              className={
-                i === arr.length - 1
-                  ? status === "like"
-                    ? "card-wrap like"
-                    : status === "dislike"
-                    ? "card-wrap dislike"
-                    : "card-wrap"
+        {!avail.length && user && !user.settings.global && (
+          <CardDiv
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              textAlign: "center",
+              fontSize: "1.1rem",
+              background: "#f4f4f4",
+              height: "100%",
+              width: "100%",
+            }}>
+            No one found in your search perimeter.
+            <div
+              style={{
+                width: "100%",
+                marginTop: "1rem",
+              }}>
+              <div>
+                You should probably
+                <EnableGlobalButton onClick={() => enableGlobal()}>
+                  Enable Global Search
+                </EnableGlobalButton>
+              </div>
+            </div>
+          </CardDiv>
+        )}
+        {avail.map((cur, i, arr) => (
+          <CardDiv
+            onMouseDown={dragHandler}
+            onTouchStart={dragHandler}
+            key={cur.uid}
+            data-uid={cur.uid}
+            className={
+              i === arr.length - 1
+                ? status === "like"
+                  ? "card-wrap like"
+                  : status === "dislike"
+                  ? "card-wrap dislike"
                   : "card-wrap"
-              }>
-              <ProfileCard user={cur} blockClicks={blockClicks}>
-                <ButtonsWrap
-                  onClickCapture={() => {
-                    setBlockClick(true);
-                    window.setTimeout(() => setBlockClick(false), 100);
-                  }}>
-                  <Button
-                    color="#FB745D"
-                    onClick={() => dislikeHandler(cur.uid)}>
-                    <Icon color="#FB745D" size="lg" icon={faTimes} />
-                  </Button>
-                  <Button color="#4ECD97" onClick={() => likeHandler(cur.uid)}>
-                    <Icon color="#4ECD97" size="lg" icon={faHeart} />
-                  </Button>
-                </ButtonsWrap>
-              </ProfileCard>
-            </CardDiv>
-          ))}
+                : "card-wrap"
+            }>
+            <ProfileCard user={cur} blockClicks={blockClicks}>
+              <ButtonsWrap
+                onClickCapture={() => {
+                  setBlockClick(true);
+                  window.setTimeout(() => setBlockClick(false), 100);
+                }}>
+                <Button color="#FB745D" onClick={() => dislikeHandler(cur.uid)}>
+                  <Icon color="#FB745D" size="lg" icon={faTimes} />
+                </Button>
+                <Button color="#4ECD97" onClick={() => likeHandler(cur.uid)}>
+                  <Icon color="#4ECD97" size="lg" icon={faHeart} />
+                </Button>
+              </ButtonsWrap>
+            </ProfileCard>
+          </CardDiv>
+        ))}
       </CardWrap>
     </StyledFeed>
   );

@@ -26,4 +26,18 @@ const animationOpenModalHor = css`
   ${openModalHor} 0.3s ease-in-out forwards
 `;
 
-export { animationOpenModalVert, animationOpenModalHor };
+const feedBg = keyframes`
+0% {
+  width: 25vw;
+  height: 25vw;
+}
+100% {
+  width: 75vw;
+  height: 75vw;
+}`;
+
+const animationFeedBg = css`
+  ${feedBg} 1.5s linear infinite
+`;
+
+export { animationOpenModalVert, animationOpenModalHor, animationFeedBg };

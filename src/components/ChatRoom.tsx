@@ -296,6 +296,8 @@ const ChatRoom = ({ convo, close }: ChatRoomProps) => {
     collection(db, "conversations", convo.id, "messages")
   );
 
+  const messAreaRef = useRef<HTMLDivElement>(null);
+
   const [textVal, setTextVal] = useState("");
   const [imgVal, setImgVal] = useState<File | null>(null);
   const [imgURL, setImgURL] = useState("");
@@ -357,7 +359,16 @@ const ChatRoom = ({ convo, close }: ChatRoomProps) => {
       });
     }
   };
-  // TODO add auto scroll to bottom
+
+  useEffect(() => {
+    console.log(messAreaRef.current);
+    if (!messAreaRef.current) return;
+    messAreaRef.current.scroll({
+      top: messAreaRef.current.scrollHeight,
+      behavior: "smooth",
+    });
+  }, [messages]);
+
   useEffect(() => {
     if (!user) return;
     if (convo.latest.origin !== user.uid && !convo.latest.seen) {
@@ -417,7 +428,15 @@ const ChatRoom = ({ convo, close }: ChatRoomProps) => {
       doOpen={isOpen}
       animation="horizontal">
       <StyledChatRoom>
-        <MessagesArea className={imgVal ? "preview-open" : ""}>
+        <MessagesArea
+          onLoad={() =>
+            messAreaRef.current?.scroll({
+              top: messAreaRef.current.scrollHeight,
+              behavior: "smooth",
+            })
+          }
+          ref={messAreaRef}
+          className={imgVal ? "preview-open" : ""}>
           {messages.map((message) => (
             <>
               <small
