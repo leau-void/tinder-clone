@@ -358,6 +358,19 @@ const ChatRoom = ({ convo, close }: ChatRoomProps) => {
         },
       });
     }
+
+    if (match.current && !match.current.isHuman) {
+      const replyId = uniqid();
+      const autoReply: Message = {
+        origin: match.current.uid,
+        text: "This is a test message! Hope you are enjoying this project!",
+        timestamp: Timestamp.now().toMillis() + 1000,
+        id: replyId,
+        seen: false,
+      };
+
+      setDoc(doc(messagesRef.current, replyId), autoReply);
+    }
   };
 
   useEffect(() => {
