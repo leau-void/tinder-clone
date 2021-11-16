@@ -438,7 +438,24 @@ const EditProfile = ({
             justifyContent: "center",
             marginTop: "2rem",
           }}>
-          <ProfileCard user={user} />
+          <ProfileCard
+            user={{
+              ...user,
+              profile: {
+                name,
+                age,
+                description,
+                city,
+                job,
+                gender,
+                orientation,
+                passions,
+                photos: photos
+                  .filter((ph) => !!ph)
+                  .map((pho) => ({ src: pho!.src })),
+              },
+            }}
+          />
         </div>
       ) : (
         <div>No profile to display.</div>
