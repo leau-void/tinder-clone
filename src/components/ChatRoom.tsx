@@ -374,7 +374,6 @@ const ChatRoom = ({ convo, close }: ChatRoomProps) => {
   };
 
   useEffect(() => {
-    console.log(messAreaRef.current);
     if (!messAreaRef.current) return;
     messAreaRef.current.scroll({
       top: messAreaRef.current.scrollHeight,

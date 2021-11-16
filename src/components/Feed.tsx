@@ -247,8 +247,6 @@ const Feed = () => {
     });
   };
 
-  // TODO fix cards re-render on like/dislike
-
   const startX = useRef<number | null>(null);
   const startY = useRef<number | null>(null);
   const latestX = useRef<number | null>(null);

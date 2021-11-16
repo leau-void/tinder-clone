@@ -22,11 +22,20 @@ import { faMobileAlt, faUserSecret } from "@fortawesome/free-solid-svg-icons";
 import useBoolToggle from "../hooks/useBoolToggle";
 import PhoneLoginModal from "./PhoneLoginModal";
 
-const StyledLogin = styled.main``;
+const StyledLogin = styled.main`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
 
-const Title = styled.h3``;
+const Title = styled.h3`
+  margin: 1rem 0;
+`;
 
-const Subtitle = styled.h5``;
+const Subtitle = styled.h5`
+  margin: 0.5rem 0;
+`;
 
 const ButtonContainer = styled.div`
   display: flex;
@@ -42,10 +51,17 @@ const LoginButton = styled.button`
   align-items: center;
   justify-items: center;
   margin: 0.5rem 0;
+  border: 2px solid;
+  color: #424242;
+
+  &:hover {
+    color: #3d84a8;
+  }
 `;
 
 const Icon = styled(FontAwesomeIcon)`
   width: 30px;
+  height: 100%;
 `;
 
 const Label = styled.span`
@@ -74,12 +90,12 @@ const Login = () => {
       {user && <Redirect to="/" />}
       <Title>GET STARTED</Title>
       <Subtitle>Start meeting interesting people today.</Subtitle>
-      {isPhoneModalOpen && <PhoneLoginModal />}
       <ButtonContainer>
         <LoginButton onClick={() => toggleIsPhoneModalOpen()}>
           <Icon icon={faMobileAlt} />
           <Label>Log in with phone number</Label>
         </LoginButton>
+        {isPhoneModalOpen && <PhoneLoginModal />}
         <LoginButton onClick={() => loginHandler("facebook")}>
           <Icon icon={faFacebook} />
           <Label>Log in with Facebook</Label>
