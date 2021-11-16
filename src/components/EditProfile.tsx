@@ -15,7 +15,7 @@ import ModalMenu, {
 } from "./ModalMenu";
 import PhotoCard from "./PhotoCard";
 import validFileType from "../utils/validFileType";
-import { doc, updateDoc } from "@firebase/firestore";
+import { doc, updateDoc } from "firebase/firestore";
 import { db, store } from "../App";
 import CroppingTool from "./CroppingTool";
 import {

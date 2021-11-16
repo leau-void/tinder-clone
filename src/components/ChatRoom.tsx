@@ -15,7 +15,7 @@ import {
   updateDoc,
   setDoc,
   Timestamp,
-} from "@firebase/firestore";
+} from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import uniqid from "uniqid";
 import UsersContext from "../context/UsersContext";
