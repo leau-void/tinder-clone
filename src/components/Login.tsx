@@ -1,12 +1,10 @@
 import {
   getAuth,
   signInAnonymously,
-  signInWithPhoneNumber,
   signInWithPopup,
   FacebookAuthProvider,
   GoogleAuthProvider,
   GithubAuthProvider,
-  RecaptchaVerifier,
 } from "firebase/auth";
 import React, { useCallback, useContext } from "react";
 import { Redirect } from "react-router";
@@ -114,6 +112,15 @@ const Login = () => {
           <Label>Log in as Guest</Label>
         </LoginButton>
       </ButtonContainer>
+      <div style={{ maxWidth: "80%", textAlign: "center", padding: "0.25rem" }}>
+        Using a guest account will create a populated profile for you, but you
+        will still be able to edit the profile and use all of the app's
+        functionalities.
+      </div>
+      <div style={{ maxWidth: "80%", textAlign: "center", padding: "0.25rem" }}>
+        Unless you log out of the account, it will remain accessible. Use the
+        other log in methods to backup your account.
+      </div>
     </StyledLogin>
   );
 };

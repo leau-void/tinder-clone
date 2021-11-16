@@ -1,4 +1,4 @@
-import styled, { css, keyframes } from "styled-components";
+import { css, keyframes } from "styled-components";
 
 const openModalVert = keyframes`
 0% {

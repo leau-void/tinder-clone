@@ -2,7 +2,7 @@
   "name": "tinder-clone",
   "version": "0.1.0",
   "private": true,
-  "homepage": "http://leau-void.github.io/tinder-clone",
+  "homepage": "https://leau-void.github.io/tinder-clone",
   "dependencies": {
     "@firebase/rules-unit-testing": "^2.0.1",
     "@fortawesome/fontawesome-free": "^5.15.4",

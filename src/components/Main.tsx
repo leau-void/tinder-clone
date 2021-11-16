@@ -2,7 +2,6 @@ import {
   doc,
   updateDoc,
   Timestamp,
-  getDocs,
   collection,
   query,
   where,

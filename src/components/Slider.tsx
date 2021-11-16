@@ -75,7 +75,7 @@ const Slider = ({
 
     if (!minRange.current) return;
     minRange.current.style.width = ((lo[0] - min) / (max - min)) * 100 + "%";
-  }, [minRange, maxRange]);
+  }, [minRange, maxRange, lo, hi, min, max]);
 
   useEffect(() => {
     if (!slider.current) return;
