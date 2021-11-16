@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { signOut, getAuth } from "firebase/auth";
+import { signOut, getAuth, Auth } from "firebase/auth";
 import styled from "styled-components";
 import UserContext from "../context/UserContext";
 import Slider from "./Slider";
@@ -107,7 +107,7 @@ const Settings = ({
     setGlobal(user.settings.global);
   }, [user]);
 
-  const handleClose = (cb: (args?: any) => void, ...args: any) => {
+  const handleClose = (cb: any, auth?: Auth) => {
     if (!user) return;
     const docRef = doc(db, "users", user.uid);
     updateDoc(docRef, {
@@ -118,8 +118,7 @@ const Settings = ({
         global: global,
       },
     });
-
-    cb(...args);
+    cb(auth);
   };
 
   return (
