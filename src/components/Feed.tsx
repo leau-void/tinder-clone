@@ -1,5 +1,6 @@
 import React, {
   SyntheticEvent,
+  useCallback,
   useContext,
   useEffect,
   useRef,
@@ -39,6 +40,49 @@ const CardWrap = styled.div`
   }
 `;
 
+const CardDiv = styled.div`
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  border-radius: 8px;
+  transition: tranform 0.01s linear;
+
+  &.like {
+    ::after {
+      content: "Like";
+      display: block;
+      color: #4ecd97;
+      font-size: 2rem;
+      line-height: 2rem;
+      font-weight: 700;
+      top: 3rem;
+      border: 5px dashed;
+      border-radius: 20px;
+      padding: 0.5rem;
+      right: 1.5rem;
+      position: absolute;
+      transform: rotate(10deg);
+    }
+  }
+  &.dislike {
+    ::after {
+      content: "Pass";
+      display: block;
+      color: #fb745d;
+      font-size: 2rem;
+      line-height: 2rem;
+      font-weight: 700;
+      top: 3rem;
+      border: 5px dashed;
+      border-radius: 20px;
+      padding: 0.5rem;
+      left: 1.5rem;
+      position: absolute;
+      transform: rotate(-10deg);
+    }
+  }
+`;
+
 const Icon = styled(FontAwesomeIcon)``;
 
 const ButtonsWrap = styled.div`
@@ -72,7 +116,7 @@ const Feed = () => {
   const [avail, setAvail] = useState<User[]>([]);
 
   const likeHandler = async (uid: string) => {
-    if (!user) return;
+    if (!user || !uid) return;
 
     const match = users.find((others) => others.uid === uid) as User;
 
@@ -101,7 +145,7 @@ const Feed = () => {
   };
 
   const dislikeHandler = (uid: string) => {
-    if (!user) return;
+    if (!user || !uid) return;
     updateDoc(doc(db, "users", user.uid), {
       dislikes: arrayUnion(uid),
     });
@@ -136,15 +180,18 @@ const Feed = () => {
     );
   }, [user, users]);
 
-  // TODO add handling for swiping cards
+  // TODO try fix cards re-render on like/dislike
 
   // TODO add logo in bg and button to turn global on if global is off
 
   const startX = useRef<number | null>(null);
   const startY = useRef<number | null>(null);
+  const latestX = useRef<number | null>(null);
+  const latestY = useRef<number | null>(null);
   const card = useRef<HTMLElement | null>(null);
 
   const [status, setStatus] = useState<null | "like" | "dislike">(null);
+  const statusRef = useRef<null | "like" | "dislike">(null);
   const [blockClicks, setBlockClick] = useState(false);
 
   const moveHandler = (e: MouseEvent | TouchEvent) => {
@@ -152,47 +199,107 @@ const Feed = () => {
 
     setBlockClick(true);
 
-    let newX = 0;
-    let newY = 0;
+    latestX.current = 0;
+    latestY.current = 0;
 
     if (e instanceof MouseEvent) {
-      newX = e.screenX;
-      newY = e.screenY;
+      latestX.current = e.screenX;
+      latestY.current = e.screenY;
     } else if (e instanceof TouchEvent) {
       e.preventDefault();
-      newX = e.targetTouches[0].screenX;
-      newY = e.targetTouches[0].screenY;
+      latestX.current = e.targetTouches[0].screenX;
+      latestY.current = e.targetTouches[0].screenY;
     }
 
     if (!startX.current || !startY.current) {
-      startX.current = newX;
-      startY.current = newY;
+      startX.current = latestX.current;
+      startY.current = latestY.current;
       return;
     }
 
     card.current.style.transform =
       "translate(" +
-      (newX - startX.current) +
+      (latestX.current - startX.current) +
       "px," +
-      (newY - startY.current) +
-      "px)";
+      (latestY.current - startY.current) +
+      "px) rotate(" +
+      (latestX.current - startX.current) / 20 +
+      "deg)";
+
+    const { left, right } = card.current.getBoundingClientRect();
+    const bodyWidth = document.body.clientWidth;
+    const newDiff = latestX.current - startX.current;
+    if (newDiff < 50 && newDiff > -50) {
+      setStatus(null);
+      statusRef.current = null;
+    } else if (right > bodyWidth * 0.85) {
+      setStatus("like");
+      statusRef.current = "like";
+    } else if (left < bodyWidth * 0.15) {
+      setStatus("dislike");
+      statusRef.current = "dislike";
+    } else {
+      setStatus(null);
+      statusRef.current = null;
+    }
   };
 
   const moveEnd = (e: MouseEvent | TouchEvent) => {
-    startX.current = null;
-    startY.current = null;
-
-    if (card.current) {
-      card.current.style.transform = "";
-    }
-
-    card.current = null;
-
     document.removeEventListener("mousemove", moveHandler);
     document.removeEventListener("mouseup", moveEnd);
 
     document.removeEventListener("touchmove", moveHandler);
     document.removeEventListener("touchend", moveEnd);
+
+    let curCard: HTMLElement;
+    if (card.current) {
+      curCard = card.current;
+      curCard.style.transition = "all 0.3s linear";
+    }
+
+    if (card.current && !statusRef.current) {
+      curCard!.style.transform = "";
+      window.setTimeout(() => {
+        curCard.style.transition = "";
+      }, 300);
+    } else if (
+      card.current &&
+      startX.current &&
+      startY.current &&
+      latestX.current &&
+      latestY.current
+    ) {
+      switch (statusRef.current) {
+        case "like":
+          card.current.style.transform =
+            "translate(100vw," +
+            (latestY.current - startY.current) +
+            "px) rotate(25deg)";
+          window.setTimeout(() => {
+            console.log(curCard!.dataset.uid);
+            likeHandler(curCard!.dataset.uid || "");
+          }, 300);
+          break;
+        case "dislike":
+          card.current.style.transform =
+            "translate(-100vw," +
+            (latestY.current - startY.current) +
+            "px) rotate(" +
+            (latestX.current - startX.current) / 20 +
+            "deg)";
+          window.setTimeout(() => {
+            dislikeHandler(curCard!.dataset.uid || "");
+          }, 300);
+      }
+    }
+
+    startX.current = null;
+    startY.current = null;
+    latestX.current = null;
+    latestY.current = null;
+    setStatus(null);
+    statusRef.current = null;
+    card.current = null;
   };
 
   const dragHandler = (e: SyntheticEvent) => {
@@ -218,14 +325,27 @@ const Feed = () => {
         {avail
           .slice(0, 5)
           .reverse()
-          .map((cur) => (
-            <div
-              className="card-wrap"
+          .map((cur, i, arr) => (
+            <CardDiv
               onMouseDown={dragHandler}
               onTouchStart={dragHandler}
-              key={cur.uid}>
+              key={cur.uid}
+              data-uid={cur.uid}
+              className={
+                i === arr.length - 1
+                  ? status === "like"
+                    ? "card-wrap like"
+                    : status === "dislike"
+                    ? "card-wrap dislike"
+                    : "card-wrap"
+                  : "card-wrap"
+              }>
               <ProfileCard user={cur} blockClicks={blockClicks}>
-                <ButtonsWrap>
+                <ButtonsWrap
+                  onClickCapture={() => {
+                    setBlockClick(true);
+                    window.setTimeout(() => setBlockClick(false), 100);
+                  }}>
                   <Button
                     color="#FB745D"
                     onClick={() => dislikeHandler(cur.uid)}>
@@ -236,7 +356,7 @@ const Feed = () => {
                   </Button>
                 </ButtonsWrap>
               </ProfileCard>
-            </div>
+            </CardDiv>
           ))}
       </CardWrap>
     </StyledFeed>

@@ -78,6 +78,7 @@ const StyledPhotoWrap = styled.div`
   overflow-x: hidden;
   position: absolute;
   background: center / contain no-repeat url(${userPlaceholder}), #e6e7e8;
+  border-radius: 8px;
 
   .full-size & {
     position: relative;
