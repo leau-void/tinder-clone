@@ -357,7 +357,7 @@ const ChatRoom = ({ convo, close }: ChatRoomProps) => {
       });
     }
   };
-
+  // TODO add auto scroll to bottom
   useEffect(() => {
     if (!user) return;
     if (convo.latest.origin !== user.uid && !convo.latest.seen) {

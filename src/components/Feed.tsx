@@ -1,4 +1,10 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, {
+  SyntheticEvent,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import styled from "styled-components";
 import UserContext from "../context/UserContext";
 import UsersContext from "../context/UsersContext";
@@ -88,9 +94,7 @@ const Feed = () => {
       sendMatchEvent();
     } else {
       const matchDoc = await getDoc(doc(db, "users", match.uid));
-      console.log(matchDoc.data(), user.uid);
       if ((matchDoc.data() as User).likes.includes(user.uid)) {
-        console.log("aa");
         sendMatchEvent();
       }
     }
@@ -134,6 +138,80 @@ const Feed = () => {
 
   // TODO add handling for swiping cards
 
+  // TODO add logo in bg and button to turn global on if global is off
+
+  const startX = useRef<number | null>(null);
+  const startY = useRef<number | null>(null);
+  const card = useRef<HTMLElement | null>(null);
+
+  const [status, setStatus] = useState<null | "like" | "dislike">(null);
+  const [blockClicks, setBlockClick] = useState(false);
+
+  const moveHandler = (e: MouseEvent | TouchEvent) => {
+    if (!card.current) return;
+
+    setBlockClick(true);
+
+    let newX = 0;
+    let newY = 0;
+
+    if (e instanceof MouseEvent) {
+      newX = e.screenX;
+      newY = e.screenY;
+    } else if (e instanceof TouchEvent) {
+      e.preventDefault();
+      newX = e.targetTouches[0].screenX;
+      newY = e.targetTouches[0].screenY;
+    }
+
+    if (!startX.current || !startY.current) {
+      startX.current = newX;
+      startY.current = newY;
+      return;
+    }
+
+    card.current.style.transform =
+      "translate(" +
+      (newX - startX.current) +
+      "px," +
+      (newY - startY.current) +
+      "px)";
+  };
+
+  const moveEnd = (e: MouseEvent | TouchEvent) => {
+    startX.current = null;
+    startY.current = null;
+
+    if (card.current) {
+      card.current.style.transform = "";
+    }
+
+    card.current = null;
+
+    document.removeEventListener("mousemove", moveHandler);
+    document.removeEventListener("mouseup", moveEnd);
+
+    document.removeEventListener("touchmove", moveHandler);
+    document.removeEventListener("touchend", moveEnd);
+  };
+
+  const dragHandler = (e: SyntheticEvent) => {
+    if ((e.target as HTMLElement).closest(".full-size")) return;
+    setBlockClick(false);
+    e.preventDefault();
+
+    const findCard = (e.target as HTMLElement).closest(".card-wrap");
+    if (findCard) {
+      card.current = findCard as HTMLElement;
+
+      document.addEventListener("mousemove", moveHandler, { passive: false });
+      document.addEventListener("mouseup", moveEnd);
+
+      document.addEventListener("touchmove", moveHandler, { passive: false });
+      document.addEventListener("touchend", moveEnd);
+    }
+  };
+
   return (
     <StyledFeed>
       <CardWrap>
@@ -141,16 +219,24 @@ const Feed = () => {
           .slice(0, 5)
           .reverse()
           .map((cur) => (
-            <ProfileCard key={cur.uid} user={cur}>
-              <ButtonsWrap>
-                <Button color="#FB745D" onClick={() => dislikeHandler(cur.uid)}>
-                  <Icon color="#FB745D" size="lg" icon={faTimes} />
-                </Button>
-                <Button color="#4ECD97" onClick={() => likeHandler(cur.uid)}>
-                  <Icon color="#4ECD97" size="lg" icon={faHeart} />
-                </Button>
-              </ButtonsWrap>
-            </ProfileCard>
+            <div
+              className="card-wrap"
+              onMouseDown={dragHandler}
+              onTouchStart={dragHandler}
+              key={cur.uid}>
+              <ProfileCard user={cur} blockClicks={blockClicks}>
+                <ButtonsWrap>
+                  <Button
+                    color="#FB745D"
+                    onClick={() => dislikeHandler(cur.uid)}>
+                    <Icon color="#FB745D" size="lg" icon={faTimes} />
+                  </Button>
+                  <Button color="#4ECD97" onClick={() => likeHandler(cur.uid)}>
+                    <Icon color="#4ECD97" size="lg" icon={faHeart} />
+                  </Button>
+                </ButtonsWrap>
+              </ProfileCard>
+            </div>
           ))}
       </CardWrap>
     </StyledFeed>

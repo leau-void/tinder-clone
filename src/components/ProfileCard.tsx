@@ -36,7 +36,7 @@ const FullSizeCard = styled.div`
   width: 100%;
   min-height: 100vh;
   max-height: 100vh;
-  background: lightgrey;
+  background: #e6e7e8;
   z-index: 80;
 
   &.only-photo {
@@ -132,6 +132,7 @@ interface PhotoWrapProps {
   clickDispatch: Dispatch<{ type: "next" | "prev" | "init" }>;
   currentPhoto: number;
   expandHandler?: () => void;
+  blockClicks?: boolean;
 }
 
 const PhotoWrap = ({
@@ -139,8 +140,10 @@ const PhotoWrap = ({
   clickDispatch,
   currentPhoto,
   expandHandler,
+  blockClicks,
 }: PhotoWrapProps) => {
   const clickHandler = (e: SyntheticEvent) => {
+    if (blockClicks) return;
     const target = e.target as HTMLElement;
     const { offsetX, offsetY } = e.nativeEvent as PointerEvent;
     if (offsetY / target.offsetHeight > 2 / 3 && expandHandler)
@@ -313,11 +316,13 @@ const ProfileCard = ({
   compareLocation,
   children,
   onlyPhotos,
+  blockClicks,
 }: {
   user: User;
   compareLocation?: Location;
   children?: JSX.Element | JSX.Element[];
   onlyPhotos?: boolean;
+  blockClicks?: boolean;
 }) => {
   const {
     name,
@@ -524,15 +529,22 @@ const ProfileCard = ({
           </ScrollableCard>
         </FullSizeCard>
       ) : (
-        <StyledCard>
+        <StyledCard className="profile-card">
           <PhotoWrap
             currentPhoto={currentPhoto}
             clickDispatch={clickDispatch}
             photos={photos}
             expandHandler={() => setIsFullSize(true)}
+            blockClicks={blockClicks}
           />
-          <PartialInfo onClick={() => setIsFullSize(true)}>
-            <ExpandButton onClick={() => setIsFullSize(true)}>
+          <PartialInfo
+            onClick={() => {
+              if (!blockClicks) setIsFullSize(true);
+            }}>
+            <ExpandButton
+              onClick={() => {
+                if (!blockClicks) setIsFullSize(true);
+              }}>
               <Icon size="1x" color="#f5f5f5" icon={faInfoCircle} />
             </ExpandButton>
             <NameAgeWrap>
