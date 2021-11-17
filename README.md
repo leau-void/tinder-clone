@@ -15,12 +15,19 @@
 
 ## About The Project
 
-[![Main Game Screen](demo/game.png)](https://leau-void.github.io/tinder-clone/)
+##### Main demo pt.1
+[![Main Demo](demo/main-demo-pt1.gif)](https://leau-void.github.io/tinder-clone/)
+
+##### Main demo pt.2
+[![Main Demo](demo/main-demo-pt2.gif)](https://leau-void.github.io/tinder-clone/)
+
+##### Profile creation demo
+[![Main Demo](demo/profile-demo.gif)](https://leau-void.github.io/tinder-clone/)
+
 
 <a href="#preview">More screenshots</a>
 
-Waves is a
-
+Waves is a social discovery app. Meet, match and chat with people in your area, or from around the globe!
 
 ## Getting started
 
@@ -30,6 +37,13 @@ cd tinder-clone
 npm install
 npm start
 ```
+
+## Features
+
+- Live feed where you can *like* or *pass* profiles, using either buttons or swipping gestures.
+- Real-time chatrooms where you can talk with your matches, sendint text and images.
+- Presence of dummy accounts that automatically *like* anyone back and reply to messages to test out the functionalities.
+- Edit the settings of your account and your public profile, preview your profile before saving, and crop or scale your pictures with the internal cropping tool.
 
 ## Built With
 
@@ -41,24 +55,24 @@ npm start
 - [styled-components](https://styled-components.com/)
 - [Fontawesome](https://fontawesome.com/)
 - [Faker.js for generating fake user info](https://github.com/marak/Faker.js/)
-- [Geolib for calculation distances from geolocation](https://www.npmjs.com/package/geolib)
 - [HTML5 Geolocation API](https://developer.mozilla.org/en-US/docs/Web/API/Geolocation_API)
+- [Geolib for calculation distances from geolocation](https://www.npmjs.com/package/geolib)
 
 
 ## Preview
 
 ### Desktop
 <div align="center">
-<a href="https://leau-void.github.io/tinder-clone/"><img src="./demo/menu.png" alt="Menu" width="85%"/></a>
-<a href="https://leau-void.github.io/tinder-clone/"><img src="./demo/game.png" alt="Game" width="85%"/></a>
-<a href="https://leau-void.github.io/tinder-clone/"><img src="./demo/scores.png" alt="Scores" width="85%"/></a>
+<a href="https://leau-void.github.io/tinder-clone/"><img src="./demo/feed.png" alt="Menu" width="85%"/></a>
+<a href="https://leau-void.github.io/tinder-clone/"><img src="./demo/chatroom.png" alt="Game" width="85%"/></a>
+<a href="https://leau-void.github.io/tinder-clone/"><img src="./demo/crop.png" alt="Scores" width="85%"/></a>
 </div>
 
 ### Mobile 
 <div align="center">
-<a href="https://leau-void.github.io/tinder-clone/"><img src="./demo/menu-mobile.png" alt="Menu" width="32%"/></a>
-<a href="https://leau-void.github.io/tinder-clone/"><img src="./demo/game-mobile.png" alt="Game" width="32%"/></a>
-<a href="https://leau-void.github.io/tinder-clone/"><img src="./demo/scores-mobile.png" alt="Scores" width="32%"/></a>
+<a href="https://leau-void.github.io/tinder-clone/"><img src="./demo/feed-mobile.png" alt="Feed" width="32%"/></a>
+<a href="https://leau-void.github.io/tinder-clone/"><img src="./demo/chatroom-mobile.png" alt="Chatroom" width="32%"/></a>
+<a href="https://leau-void.github.io/tinder-clone/"><img src="./demo/crop-mobile.png" alt="Cropping Tool" width="32%"/></a>
 </div>
 
 ## Contact
