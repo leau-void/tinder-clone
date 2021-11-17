@@ -300,7 +300,6 @@ const EditProfile = ({
     clickDownTimer.current = window.setTimeout(() => {
       if (isClickDown.current) {
       }
-      // TODO : Add handler for reorganizing photos
     }, 1500);
   };
 

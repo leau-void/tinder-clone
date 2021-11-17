@@ -318,7 +318,7 @@ const CroppingTool = ({
               ref={setupCanvas}
               width={350}
               height={467}></Canvas>
-            <small>Chose how your image will apear.</small>
+            <small>Chose how your image will appear.</small>
           </div>
           <div
             style={{

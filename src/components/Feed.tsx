@@ -423,37 +423,42 @@ const Feed = () => {
             </div>
           </CardDiv>
         )}
-        {avail.slice(0, 2).map((cur, i, arr) => (
-          <CardDiv
-            onMouseDown={dragHandler}
-            onTouchStart={dragHandler}
-            key={cur.uid}
-            data-uid={cur.uid}
-            className={
-              i === arr.length - 1
-                ? status === "like"
-                  ? "card-wrap like"
-                  : status === "dislike"
-                  ? "card-wrap dislike"
+        {avail
+          .slice(0, 2)
+          .reverse()
+          .map((cur, i, arr) => (
+            <CardDiv
+              onMouseDown={dragHandler}
+              onTouchStart={dragHandler}
+              key={cur.uid}
+              data-uid={cur.uid}
+              className={
+                i === arr.length - 1
+                  ? status === "like"
+                    ? "card-wrap like"
+                    : status === "dislike"
+                    ? "card-wrap dislike"
+                    : "card-wrap"
                   : "card-wrap"
-                : "card-wrap"
-            }>
-            <ProfileCard user={cur} blockClicks={blockClicks}>
-              <ButtonsWrap
-                onClickCapture={() => {
-                  setBlockClick(true);
-                  window.setTimeout(() => setBlockClick(false), 100);
-                }}>
-                <Button color="#FB745D" onClick={() => dislikeHandler(cur.uid)}>
-                  <Icon color="#FB745D" size="lg" icon={faTimes} />
-                </Button>
-                <Button color="#4ECD97" onClick={() => likeHandler(cur.uid)}>
-                  <Icon color="#4ECD97" size="lg" icon={faHeart} />
-                </Button>
-              </ButtonsWrap>
-            </ProfileCard>
-          </CardDiv>
-        ))}
+              }>
+              <ProfileCard user={cur} blockClicks={blockClicks}>
+                <ButtonsWrap
+                  onClickCapture={() => {
+                    setBlockClick(true);
+                    window.setTimeout(() => setBlockClick(false), 100);
+                  }}>
+                  <Button
+                    color="#FB745D"
+                    onClick={() => dislikeHandler(cur.uid)}>
+                    <Icon color="#FB745D" size="lg" icon={faTimes} />
+                  </Button>
+                  <Button color="#4ECD97" onClick={() => likeHandler(cur.uid)}>
+                    <Icon color="#4ECD97" size="lg" icon={faHeart} />
+                  </Button>
+                </ButtonsWrap>
+              </ProfileCard>
+            </CardDiv>
+          ))}
       </CardWrap>
     </StyledFeed>
   );
